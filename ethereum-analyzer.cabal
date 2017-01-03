@@ -29,6 +29,6 @@ executable ethereum-analyzer
   main-is:             Main.hs
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >=4.9 && <4.10
+  build-depends:       base >= 4 && < 5
   hs-source-dirs:      exec_src
   default-language:    Haskell98
