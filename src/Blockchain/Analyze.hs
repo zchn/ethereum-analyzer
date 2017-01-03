@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
-module Blockchain.BlockChain (
+module Blockchain.Analyze (
   something
   ) where
 

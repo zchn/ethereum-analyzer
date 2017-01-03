@@ -14,8 +14,7 @@ cabal-version:       >=1.10
 library
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >= 4 && < 5,
-                       ethereum-vm
+  build-depends:       base >= 4 && < 5
   exposed-modules:
                   Blockchain.Analyze,
                   Executable.EthAnalyzer

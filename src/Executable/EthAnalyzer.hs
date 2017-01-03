@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings, TemplateHaskell, FlexibleContexts #-}
 
-module Executable.EthereumVM (
+module Executable.EthAnalyzer (
   ethAnalyzer
   ) where
 
