@@ -1,0 +1,34 @@
+name:                ethereum-analyzer
+version:             0.1.0.0
+synopsis:            A Ethereum contact analyzer.
+homepage:            https://github.com/ethereumK/ethereum-analyzer
+license:             Apache-2.0
+license-file:        LICENSE
+author:              Kevin Chen
+maintainer:          k_@berkeley.edu
+category:            System
+build-type:          Simple
+extra-source-files:  ChangeLog.md, README.md
+cabal-version:       >=1.10
+
+library
+  -- other-modules:       
+  -- other-extensions:    
+  build-depends:       base >=4.9 && <4.10
+                       ethereum-vm
+  exposed-modules:
+                  Blockchain.Analyze,
+                  Executable.EthAnalyzer
+  other-modules:
+                Blockchain.Analyze.Internal
+                                  
+  hs-source-dirs:      src
+  default-language:    Haskell98
+
+executable ethereum-analyzer
+  main-is:             Main.hs
+  -- other-modules:       
+  -- other-extensions:    
+  build-depends:       base >=4.9 && <4.10
+  hs-source-dirs:      exec_src
+  default-language:    Haskell98
