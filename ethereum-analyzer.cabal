@@ -15,14 +15,23 @@ library
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >= 4 && < 5,
+                       aeson,
+                       bytestring,
+                       conduit-combinators,
+                       conduit-extra,
+                       ethereum-vm,
+                       hflags,
+                       json-rpc,
                        monad-logger,
-                       hflags
+                       mtl,
+                       text
   exposed-modules:
                   Blockchain.Analyze,
                   Executable.EthAnalyzer
   other-modules:
                 Blockchain.Analyze.Internal
                                   
+  ghc-options: -Wall -O2
   hs-source-dirs:      src
   default-language:    Haskell98
 
@@ -31,8 +40,12 @@ executable ethereum-analyzer
   -- other-modules:       
   -- other-extensions:    
   build-depends:       base >= 4 && < 5,
+                       blockapps-util,
                        ethereum-analyzer,
-                       monad-logger,
-                       hflags
+                       ethereum-vm,
+                       hflags,
+                       monad-logger
+                       
+  ghc-options: -Wall -O2                       
   hs-source-dirs:      exec_src
   default-language:    Haskell98

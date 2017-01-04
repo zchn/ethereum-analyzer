@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
 module Blockchain.Analyze (
-  something
+  jrpcVersion
   ) where
 
-something = error "Unimplemented."
+import Blockchain.Analyze.Internal
