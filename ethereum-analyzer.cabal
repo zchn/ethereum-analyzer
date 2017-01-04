@@ -20,7 +20,7 @@ library
                        conduit-combinators,
                        conduit-extra,
                        ethereum-vm,
-                       hflags,
+                       -- hflags,
                        json-rpc,
                        monad-logger,
                        mtl,
@@ -31,8 +31,9 @@ library
   other-modules:
                 Blockchain.Analyze.Internal
                                   
-  ghc-options: -Wall -O2
+  ghc-options:         -Wall -O2
   hs-source-dirs:      src
+  buildable:           True
   default-language:    Haskell98
 
 executable ethereum-analyzer
@@ -43,9 +44,10 @@ executable ethereum-analyzer
                        blockapps-util,
                        ethereum-analyzer,
                        ethereum-vm,
-                       hflags,
+                       -- hflags,
                        monad-logger
                        
-  ghc-options: -Wall -O2                       
+  ghc-options:         -Wall -O2                       
   hs-source-dirs:      exec_src
+  buildable:           True
   default-language:    Haskell98
