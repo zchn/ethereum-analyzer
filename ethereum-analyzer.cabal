@@ -14,7 +14,9 @@ cabal-version:       >=1.10
 library
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >= 4 && < 5
+  build-depends:       base >= 4 && < 5,
+                       monad-logger,
+                       hflags
   exposed-modules:
                   Blockchain.Analyze,
                   Executable.EthAnalyzer
@@ -28,6 +30,9 @@ executable ethereum-analyzer
   main-is:             Main.hs
   -- other-modules:       
   -- other-extensions:    
-  build-depends:       base >= 4 && < 5
+  build-depends:       base >= 4 && < 5,
+                       ethereum-analyzer,
+                       monad-logger,
+                       hflags
   hs-source-dirs:      exec_src
   default-language:    Haskell98

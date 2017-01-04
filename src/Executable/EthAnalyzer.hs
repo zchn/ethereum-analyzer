@@ -4,6 +4,7 @@ module Executable.EthAnalyzer (
   ethAnalyzer
   ) where
 
+import Control.Monad.Logger
 
 ethAnalyzer::LoggingT IO ()
 ethAnalyzer = do
