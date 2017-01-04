@@ -43,8 +43,8 @@ handleResponse t =
 
 jrpcVersion_ :: MonadLoggerIO m => JsonRpcT m Res
 jrpcVersion_ = do
-  tEM <- sendRequest Web3_clientVersionReq
   $(logDebug) "sending web3_clientVersion request"
+  tEM <- sendRequest Web3_clientVersionReq
   return $ handleResponse tEM
 
 
