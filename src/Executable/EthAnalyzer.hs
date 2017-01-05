@@ -3,7 +3,7 @@ module Executable.EthAnalyzer (
   ethAnalyzer
   ) where
 
-import Blockchain.Analyze
+import Blockchain.Jsonrpc.Client
 import Control.Monad.Logger
 import Data.Text as T
 
