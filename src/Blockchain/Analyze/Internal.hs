@@ -28,7 +28,8 @@ instance ToJSON Req where
 data Res = Web3_clientVersionRes Text deriving (Show, Eq)
 
 instance FromResponse Res where
-  parseResult "web3_clientVersion" = Just $ withText "web3_clientVersion" (return . Web3_clientVersionRes)
+  parseResult "web3_clientVersion" = Just $ withText "web3_clientVersion" (
+    return . Web3_clientVersionRes)
   parseResult _ = Nothing
 
 instance ToJSON Res where
@@ -43,6 +44,10 @@ handleResponse t =
 
 jrpcVersion_ :: MonadLoggerIO m => JsonRpcT m Res
 jrpcVersion_ = do
+  $(logDebug) "debugging response parsing"
+  $(logDebug) $ T.pack $ "toJSON: " ++ (show $ toJSON $ Web3_clientVersionRes "versssss")
+  $(logDebug) $ T.pack $ "parsing: " ++ (show ((fromResponse "web3_clientVersion" $ Response V2 (toJSON $ Web3_clientVersionRes "versssss") (IdInt 1)) :: Maybe Res))
+  -- $(logDebug) $ T.pack $ "fromResponse toJSON: " ++ (toJSON $ Web3_clientVersionRes "versssss")
   $(logDebug) "sending web3_clientVersion request"
   tEM <- sendRequest Web3_clientVersionReq
   return $ handleResponse tEM
@@ -52,6 +57,5 @@ jrpcVersion :: (MonadLoggerIO m, MonadBaseControl IO m) => String -> Int -> m Te
 jrpcVersion server port = do
   $logInfo $ T.pack $ "Conntectin to " ++ server ++ ":" ++ show port
   Web3_clientVersionRes ver <- jsonRpcTcpClient V2 True (
-    clientSettings port $ DBC.pack server)
-    jrpcVersion_
+    clientSettings port $ DBC.pack server) jrpcVersion_
   return ver
