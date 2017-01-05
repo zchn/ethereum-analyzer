@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts, OverloadedStrings, TemplateHaskell #-}
 
 module Blockchain.Jsonrpc.Client
-  (jrpcVersion) where
+  (web3ClientVersion) where
 
 import Conduit
 import Control.Monad.Catch
@@ -24,7 +24,7 @@ instance ToRequest Req where
 instance ToJSON Req where
   toJSON = const emptyArray
 
-data Res = Web3_clientVersionRes Text deriving (Show, Eq)
+data Res = Web3_clientVersionRes {clientVersion :: Text} deriving (Show, Eq)
 
 instance FromResponse Res where
   parseResult "web3_clientVersion" = Just $ withText "web3_clientVersion" (
@@ -34,43 +34,21 @@ instance FromResponse Res where
 instance ToJSON Res where
   toJSON (Web3_clientVersionRes result) = toJSON result
 
-jrpcVersion :: (MonadIO m, MonadCatch m) => String -> Int -> m Text
-jrpcVersion server port = do
+callJsonRpc :: (MonadIO m, MonadCatch m) => String -> Int -> Req -> m Res
+callJsonRpc server port req = do
   initReq <- NHC.parseUrl ("http://" ++ server ++ ":" ++ (show port))
-  let req = initReq {
+  let requ = initReq {
                     NHC.method = "POST",
                     NHC.requestHeaders = ("Content-Type", "application/json") : NHC.requestHeaders initReq,
-                    NHC.requestBody = RequestBodyLBS $ encode $ toJSON (NJ.buildRequest V2 Web3_clientVersionReq (IdInt 1))
+                    NHC.requestBody = RequestBodyLBS $ encode $ toJSON (NJ.buildRequest V2 req (IdInt 1))
                     }
   manager <- liftIO $ newManager tlsManagerSettings
-  resp <- NHC.httpLbs req manager
+  resp <- NHC.httpLbs requ manager
   case decode $ responseBody resp of
-    Just body -> case fromResponse "web3_clientVersion" body of
-      Just (Web3_clientVersionRes ver) -> return ver
+    Just body -> case fromResponse (requestMethod req) body of
+      Just res -> return res
       Nothing -> error $ "couldn't parse json-rpc response: " ++ (show resp)
     Nothing -> error $ "couldn't parse json: " ++ (show resp)
 
--- handleResponse :: Maybe (Either ErrorObj Res) -> Res
--- handleResponse t =
---   case t of
---     Nothing -> error "could not receive or parse response"
---     Just (Left e) -> error $ fromError e
---     Just (Right r) -> r
-
--- jrpcVersion_ :: MonadLoggerIO m => JsonRpcT m Res
--- jrpcVersion_ = do
---   $(logDebug) "debugging response parsing"
---   $(logDebug) $ T.pack $ "toJSON: " ++ (show $ toJSON $ Web3_clientVersionRes "versssss")
---   $(logDebug) $ T.pack $ "parsing: " ++ (show ((fromResponse "web3_clientVersion" $ Response V2 (toJSON $ Web3_clientVersionRes "versssss") (IdInt 1)) :: Maybe Res))
---   -- $(logDebug) $ T.pack $ "fromResponse toJSON: " ++ (toJSON $ Web3_clientVersionRes "versssss")
---   $(logDebug) "sending web3_clientVersion request"
---   tEM <- sendRequest Web3_clientVersionReq
---   return $ handleResponse tEM
-
-
--- jrpcVersion :: (MonadLoggerIO m, MonadBaseControl IO m) => String -> Int -> m Text
--- jrpcVersion server port = do
---   $logInfo $ T.pack $ "Conntectin to " ++ server ++ ":" ++ show port
---   Web3_clientVersionRes ver <- jsonRpcTcpClient V2 True (
---     clientSettings port $ DBC.pack server) jrpcVersion_
---   return ver
+web3ClientVersion :: (MonadIO m, MonadCatch m) => String -> Int -> m Text
+web3ClientVersion server port = fmap clientVersion $ callJsonRpc server port Web3_clientVersionReq

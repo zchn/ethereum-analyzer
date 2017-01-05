@@ -11,6 +11,6 @@ import Data.Text as T
 ethAnalyzer :: String -> Int -> LoggingT IO ()
 ethAnalyzer server port = do
   $logInfo "Starting ethereum-analyzer."
-  ver <- jrpcVersion server port
+  ver <- web3ClientVersion server port
   $logInfo $ T.append "version is " ver
   return ()
