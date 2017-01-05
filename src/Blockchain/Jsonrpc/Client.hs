@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts, OverloadedStrings, TemplateHaskell #-}
 
 module Blockchain.Jsonrpc.Client
-  (web3ClientVersion) where
+  (web3ClientVersion, ethGetCode) where
 
 import Conduit
 import Control.Monad.Catch
@@ -10,29 +10,48 @@ import Data.Aeson.Types hiding (Error)
 import Data.Text as T
 import Network.HTTP.Conduit as NHC hiding (port)
 import Network.JsonRpc as NJ
+import qualified Data.Vector as V
 
-data Req = Web3_clientVersionReq deriving (Show, Eq)
+data Req = Web3_clientVersionReq | Eth_getCodeReq {codeAddress :: Text, codeBlockNum :: Text } deriving (Show, Eq)
+
+parseJSONElemAtIndex :: FromJSON a => Int -> V.Vector Value -> Parser a
+parseJSONElemAtIndex idx ary = parseJSON (V.unsafeIndex ary idx)
 
 instance FromRequest Req where
   parseParams "web3_clientVersion" = Just $ const $ return Web3_clientVersionReq
+  parseParams "eth_getCode" = Just $ withArray "(address, blockNum)" $ \ab ->
+    let n = V.length ab
+    in if n == 2
+       then do
+          addr <- parseJSONElemAtIndex 0 ab
+          blk <- parseJSONElemAtIndex 1 ab
+          return $ Eth_getCodeReq addr blk
+       else fail $ "cannot unpack array of length " ++
+            show n ++ " into a Eth_getCodeReq"
   parseParams _ = Nothing
 
 instance ToRequest Req where
   requestMethod Web3_clientVersionReq = "web3_clientVersion"
+  requestMethod (Eth_getCodeReq _ _) = "eth_getCode"
   requestIsNotif        = const False
 
 instance ToJSON Req where
-  toJSON = const emptyArray
+  toJSON Web3_clientVersionReq = emptyArray
+  toJSON (Eth_getCodeReq addr blk) = toJSON (addr, blk)
 
-data Res = Web3_clientVersionRes {clientVersion :: Text} deriving (Show, Eq)
+data Res = Web3_clientVersionRes {clientVersion :: Text} |
+  Eth_getCodeRes { code :: Text } deriving (Show, Eq)
 
 instance FromResponse Res where
-  parseResult "web3_clientVersion" = Just $ withText "web3_clientVersion" (
+  parseResult "web3_clientVersion" = Just $ withText "clientVersion" (
     return . Web3_clientVersionRes)
+  parseResult "eth_getCode" = Just $ withText "code" (
+    return . Eth_getCodeRes)
   parseResult _ = Nothing
 
 instance ToJSON Res where
   toJSON (Web3_clientVersionRes result) = toJSON result
+  toJSON (Eth_getCodeRes code) = toJSON code
 
 callJsonRpc :: (MonadIO m, MonadCatch m) => String -> Int -> Req -> m Res
 callJsonRpc server port req = do
@@ -52,3 +71,6 @@ callJsonRpc server port req = do
 
 web3ClientVersion :: (MonadIO m, MonadCatch m) => String -> Int -> m Text
 web3ClientVersion server port = fmap clientVersion $ callJsonRpc server port Web3_clientVersionReq
+
+ethGetCode :: (MonadIO m, MonadCatch m) => String -> Int -> Text -> m Text
+ethGetCode server port address = fmap code $ callJsonRpc server port (Eth_getCodeReq address "latest")

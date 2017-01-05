@@ -28,7 +28,8 @@ library
                        monad-logger,
                        mtl,
                        network,
-                       text
+                       text,
+                       vector
   exposed-modules:
                   Blockchain.Analyze,
                   Blockchain.Jsonrpc.Client,
