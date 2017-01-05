@@ -16,22 +16,25 @@ library
   -- other-extensions:    
   build-depends:       base >= 4 && < 5,
                        aeson,
+                       blockapps-data,
                        bytestring,
                        conduit-combinators,
                        conduit-extra,
                        ethereum-vm,
+                       exceptions,
                        -- hflags,
                        http-conduit,
                        json-rpc,
                        monad-logger,
                        mtl,
+                       network,
                        text
   exposed-modules:
                   Blockchain.Analyze,
                   Blockchain.Jsonrpc.Client,
                   Executable.EthAnalyzer
-  other-modules:
-                Blockchain.Analyze.Internal
+  -- other-modules:
+  --              Blockchain.Analyze.Internal
                                   
   ghc-options:         -Wall -O2
   hs-source-dirs:      src

@@ -1,7 +1,12 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
 module Blockchain.Analyze
-  ( jrpcVersion
+  (
+    decompile
   ) where
 
-import Blockchain.Analyze.Internal
+import Blockchain.Data.Code
+import Blockchain.VM.Opcodes
+
+decompile :: Code -> [Operation]
+decompile = error "unimplemented."

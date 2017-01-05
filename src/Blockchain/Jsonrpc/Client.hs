@@ -4,13 +4,11 @@ module Blockchain.Jsonrpc.Client
   (jrpcVersion) where
 
 import Conduit
-import Control.Monad.Logger
+import Control.Monad.Catch
 import Data.Aeson
 import Data.Aeson.Types hiding (Error)
-import Data.ByteString.Char8 as DBC
-import Data.Conduit.Network
 import Data.Text as T
-import Network.HTTP.Simple as NHS
+import Network.HTTP.Conduit as NHC hiding (port)
 import Network.JsonRpc as NJ
 
 data Req = Web3_clientVersionReq deriving (Show, Eq)
@@ -36,18 +34,21 @@ instance FromResponse Res where
 instance ToJSON Res where
   toJSON (Web3_clientVersionRes result) = toJSON result
 
-jrpcVersion :: (MonadIO m) => String -> Int -> m Text
-jrpcVersion server port =
-  initReq <- NHS.parseRequest ("POST http://" ++ server ++ ":" ++ (show port))
-  let req = NHS.setRequestBodyJSON
-      (NJ.buildRequest V2 Web3_clientVersionReq 1) initReq
-  resp <- NHS.httpJSON req
-  case getResponseStatus resp of
-    NHS.ok200 ->
-      case fromResponse "web3_clientVersion" (getResponseBody resp) of
-          Just $ Web3_clientVersionRes ver -> return ver
-          Nothing -> error $ "couldn't get version from response: " ++ (show resp)
-    other -> error $ "non-OK status when getting version: " ++ (show other)
+jrpcVersion :: (MonadIO m, MonadCatch m) => String -> Int -> m Text
+jrpcVersion server port = do
+  initReq <- NHC.parseUrl ("http://" ++ server ++ ":" ++ (show port))
+  let req = initReq {
+                    NHC.method = "POST",
+                    NHC.requestHeaders = ("Content-Type", "application/json") : NHC.requestHeaders initReq,
+                    NHC.requestBody = RequestBodyLBS $ encode $ toJSON (NJ.buildRequest V2 Web3_clientVersionReq (IdInt 1))
+                    }
+  manager <- liftIO $ newManager tlsManagerSettings
+  resp <- NHC.httpLbs req manager
+  case decode $ responseBody resp of
+    Just body -> case fromResponse "web3_clientVersion" body of
+      Just (Web3_clientVersionRes ver) -> return ver
+      Nothing -> error $ "couldn't parse json-rpc response: " ++ (show resp)
+    Nothing -> error $ "couldn't parse json: " ++ (show resp)
 
 -- handleResponse :: Maybe (Either ErrorObj Res) -> Res
 -- handleResponse t =

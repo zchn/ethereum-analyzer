@@ -11,7 +11,7 @@ import Executable.EthAnalyzer
 -- defineFlag "jrpcPort" (8545 :: Int) "Ethereum json-rpc server port."
 flags_jrpcServer = "192.168.3.53"
 
-flags_jrpcPort = 7891 -- 8545
+flags_jrpcPort = 8545
 
 main :: IO ()
 main
