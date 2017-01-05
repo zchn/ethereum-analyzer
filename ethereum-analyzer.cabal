@@ -21,12 +21,14 @@ library
                        conduit-extra,
                        ethereum-vm,
                        -- hflags,
+                       http-conduit,
                        json-rpc,
                        monad-logger,
                        mtl,
                        text
   exposed-modules:
                   Blockchain.Analyze,
+                  Blockchain.Jsonrpc.Client,
                   Executable.EthAnalyzer
   other-modules:
                 Blockchain.Analyze.Internal
