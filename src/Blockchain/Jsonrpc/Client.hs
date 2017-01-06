@@ -4,15 +4,19 @@
 module Blockchain.Jsonrpc.Client
   ( web3ClientVersion
   , ethGetCode
+  , getCode
   ) where
 
+import Blockchain.Data.Code as BDC
 import Conduit
 import Control.Monad.Catch
 import Data.Aeson
 import Data.Aeson.Types hiding (Error)
+import Data.HexString
 import Data.Text as T
 import Network.HTTP.Conduit as NHC hiding (port)
 import Network.JsonRpc as NJ
+import qualified Data.ByteString.Char8 as DBC
 import qualified Data.Vector as V
 
 data Req
@@ -99,3 +103,11 @@ ethGetCode
   => String -> Int -> Text -> m Text
 ethGetCode server port address =
   fmap code $ callJsonRpc server port (Eth_getCodeReq address "latest")
+
+
+getCode
+  :: (MonadIO m, MonadCatch m)
+  => String -> Int -> Text -> m Code
+getCode server port address = do
+  textCode <- ethGetCode server port address
+  return $ BDC.Code $ toBytes (hexString (DBC.pack $ T.unpack $ T.drop 3 textCode))

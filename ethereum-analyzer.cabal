@@ -23,6 +23,7 @@ library
                        ethereum-vm,
                        exceptions,
                        -- hflags,
+                       hexstring,
                        http-conduit,
                        json-rpc,
                        monad-logger,
