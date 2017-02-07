@@ -68,4 +68,5 @@ test-suite spec
   build-depends:       base
                      , bytestring
                      , ethereum-analyzer
+                     , extra
                      , hspec
