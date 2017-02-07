@@ -58,3 +58,13 @@ executable ethereum-analyzer
   hs-source-dirs:      exec_src
   buildable:           True
   default-language:    Haskell98
+
+test-suite spec
+  type:                exitcode-stdio-1.0
+  ghc-options:         -Wall
+  hs-source-dirs:      test
+  main-is:             Spec.hs
+  build-depends:
+                       base
+                     , ethereum-analyzer
+                     , hspec
