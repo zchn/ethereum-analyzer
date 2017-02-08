@@ -69,5 +69,6 @@ test-suite spec
                      , blockapps-util
                      , bytestring
                      , ethereum-analyzer
+                     , ethereum-vm
                      , extra
                      , hspec
