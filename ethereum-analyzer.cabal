@@ -23,8 +23,9 @@ library
                        conduit-extra,
                        ethereum-vm,
                        exceptions,
-                       -- hflags,
+                       hflags,
                        hexstring,
+                       hoopl,
                        http-conduit,
                        json-rpc,
                        monad-logger,
@@ -34,6 +35,7 @@ library
                        vector
   exposed-modules:
                   Blockchain.Analyze,
+                  Blockchain.Analyze.IR,
                   Blockchain.Jsonrpc.Client,
                   Executable.EthAnalyzer
   -- other-modules:
@@ -52,7 +54,7 @@ executable ethereum-analyzer
                        blockapps-util,
                        ethereum-analyzer,
                        ethereum-vm,
-                       -- hflags,
+                       hflags,
                        monad-logger
                        
   ghc-options:         -Wall -O2                       

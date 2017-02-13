@@ -21,8 +21,7 @@ import qualified Data.Vector as V
 
 data Req
   = Web3_clientVersionReq
-  | Eth_getCodeReq { codeAddress :: Text
-                   , codeBlockNum :: Text}
+  | Eth_getCodeReq Text Text -- codeAddres codeBlockNum
   deriving (Show, Eq)
 
 parseJSONElemAtIndex
@@ -69,7 +68,7 @@ instance FromResponse Res where
 
 instance ToJSON Res where
   toJSON (Web3_clientVersionRes result) = toJSON result
-  toJSON (Eth_getCodeRes code) = toJSON code
+  toJSON (Eth_getCodeRes codeRes) = toJSON codeRes
 
 callJsonRpc
   :: (MonadIO m, MonadCatch m)
