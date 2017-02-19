@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts, FlexibleInstances, GADTs, Rank2Types #-}
 
-module Blockchain.Analyze.IR (ExtOp(..), e2h, h2e, oo2e, oc2e) where
+module Blockchain.Analyze.IR (HplOp) where
 
 import Blockchain.ExtWord as BE
 import Blockchain.VM.Opcodes as BVO
@@ -9,18 +9,15 @@ import Control.Monad as CM
 import Data.Bimap as DB
 
 
-data ExtOp = EvmOp { offset :: Word256, op :: Operation }
-  | ExtOp deriving (Eq, Show)
-
 data HplOp e x where
-  CoOp :: Label -> HplOp CH.C CH.O
-  OoOp :: ExtOp -> HplOp CH.O CH.O
-  OcOp :: ExtOp -> [Label] -> HplOp CH.O CH.C
+  CoOp :: Word256 -> Label -> HplOp CH.C CH.O
+  OoOp :: (Word256, Operation) -> HplOp CH.O CH.O
+  OcOp :: (Word256, Operation) -> [Label] -> HplOp CH.O CH.C
 
 instance Show (HplOp e x)
 
 instance Eq (HplOp CH.C CH.O) where
-  (==) (CoOp a) (CoOp b) = a == b
+  (==) (CoOp a _) (CoOp b _) = a == b
 
 instance Eq (HplOp CH.O CH.O) where
   (==) (OoOp a) (OoOp b) = a == b
@@ -29,22 +26,14 @@ instance Eq (HplOp CH.O CH.C) where
   (==) (OcOp a _) (OcOp b _) = a == b
 
 instance NonLocal HplOp where
-  entryLabel (CoOp l) = l
+  entryLabel (CoOp _ l) = l
   successors (OcOp _ ll) = ll
 
-e2h :: ExtOp -> Either (HplOp CH.O CH.O) (HplOp CH.O CH.C)
-e2h a@(EvmOp _ JUMPDEST) = Left $ OoOp a
-e2h a@(EvmOp _ POP) = Left $ OoOp a
-e2h _ = error "Unimplemented!"
+evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM Body
+evmOps2HplBody el = error "Unimplemented"
 
-h2e :: Either (HplOp CH.O CH.O) (HplOp CH.O CH.C) -> ExtOp
-h2e _ = error "Unimplemented!"
-
-oo2e :: HplOp CH.O CH.O -> ExtOp
-oo2e _ = error "Unimplemented!"
-
-oc2e :: HplOp CH.O CH.C -> ExtOp
-oc2e _ = error "Unimplemented!"
+hplBody2evmOps :: Body -> [(Word256, Operation)]
+hplBody2evmOps b = error "Unimplemented"
 
 --------------------------------------------------------------------------------
 -- The WordLabelMapM monad
