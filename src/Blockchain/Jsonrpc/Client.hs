@@ -21,7 +21,8 @@ import qualified Data.Vector as V
 
 data Req
   = Web3_clientVersionReq
-  | Eth_getCodeReq Text Text -- codeAddres codeBlockNum
+  | Eth_getCodeReq Text
+                   Text -- codeAddres codeBlockNum
   deriving (Show, Eq)
 
 parseJSONElemAtIndex
@@ -103,10 +104,10 @@ ethGetCode
 ethGetCode server port address =
   fmap code $ callJsonRpc server port (Eth_getCodeReq address "latest")
 
-
 getCode
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> Text -> m Code
 getCode server port address = do
   textCode <- ethGetCode server port address
-  return $ BDC.Code $ toBytes (hexString (DBC.pack $ T.unpack $ T.drop 3 textCode))
+  return $
+    BDC.Code $ toBytes (hexString (DBC.pack $ T.unpack $ T.drop 3 textCode))

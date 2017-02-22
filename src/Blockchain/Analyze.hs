@@ -1,8 +1,8 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
 module Blockchain.Analyze
-  ( decompile,
-    decompileHexString
+  ( decompile
+  , decompileHexString
   ) where
 
 import Blockchain.Data.Code
@@ -21,11 +21,14 @@ decompile (Code bs) = decompileBS bs
 decompile _ = []
 
 decompileBS :: ByteString -> [(Word256, Operation)]
-decompileBS bs = let hardlimit = 10000 in decompileBSAt bs 0 hardlimit
+decompileBS bs =
+  let hardlimit = 10000
+  in decompileBSAt bs 0 hardlimit
 
 decompileBSAt :: ByteString -> Word256 -> Int -> [(Word256, Operation)]
 decompileBSAt "" _ _ = []
 decompileBSAt _ _ 0 = []
 decompileBSAt bs base limit =
-  (base+next, op) : decompileBSAt (safeDrop next bs) (base+next) (limit-1)
-  where (op, next) = getOperationAt' bs 0
+  (base + next, op) : decompileBSAt (safeDrop next bs) (base + next) (limit - 1)
+  where
+    (op, next) = getOperationAt' bs 0
