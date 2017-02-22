@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, FlexibleContexts, FlexibleInstances, GADTs, Rank2Types #-}
+{-# LANGUAGE OverloadedStrings, FlexibleContexts, FlexibleInstances, GADTs, Rank2Types, DeriveGeneric #-}
 
 module Blockchain.Analyze.IR (HplOp) where
 
@@ -29,10 +29,10 @@ instance NonLocal HplOp where
   entryLabel (CoOp _ l) = l
   successors (OcOp _ ll) = ll
 
-evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM Body
+evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM (Body HplOp)
 evmOps2HplBody el = error "Unimplemented"
 
-hplBody2evmOps :: Body -> [(Word256, Operation)]
+hplBody2evmOps :: (Body HplOp) -> [(Word256, Operation)]
 hplBody2evmOps b = error "Unimplemented"
 
 --------------------------------------------------------------------------------
