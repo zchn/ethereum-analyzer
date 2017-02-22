@@ -3,6 +3,9 @@
 
 module Blockchain.Analyze.IR
   ( HplOp
+  , evmOps2HplBody
+  , hplBody2EvmOps
+  , runWordLabelMapM
   ) where
 
 import Blockchain.ExtWord as BE
@@ -34,8 +37,12 @@ instance NonLocal HplOp where
 evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM (Body HplOp)
 evmOps2HplBody el = error "Unimplemented"
 
-hplBody2evmOps :: (Body HplOp) -> [(Word256, Operation)]
-hplBody2evmOps b = error "Unimplemented"
+hplBody2EvmOps :: (Body HplOp) -> [(Word256, Operation)]
+hplBody2EvmOps b = error "Unimplemented"
+
+runWordLabelMapM :: WordLabelMapM [(Word256, Operation)]
+                 -> [(Word256, Operation)]
+runWordLabelMapM (WordLabelMapM fun) = snd $ runSimpleUniqueMonad $ fun empty
 
 --------------------------------------------------------------------------------
 -- The WordLabelMapM monad
