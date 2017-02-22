@@ -37,6 +37,7 @@ library
   exposed-modules:
                   Blockchain.Analyze,
                   Blockchain.Analyze.IR,
+                  Blockchain.Analyze.InstCounter,
                   Blockchain.Jsonrpc.Client,
                   Executable.EthAnalyzer
   -- other-modules:

@@ -2,10 +2,10 @@
   FlexibleInstances, GADTs, Rank2Types, DeriveGeneric #-}
 
 module Blockchain.Analyze.IR
-  ( HplOp
+  ( HplBody
+  , HplOp
+  , WordLabelMapM
   , evmOps2HplBody
-  , hplBody2EvmOps
-  , runWordLabelMapM
   ) where
 
 import Blockchain.ExtWord as BE
@@ -15,34 +15,39 @@ import Control.Monad as CM
 import Data.Bimap as DB
 
 data HplOp e x where
-        CoOp :: Word256 -> Label -> HplOp CH.C CH.O
-        OoOp :: (Word256, Operation) -> HplOp CH.O CH.O
-        OcOp :: (Word256, Operation) -> [Label] -> HplOp CH.O CH.C
+        CoOp :: Label -> HplOp C O
+        OoOp :: (Word256, Operation) -> HplOp O O
+        OcOp :: (Word256, Operation) -> [Label] -> HplOp O C
+        TailOp :: [(Word256, Operation)] -> HplOp O C
 
 instance Show (HplOp e x)
 
-instance Eq (HplOp CH.C CH.O) where
-  (==) (CoOp a _) (CoOp b _) = a == b
+instance Eq (HplOp C O) where
+  (==) (CoOp a) (CoOp b) = a == b
 
-instance Eq (HplOp CH.O CH.O) where
+instance Eq (HplOp O O) where
   (==) (OoOp a) (OoOp b) = a == b
 
-instance Eq (HplOp CH.O CH.C) where
+instance Eq (HplOp O C) where
+  (==) (TailOp a) (TailOp b) = a == b
   (==) (OcOp a _) (OcOp b _) = a == b
+  (==) _ _ = False
 
 instance NonLocal HplOp where
-  entryLabel (CoOp _ l) = l
+  entryLabel (CoOp l) = l
   successors (OcOp _ ll) = ll
+  successors (TailOp _) = []
 
-evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM (Body HplOp)
-evmOps2HplBody el = error "Unimplemented"
+type HplBody = Body HplOp
 
-hplBody2EvmOps :: (Body HplOp) -> [(Word256, Operation)]
-hplBody2EvmOps b = error "Unimplemented"
-
-runWordLabelMapM :: WordLabelMapM [(Word256, Operation)]
-                 -> [(Word256, Operation)]
-runWordLabelMapM (WordLabelMapM fun) = snd $ runSimpleUniqueMonad $ fun empty
+-- evmOp2HplOp :: (Word256, Operation) -> WordLabelMapM (Either (HplOp O O) (HplOp O C))
+-- evmOp2HplOp op@(loc, STOP) = return $ Right $ OcOp op []
+-- evmOp2HplOp op = error ("Unimplemented(evmOp2HplOp):" ++ show op)
+evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM HplBody
+evmOps2HplBody [] = return emptyBody
+evmOps2HplBody el@((loc, _):t) = do
+  l <- labelFor loc
+  addBlock (blockJoin (CoOp l) emptyBlock (TailOp el)) <$> evmOps2HplBody t
 
 --------------------------------------------------------------------------------
 -- The WordLabelMapM monad
@@ -59,7 +64,7 @@ labelFor word = WordLabelMapM f
       case DB.lookup word m of
         Just l' -> return (m, l')
         Nothing -> do
-          l' <- CH.freshLabel
+          l' <- freshLabel
           let m' = DB.insert word l' m
           return (m', l')
 
