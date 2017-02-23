@@ -12,5 +12,5 @@ spec = do
   describe "e2h" $
     do it "works" $
          do let decompiled = decompileHexString hexcode1
-            unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled))
-              `shouldBe` length decompiled
+            unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled)) `shouldBe`
+              length decompiled

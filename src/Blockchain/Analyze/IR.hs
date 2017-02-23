@@ -88,7 +88,7 @@ instance Applicative WordLabelMapM where
   pure x = WordLabelMapM (\m -> return (m, x))
   (<*>) = ap
 
-class UnWordLabelMapM a where
+class UnWordLabelMapM a  where
   unWordLabelMapM :: WordLabelMapM a -> a
 
 instance UnWordLabelMapM Int where
