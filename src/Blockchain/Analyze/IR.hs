@@ -5,6 +5,7 @@ module Blockchain.Analyze.IR
   ( HplBody
   , HplOp
   , WordLabelMapM
+  , unWordLabelMapM
   , evmOps2HplBody
   ) where
 
@@ -86,3 +87,12 @@ instance Functor WordLabelMapM where
 instance Applicative WordLabelMapM where
   pure x = WordLabelMapM (\m -> return (m, x))
   (<*>) = ap
+
+class UnWordLabelMapM a where
+  unWordLabelMapM :: WordLabelMapM a -> a
+
+instance UnWordLabelMapM Int where
+  unWordLabelMapM = internalUnWordLabelMapM
+
+internalUnWordLabelMapM :: WordLabelMapM a -> a
+internalUnWordLabelMapM (WordLabelMapM f) = snd $ runSimpleUniqueMonad (f empty)

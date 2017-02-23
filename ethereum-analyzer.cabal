@@ -75,4 +75,5 @@ test-suite spec
                      , ethereum-analyzer
                      , ethereum-vm
                      , extra
+                     , hoopl
                      , hspec

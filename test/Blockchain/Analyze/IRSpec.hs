@@ -3,7 +3,7 @@ module Blockchain.Analyze.IRSpec
   ) where
 
 import Blockchain.Analyze
-import Blockchain.Analyze.InstCounter
+import Compiler.Hoopl
 import SpecCommon
 import Test.Hspec
 
@@ -12,4 +12,5 @@ spec = do
   describe "e2h" $
     do it "works" $
          do let decompiled = decompileHexString hexcode1
-            doInstCounter (evmOps2HplBody decompiled) `shouldBe` length decompiled
+            unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled))
+              `shouldBe` length decompiled
