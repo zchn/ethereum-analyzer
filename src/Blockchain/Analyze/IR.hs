@@ -1,5 +1,6 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts,
-  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies, UndecidableInstances #-}
+  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies,
+  UndecidableInstances #-}
 
 module Blockchain.Analyze.IR
   ( HplBody
@@ -79,7 +80,7 @@ evmOps2HplBody el@((loc, _):_) = do
       if isTerminator (snd h')
         then return $ addBlock (blockJoinTail hd (OcOp h' [])) body
         else return body
-    doEvmOps2HplBody body hd (h':(t'@((loc', _):_))) =
+    doEvmOps2HplBody body hd (h':(t'@((loc', op'):_))) =
       if isTerminator (snd h')
         then do
           l' <- labelFor loc'
@@ -95,7 +96,22 @@ evmOps2HplBody el@((loc, _):_) = do
                body)
             (blockJoinHead (CoOp l') emptyBlock)
             t'
-        else doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
+        else if op' /= JUMPDEST
+               then doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
+               else do
+                 l' <- labelFor loc'
+                 doEvmOps2HplBody
+                   (addBlock
+                      (blockJoinTail
+                         hd
+                         (OcOp
+                            h'
+                            (if canPassThrough (snd h')
+                               then [l']
+                               else [])))
+                      body)
+                   (blockJoinHead (CoOp l') emptyBlock)
+                   t'
 
 isTerminator :: Operation -> Bool
 isTerminator STOP = True

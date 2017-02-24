@@ -13,11 +13,11 @@ spec = do
     do it "works for hexcode1" $
          do let decompiled = decompileHexString hexcode1
             unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled)) `shouldBe`
-              243
+              327
        it "works for hexcode2" $
          do let decompiled = decompileHexString hexcode2
             unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled)) `shouldBe`
-              11
+              12
        it "shows HplBody" $
          do let decompiled = decompileHexString hexcode2
             unWordLabelMapM (show <$> (evmOps2HplBody decompiled)) `shouldBe`
@@ -117,12 +117,14 @@ spec = do
               "21]," ++
               "OO: 103: SWAP1," ++
               "OO: 104: PUSH [32]," ++
-              "OO: 106: SWAP1," ++
-              "OO: 107: LOG3," ++
-              "OO: 108: JUMPDEST]," ++
-              "OC: 109: JUMP -> []))," ++
+              "OO: 106: SWAP1]," ++
+              "OC: 107: LOG3 -> [L6]))," ++
               "(6," ++
               "(CO: L6," ++
+              "[OO: 108: JUMPDEST]," ++
+              "OC: 109: JUMP -> []))," ++
+              "(7," ++
+              "(CO: L7," ++
               "[OO: 110: JUMPDEST," ++
               "OO: 111: PUSH [213]," ++
               "OO: 113: PUSH [0]," ++
@@ -143,9 +145,9 @@ spec = do
               "OO: 132: EQ," ++
               "OO: 133: ISZERO," ++
               "OO: 134: PUSH [108]]," ++
-              "OC: 136: JUMPI -> [L7]))," ++
-              "(7," ++
-              "(CO: L7," ++
+              "OC: 136: JUMPI -> [L8]))," ++
+              "(8," ++
+              "(CO: L8," ++
               "[OO: 137: PUSH [0]," ++
               "OO: 139: SLOAD," ++
               "OO: 140: PUSH [1]," ++
@@ -155,8 +157,8 @@ spec = do
               "OO: 147: SUB," ++
               "OO: 148: AND]," ++
               "OC: 149: SUICIDE -> []))," ++
-              "(8," ++
-              "(CO: L8," ++
+              "(9," ++
+              "(CO: L9," ++
               "[OO: 150: JUMPDEST," ++
               "OO: 151: PUSH [213]," ++
               "OO: 153: PUSH [0]," ++
@@ -177,9 +179,9 @@ spec = do
               "OO: 172: EQ," ++
               "OO: 173: ISZERO," ++
               "OO: 174: PUSH [108]]," ++
-              "OC: 176: JUMPI -> [L9]))," ++
-              "(9," ++
-              "(CO: L9," ++
+              "OC: 176: JUMPI -> [L10]))," ++
+              "(10," ++
+              "(CO: L10," ++
               "[OO: 177: PUSH [0]," ++
               "OO: 179: DUP1," ++
               "OO: 180: SLOAD," ++
@@ -204,15 +206,15 @@ spec = do
               "OO: 203: DUP6," ++
               "OO: 204: DUP9," ++
               "OO: 205: DUP4]," ++
-              "OC: 206: CALL -> [L10]))," ++
-              "(10," ++
-              "(CO: L10," ++
+              "OC: 206: CALL -> [L11]))," ++
+              "(11," ++
+              "(CO: L11," ++
               "[OO: 207: POP," ++
               "OO: 208: POP," ++
               "OO: 209: POP," ++
               "OO: 210: POP," ++
               "OO: 211: POP]," ++
               "OC: 212: JUMP -> []))," ++
-              "(11," ++
-              "(CO: L11," ++
+              "(12," ++
+              "(CO: L12," ++
               "[OO: 213: JUMPDEST]," ++ "OC: 214: STOP -> []))]))"
