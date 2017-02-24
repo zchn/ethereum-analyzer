@@ -27,7 +27,7 @@ library
                        exceptions,
                        hflags,
                        hexstring,
-                       hoopl,
+                       hoopl >= 3.10.2.1,
                        http-conduit,
                        json-rpc,
                        monad-logger,
