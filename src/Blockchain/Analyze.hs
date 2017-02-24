@@ -31,6 +31,6 @@ decompileBSAt :: ByteString -> Word256 -> Int -> [(Word256, Operation)]
 decompileBSAt "" _ _ = []
 decompileBSAt _ _ 0 = []
 decompileBSAt bs base limit =
-  (base + next, op) : decompileBSAt (safeDrop next bs) (base + next) (limit - 1)
+  (base, op) : decompileBSAt (safeDrop next bs) (base + next) (limit - 1)
   where
     (op, next) = getOperationAt' bs 0
