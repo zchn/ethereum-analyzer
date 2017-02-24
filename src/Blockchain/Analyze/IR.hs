@@ -60,8 +60,15 @@ evmOps2HplBody el@((loc, _):_) = do
         then do
           l' <- labelFor loc'
           doEvmOps2HplBody
-            (addBlock (blockJoinTail hd (OcOp h' (
-                                            if canPassThrough (snd h') then [l'] else []))) body)
+            (addBlock
+               (blockJoinTail
+                  hd
+                  (OcOp
+                     h'
+                     (if canPassThrough (snd h')
+                        then [l']
+                        else [])))
+               body)
             (blockJoinHead (CoOp l') emptyBlock)
             t'
         else doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'

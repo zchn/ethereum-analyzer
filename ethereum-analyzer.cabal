@@ -22,6 +22,7 @@ library
                        bytestring,
                        conduit-combinators,
                        conduit-extra,
+                       containers,
                        ethereum-vm,
                        exceptions,
                        hflags,
@@ -36,6 +37,7 @@ library
                        vector
   exposed-modules:
                   Blockchain.Analyze,
+                  Blockchain.Analyze.CfgAugmentPass,
                   Blockchain.Analyze.IR,
                   Blockchain.Analyze.InstCounter,
                   Blockchain.Jsonrpc.Client,
