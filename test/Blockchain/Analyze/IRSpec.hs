@@ -10,7 +10,11 @@ import Test.Hspec
 spec :: Spec
 spec = do
   describe "e2h" $
-    do it "works" $
+    do it "works for hexcode1" $
          do let decompiled = decompileHexString hexcode1
             unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled)) `shouldBe`
-              length decompiled
+              243
+       it "works for hexcode2" $
+         do let decompiled = decompileHexString hexcode2
+            unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled)) `shouldBe`
+              11

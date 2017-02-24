@@ -46,9 +46,39 @@ type HplBody = Body HplOp
 -- evmOp2HplOp op = error ("Unimplemented(evmOp2HplOp):" ++ show op)
 evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM HplBody
 evmOps2HplBody [] = return emptyBody
-evmOps2HplBody el@((loc, _):t) = do
+evmOps2HplBody el@((loc, h):t) = do
   l <- labelFor loc
-  addBlock (blockJoin (CoOp l) emptyBlock (TailOp el)) <$> evmOps2HplBody t
+  doEvmOps2HplBody emptyBody (blockJoinHead (CoOp l) emptyBlock) el
+  where
+    doEvmOps2HplBody :: HplBody
+                     -> (Block HplOp C O)
+                     -> [(Word256, Operation)]
+                     -> WordLabelMapM HplBody
+    doEvmOps2HplBody body hd [] = return body -- sliently discarding bad hds
+    doEvmOps2HplBody body hd (h':[]) =
+      if isTerminator (snd h')
+        then return $ addBlock (blockJoinTail hd (OcOp h' [])) body
+        else return body
+    doEvmOps2HplBody body hd (h':(t'@((loc', _):_))) =
+      if isTerminator (snd h')
+        then do
+          l' <- labelFor loc'
+          doEvmOps2HplBody
+            (addBlock (blockJoinTail hd (OcOp h' [])) body)
+            (blockJoinHead (CoOp l') emptyBlock)
+            t'
+        else doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
+
+isTerminator :: Operation -> Bool
+isTerminator STOP = True
+isTerminator JUMP = True
+isTerminator JUMPI = True
+isTerminator CALL = True
+isTerminator CALLCODE = True
+isTerminator RETURN = True
+isTerminator DELEGATECALL = True
+isTerminator SUICIDE = True
+isTerminator _ = False
 
 --------------------------------------------------------------------------------
 -- The WordLabelMapM monad
