@@ -1,9 +1,13 @@
+{-# LANGUAGE OverloadedStrings, FlexibleContexts,
+  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies, UndecidableInstances #-}
+
 module Blockchain.Analyze.CfgAugmentPass
   ( doCfgAugmentPass
   ) where
 
 import Blockchain.Analyze
 import Blockchain.ExtWord
+import Blockchain.VM.Opcodes
 import Compiler.Hoopl
 import Data.Maybe
 import Data.Set
@@ -34,37 +38,37 @@ stackTopTransfer :: FwdTransfer HplOp StackTopFact
 stackTopTransfer = mkFTransfer3 coT ooT ocT
   where
     coT :: HplOp C O -> StackTopFact -> StackTopFact
-    coT = error "Unimplemented"
+    coT _ f = f
     ooT :: HplOp O O -> StackTopFact -> StackTopFact
-    ooT = error "Unimplemented"
+    ooT op _ = error ("Unimplemented(ooT):" ++ show op)
     ocT :: HplOp O C -> StackTopFact -> FactBase StackTopFact
-    ocT = error "Unimplemented"
-
-cfgAugmentRewrite :: FwdRewrite (CheckingFuelMonad SimpleUniqueMonad) HplOp StackTopFact
+    ocT op@(OcOp (_, JUMPI) _) f = distributeFact op Nothing
+    ocT op _ = error ("Unimplemented(ocT): " ++ show op)
+cfgAugmentRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackTopFact
 cfgAugmentRewrite = mkFRewrite3 coR ooR ocR
   where
     coR :: HplOp C O
         -> StackTopFact
-        -> SimpleFuelMonad (Maybe (Graph HplOp C O))
-    coR = error "Unimplemented"
+        -> WordLabelMapFuelM (Maybe (Graph HplOp C O))
+    coR = error "Unimplemented(coR)"
     ooR :: HplOp O O
         -> StackTopFact
-        -> SimpleFuelMonad (Maybe (Graph HplOp O O))
-    ooR = error "Unimplemented"
+        -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
+    ooR = error "Unimplemented(ooR)"
     ocR :: HplOp O C
         -> StackTopFact
-        -> SimpleFuelMonad (Maybe (Graph HplOp O C))
-    ocR = error "Unimplemented"
+        -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
+    ocR = error "Unimplemented(ocR)"
 
-cfgAugmentPass :: FwdPass (CheckingFuelMonad SimpleUniqueMonad) HplOp (Maybe (Set Word256))
+cfgAugmentPass :: FwdPass WordLabelMapFuelM HplOp (Maybe (Set Word256))
 cfgAugmentPass =
   FwdPass
   { fp_lattice = stackTopLattice
   , fp_transfer = stackTopTransfer
-  , fp_rewrite = cfgAugmentRewrite
+  , fp_rewrite = noFwdRewrite -- cfgAugmentRewrite
   }
 
-doCfgAugmentPass :: Label -> HplBody -> SimpleUniqueMonad HplBody
+doCfgAugmentPass :: Label -> HplBody -> WordLabelMapM HplBody
 doCfgAugmentPass entry body =
   runWithFuel
     1000000

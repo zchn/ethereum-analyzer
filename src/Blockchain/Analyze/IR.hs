@@ -1,10 +1,11 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts,
-  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric #-}
+  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies, UndecidableInstances #-}
 
 module Blockchain.Analyze.IR
   ( HplBody
-  , HplOp
+  , HplOp(..)
   , WordLabelMapM
+  , WordLabelMapFuelM
   , unWordLabelMapM
   , evmOps2HplBody
   , labelFor
@@ -121,6 +122,25 @@ type WordLabelMap = Bimap Word256 Label
 
 data WordLabelMapM a =
   WordLabelMapM (WordLabelMap -> SimpleUniqueMonad (WordLabelMap, a))
+
+instance CheckpointMonad WordLabelMapM where
+  type Checkpoint WordLabelMapM = (WordLabelMap, Checkpoint SimpleUniqueMonad)
+  checkpoint =
+    let mapper
+          :: WordLabelMap
+          -> SimpleUniqueMonad (WordLabelMap, Checkpoint WordLabelMapM)
+        mapper m = do
+          suCheckpoint <- CH.checkpoint
+          return (m, (m, suCheckpoint))
+    in WordLabelMapM mapper
+  restart (m, suCheckpoint) =
+    let mapper :: WordLabelMap -> CH.SimpleUniqueMonad (WordLabelMap, ())
+        mapper _ = do
+          _ <- CH.restart suCheckpoint
+          return (m, ())
+    in WordLabelMapM mapper
+
+type WordLabelMapFuelM = CheckingFuelMonad WordLabelMapM
 
 labelFor :: Word256 -> WordLabelMapM Label
 labelFor word = WordLabelMapM f
