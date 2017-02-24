@@ -19,7 +19,6 @@ data HplOp e x where
         CoOp :: Label -> HplOp C O
         OoOp :: (Word256, Operation) -> HplOp O O
         OcOp :: (Word256, Operation) -> [Label] -> HplOp O C
-        TailOp :: [(Word256, Operation)] -> HplOp O C
 
 instance Show (HplOp e x)
 
@@ -30,14 +29,11 @@ instance Eq (HplOp O O) where
   (==) (OoOp a) (OoOp b) = a == b
 
 instance Eq (HplOp O C) where
-  (==) (TailOp a) (TailOp b) = a == b
   (==) (OcOp a _) (OcOp b _) = a == b
-  (==) _ _ = False
 
 instance NonLocal HplOp where
   entryLabel (CoOp l) = l
   successors (OcOp _ ll) = ll
-  successors (TailOp _) = []
 
 type HplBody = Body HplOp
 
@@ -46,7 +42,7 @@ type HplBody = Body HplOp
 -- evmOp2HplOp op = error ("Unimplemented(evmOp2HplOp):" ++ show op)
 evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM HplBody
 evmOps2HplBody [] = return emptyBody
-evmOps2HplBody el@((loc, h):t) = do
+evmOps2HplBody el@((loc, _):_) = do
   l <- labelFor loc
   doEvmOps2HplBody emptyBody (blockJoinHead (CoOp l) emptyBlock) el
   where
@@ -64,7 +60,8 @@ evmOps2HplBody el@((loc, h):t) = do
         then do
           l' <- labelFor loc'
           doEvmOps2HplBody
-            (addBlock (blockJoinTail hd (OcOp h' [])) body)
+            (addBlock (blockJoinTail hd (OcOp h' (
+                                            if canPassThrough (snd h') then [l'] else []))) body)
             (blockJoinHead (CoOp l') emptyBlock)
             t'
         else doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
@@ -79,6 +76,13 @@ isTerminator RETURN = True
 isTerminator DELEGATECALL = True
 isTerminator SUICIDE = True
 isTerminator _ = False
+
+canPassThrough :: Operation -> Bool
+canPassThrough STOP = False
+canPassThrough JUMP = False
+canPassThrough RETURN = False
+canPassThrough SUICIDE = False
+canPassThrough _ = True
 
 --------------------------------------------------------------------------------
 -- The WordLabelMapM monad
