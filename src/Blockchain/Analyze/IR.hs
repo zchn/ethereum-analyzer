@@ -7,6 +7,10 @@ module Blockchain.Analyze.IR
   , WordLabelMapM
   , unWordLabelMapM
   , evmOps2HplBody
+  , labelFor
+  , labelsFor
+  , showOp
+  , showOps
   ) where
 
 import Blockchain.ExtWord as BE
@@ -14,13 +18,32 @@ import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl as CH
 import Control.Monad as CM
 import Data.Bimap as DB
+import Data.Text as DT
+import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 data HplOp e x where
         CoOp :: Label -> HplOp C O
         OoOp :: (Word256, Operation) -> HplOp O O
         OcOp :: (Word256, Operation) -> [Label] -> HplOp O C
 
-instance Show (HplOp e x)
+showLoc :: Word256 -> String
+showLoc = show . getBigWordInteger
+
+showOp :: (Word256, Operation) -> String
+showOp (lineNo, op) = showLoc lineNo ++ ": " ++ show op
+
+showOps :: [(Word256, Operation)] -> [String]
+showOps = Prelude.map showOp
+
+instance Show (HplOp e x) where
+  show (CoOp l) = "CO: " ++ show l
+  show (OoOp op) = "OO: " ++ showOp op
+  show (OcOp op ll) = "OC: " ++ showOp op ++ " -> " ++ show ll
+
+instance Show (Block HplOp C C) where
+  show a =
+    let (h, m, t) = blockSplit a
+    in show (h, blockToList m, t)
 
 instance Eq (HplOp C O) where
   (==) (CoOp a) (CoOp b) = a == b
@@ -135,5 +158,12 @@ class UnWordLabelMapM a  where
 instance UnWordLabelMapM Int where
   unWordLabelMapM = internalUnWordLabelMapM
 
+instance UnWordLabelMapM String where
+  unWordLabelMapM = internalUnWordLabelMapM
+
+instance UnWordLabelMapM Text where
+  unWordLabelMapM = internalUnWordLabelMapM
+
 internalUnWordLabelMapM :: WordLabelMapM a -> a
-internalUnWordLabelMapM (WordLabelMapM f) = snd $ runSimpleUniqueMonad (f empty)
+internalUnWordLabelMapM (WordLabelMapM f) =
+  snd $ runSimpleUniqueMonad (f DB.empty)

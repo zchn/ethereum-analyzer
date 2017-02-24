@@ -8,6 +8,7 @@ import Compiler.Hoopl
 import Data.Maybe
 import Data.Set
 
+-- TODO(zchn): Use WithTop and liftJoinTop instead
 type StackTopFact = Maybe (Set Word256)
 
 stackTopLattice :: DataflowLattice (Maybe (Set Word256))
