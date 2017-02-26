@@ -30,16 +30,16 @@ toGr bd =
         mapFoldWithKey
           (\lbl blk (nList', eList') ->
               let node = lblToNode lbl
-                  edges =
+                  edgs =
                     Prelude.map (\l -> (node, lblToNode l, ())) (successors blk)
-              in (nList' ++ [(node, blk)], eList' ++ edges))
+              in (nList' ++ [(node, blk)], eList' ++ edgs))
           ([], [])
           bd
   in mkGraph nList eList
 
 visParams =
   nonClusteredParams
-  { fmtNode = \(_, nl) -> [(toLabel $ show nl)]
+  { fmtNode = \(_, nl) -> [toLabel $ show nl, shape BoxShape]
   }
 
 toDotGraph :: Gr (Block HplOp C C) () -> DotGraph Node
