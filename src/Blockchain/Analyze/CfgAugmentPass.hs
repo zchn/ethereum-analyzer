@@ -19,31 +19,32 @@ zero256 :: ByteString
 zero256 = DB.replicate 32 0
 
 -- TODO(zchn): Use WithTop and liftJoinTop and nub for List instead
-type StackTopFact = Maybe (Set Word256)
+type StackTopFact = WithTop (Set Word256)
 
-joinStackTopFact :: OldFact StackTopFact
-                 -> NewFact StackTopFact
-                 -> (ChangeFlag, StackTopFact)
-joinStackTopFact (OldFact Nothing) (NewFact _) = (NoChange, Nothing)
-joinStackTopFact (OldFact _) (NewFact Nothing) = (SomeChange, Nothing)
-joinStackTopFact (OldFact oldF) (NewFact newF) =
-  let joinedF = Just $ unions $ catMaybes [oldF, newF]
-  in (changeIf $ joinedF /= oldF, joinedF)
+joinJumpTargets
+  :: Label
+  -> OldFact (Set Word256)
+  -> NewFact (Set Word256)
+  -> (ChangeFlag, (Set Word256))
+joinJumpTargets _ (OldFact oldF) (NewFact newF) =
+  if newF `isSubsetOf` oldF
+    then (NoChange, oldF)
+    else (SomeChange, oldF `union` newF)
 
-stackTopLattice :: DataflowLattice (Maybe (Set Word256))
-stackTopLattice =
-  DataflowLattice
-  { fact_name = "stackTopLattice"
-  , fact_bot = Just Data.Set.empty
-  , fact_join = joinStackTopLattice
-  }
-
-joinStackTopLattice
+joinStackTopFact
   :: Label
   -> OldFact StackTopFact
   -> NewFact StackTopFact
   -> (ChangeFlag, StackTopFact)
-joinStackTopLattice _ = joinStackTopFact
+joinStackTopFact = liftJoinTop joinJumpTargets
+
+stackTopLattice :: DataflowLattice StackTopFact
+stackTopLattice =
+  DataflowLattice
+  { fact_name = "stackTopLattice"
+  , fact_bot = PElem Data.Set.empty
+  , fact_join = joinStackTopFact
+  }
 
 varBytesToWord256 :: [Word8] -> Word256
 varBytesToWord256 w8l =
@@ -57,17 +58,17 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
     coT _ f = f
     ooT :: HplOp O O -> StackTopFact -> StackTopFact
     ooT op@(OoOp (_, PUSH w8l)) f =
-      Just $ Data.Set.singleton $ varBytesToWord256 w8l
+      PElem $ Data.Set.singleton $ varBytesToWord256 w8l
     ooT (OoOp (_, JUMPDEST)) f = f
-    ooT (OoOp (_, LOG3)) f = Nothing
-    ooT (OoOp (_, POP)) f = Nothing
+    ooT (OoOp (_, LOG3)) f = Top
+    ooT (OoOp (_, POP)) f = Top
     ooT op _ = error ("Unimplemented(ooT):" ++ show op)
     ocT :: HplOp O C -> StackTopFact -> FactBase StackTopFact
-    ocT op@(OcOp (_, JUMP) _) f = distributeFact op Nothing
-    ocT op@(OcOp (_, JUMPI) _) f = distributeFact op Nothing
-    ocT op@(OcOp (_, SUICIDE) _) f = distributeFact op Nothing
-    ocT op@(OcOp (_, CALL) _) f = distributeFact op Nothing
-    ocT op@(OcOp (_, LOG3) _) f = distributeFact op Nothing
+    ocT op@(OcOp (_, JUMP) _) f = distributeFact op Top
+    ocT op@(OcOp (_, JUMPI) _) f = distributeFact op Top
+    ocT op@(OcOp (_, SUICIDE) _) f = distributeFact op Top
+    ocT op@(OcOp (_, CALL) _) f = distributeFact op Top
+    ocT op@(OcOp (_, LOG3) _) f = distributeFact op Top
     ocT op _ = error ("Unimplemented(ocT): " ++ show op)
 
 opGUnit :: HplOp e x -> Graph HplOp e x
@@ -98,14 +99,14 @@ cfgAugmentRewrite = mkFRewrite3 coR ooR ocR
         handleJmp :: WordLabelMapFuelM (Maybe (Graph HplOp O C))
         handleJmp =
           case f of
-            Nothing -> return $ Just $ opGUnit op -- TODO(zchn): Should return all targets
-            Just st -> do
+            Top -> return $ Just $ opGUnit op -- TODO(zchn): Should return all targets
+            PElem st -> do
               newll <- liftFuel $ labelsFor $ toList st
               return $
                 Just $
                 opGUnit $ OcOp (loc, ope) $ toList $ fromList (ll ++ newll)
 
-cfgAugmentPass :: FwdPass WordLabelMapFuelM HplOp (Maybe (Set Word256))
+cfgAugmentPass :: FwdPass WordLabelMapFuelM HplOp StackTopFact
 cfgAugmentPass =
   FwdPass
   { fp_lattice = stackTopLattice
