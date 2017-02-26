@@ -20,6 +20,7 @@ import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl as CH
 import Control.Monad as CM
 import Data.Bimap as DB
+
 -- import Data.Graph.Inductive.Graph as DGIG
 import Data.Text as DT
 import Data.List as DL
@@ -47,7 +48,7 @@ instance Show (HplOp e x) where
 instance Show (Block HplOp C C) where
   show a =
     let (h, m, t) = blockSplit a
-    in show (h, blockToList m, t)
+    in DL.unlines $ [show h] ++ DL.map show (blockToList m) ++ [show t]
 
 instance Eq (HplOp C O) where
   (==) (CoOp a) (CoOp b) = a == b
@@ -94,11 +95,6 @@ type HplBody = Body HplOp
 --                outs = DL.map (\l -> ((), fromStrLbl l)) outLs
 --            in
 --              (Just $ (ins, nd, outs), remainG)
-
-
-
-
-
 -- evmOp2HplOp :: (Word256, Operation) -> WordLabelMapM (Either (HplOp O O) (HplOp O C))
 -- evmOp2HplOp op@(loc, STOP) = return $ Right $ OcOp op []
 -- evmOp2HplOp op = error ("Unimplemented(evmOp2HplOp):" ++ show op)
