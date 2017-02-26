@@ -4,9 +4,11 @@ module Blockchain.Analyze
   ( decompile
   , decompileHexString
   , module Blockchain.Analyze.IR
+  , module Blockchain.Analyze.Util
   ) where
 
 import Blockchain.Analyze.IR
+import Blockchain.Analyze.Util
 import Blockchain.Data.Code
 import Blockchain.ExtWord
 import Blockchain.Util

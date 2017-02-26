@@ -20,7 +20,9 @@ import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl as CH
 import Control.Monad as CM
 import Data.Bimap as DB
+-- import Data.Graph.Inductive.Graph as DGIG
 import Data.Text as DT
+import Data.List as DL
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 data HplOp e x where
@@ -61,6 +63,41 @@ instance NonLocal HplOp where
   successors (OcOp _ ll) = ll
 
 type HplBody = Body HplOp
+
+-- type HplGr = Gr (Block C C) ()
+-- instance DGIG.Graph  where
+--   empty :: emptyBody
+--   isEmpty = mapEmpty
+--   match nd g =
+--     let toStrLbl n= "L" + show n
+--         fromStrLbl sLbl = read (DL.drop 1 sLbl)
+--         strLbl = toStrLbl nd
+--         blkList = bodyList g
+--         (tgtBL, dirtyBL) = DL.partition (\(lbl', blk) -> strLbl == show lbl') blkList
+--         (inLs, remainBL) = DL.foldr (
+--           \(lbl', blk) (inLs', remainBL') ->
+--             let (hd, (OcOp op ll)) = blockSplitTail blk
+--                 (tgtLL, remainLL) = DL.partition (\l' -> show l' == strLbl) ll
+--             in
+--               if DL.null tgtLL
+--               then (inLs', remainBL' ++ [(lbl', blk)])
+--               else (inLs' ++ [lbl'], remainBL' ++ [
+--                        (lbl', blockJoinTail hd (
+--                            OcOp op remainLL))])) ([], []) dirtyBL
+--         remainG = mapFromList remainBL
+--     in
+--       if DL.null tgtBL
+--       then (Nothing, g)
+--       else let (lbl', blk) = DL.head tgtBL
+--                (OcOp op outLs) = lastNode blk
+--                ins = DL.map (\l -> ((), fromStrLbl l)) inLs
+--                outs = DL.map (\l -> ((), fromStrLbl l)) outLs
+--            in
+--              (Just $ (ins, nd, outs), remainG)
+
+
+
+
 
 -- evmOp2HplOp :: (Word256, Operation) -> WordLabelMapM (Either (HplOp O O) (HplOp O C))
 -- evmOp2HplOp op@(loc, STOP) = return $ Right $ OcOp op []

@@ -25,6 +25,8 @@ library
                        containers,
                        ethereum-vm,
                        exceptions,
+                       fgl,
+                       graphviz,
                        hflags,
                        hexstring,
                        hoopl >= 3.10.2.1,
@@ -35,13 +37,13 @@ library
                        network,
                        text,
                        vector
-  exposed-modules:
-                  Blockchain.Analyze,
-                  Blockchain.Analyze.CfgAugmentPass,
-                  Blockchain.Analyze.IR,
-                  Blockchain.Analyze.InstCounter,
-                  Blockchain.Jsonrpc.Client,
-                  Executable.EthAnalyzer
+  exposed-modules:     Blockchain.Analyze,
+                       Blockchain.Analyze.CfgAugmentPass,
+                       Blockchain.Analyze.IR,
+                       Blockchain.Analyze.InstCounter,
+                       Blockchain.Analyze.Util,
+                       Blockchain.Jsonrpc.Client,
+                       Executable.EthAnalyzer
   -- other-modules:
   --              Blockchain.Analyze.Internal
                                   
@@ -52,8 +54,6 @@ library
 
 executable ethereum-analyzer
   main-is:             Main.hs
-  -- other-modules:       
-  -- other-extensions:    
   build-depends:       base >= 4 && < 5,
                        blockapps-util,
                        ethereum-analyzer,
@@ -71,6 +71,11 @@ test-suite spec
   ghc-options:         -Wall
   hs-source-dirs:      test
   main-is:             Spec.hs
+  other-modules:       Blockchain.Analyze.CfgAugmentPassSpec
+                     , Blockchain.Analyze.IRSpec
+                     , Blockchain.Analyze.UtilSpec
+                     , Blockchain.AnalyzeSpec
+                     , SpecCommon
   build-depends:       base
                      , blockapps-util
                      , bytestring
@@ -79,3 +84,4 @@ test-suite spec
                      , extra
                      , hoopl
                      , hspec
+                     , text
