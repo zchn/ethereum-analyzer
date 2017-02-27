@@ -3,7 +3,7 @@ module Main
     ( main
     ) where
 
-import Blockchain.Analyzer.Servant (startApp)
+import Blockchain.Analyze.Servant (startApp)
 
 main :: IO ()
 main = startApp

@@ -62,14 +62,19 @@ library
                        Blockchain.Analyze.Util,
                        Blockchain.Jsonrpc.Client,
                        Executable.EthAnalyzer
-  -- other-modules:
-  --              Blockchain.Analyze.Internal
+  other-modules:       Blockchain.Analyze.Servant.API
+                     , Blockchain.Analyze.Servant.API.Internal
+                     , Blockchain.Analyze.Servant.Server
+                     , Blockchain.Analyze.Servant.Server.Handlers
+                     , Blockchain.Analyze.Servant.Server.Instrument
+                     , Blockchain.Analyze.Servant.Server.Logging
                                   
   ghc-options:         -Wall -O2
   hs-source-dirs:      src
   buildable:           True
   default-language:    Haskell98
-
+  default-extensions:  OverloadedStrings
+  
 executable ethereum-analyzer
   main-is:             Main.hs
   build-depends:       base >= 4 && < 5,
@@ -103,3 +108,4 @@ test-suite spec
                      , hoopl
                      , hspec
                      , text
+  default-language:    Haskell98

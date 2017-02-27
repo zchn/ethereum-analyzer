@@ -1,4 +1,4 @@
-{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE  NoImplicitPrelude, OverloadedStrings, RecordWildCards, FlexibleContexts #-}
 
 -- | Logging helpers for ethereum-analyzer.
 module Blockchain.Analyze.Servant.Server.Logging
@@ -9,7 +9,7 @@ module Blockchain.Analyze.Servant.Server.Logging
   , toKeyword
   ) where
 
-import Protolude hiding (Handler, log)
+import Protolude hiding (log)
 
 import Control.Monad.Catch (MonadMask)
 import Control.Monad.Log
