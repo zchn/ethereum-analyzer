@@ -4,7 +4,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TypeOperators #-}
 
--- | API definition for hi-ckev-in-servant.
+-- | API definition for ethereum-analyzer.
 module Blockchain.Analyze.Servant.API
   ( API
   , api
@@ -23,7 +23,7 @@ import Servant.API ((:>), (:<|>)(..), Get, JSON, MimeRender(..))
 
 import Blockchain.Analyze.Servant.API.Internal (HTML)
 
--- | hi-ckev-in-servant API definition.
+-- | ethereum-analyzer API definition.
 type API = Get '[HTML] RootPage :<|> "users" :> Get '[JSON] Users
 
 -- | Value-level representation of API.
@@ -67,15 +67,15 @@ instance MimeRender HTML RootPage where
       [NI.text|
          <!doctype html>
          <html>
-         <head><title>hi-ckev-in-servant</title></head>
+         <head><title>ethereum-analyzer</title></head>
          <body>
-         <h1>hi-ckev-in-servant</h1>
+         <h1>ethereum-analyzer</h1>
          <ul>
          <li><a href="/users">users</a></li>
          <li><a href="/metrics"><code>/metrics</code></a></li>
          </ul>
          <p>
-         Source code at <a href="https://github.com/zchn/hi-ckev-in-servant">https://github.com/zchn/hi-ckev-in-servant/</a>
+         Source code at <a href="https://github.com/zchn/ethereum-analyzer">https://github.com/zchn/ethereum-analyzer/</a>
          </p>
          </body>
          <html>

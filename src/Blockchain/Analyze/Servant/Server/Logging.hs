@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 
--- | Logging helpers for hi-ckev-in-servant.
+-- | Logging helpers for ethereum-analyzer.
 module Blockchain.Analyze.Servant.Server.Logging
   ( LogM
   , withLogging

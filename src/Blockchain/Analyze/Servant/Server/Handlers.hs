@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeOperators #-}
 
--- | Implementation of the hi-ckev-in-servant API.
+-- | Implementation of the ethereum-analyzer API.
 module Blockchain.Analyze.Servant.Server.Handlers
   ( server
   ) where
@@ -20,7 +20,7 @@ import Text.PrettyPrint.Leijen.Text (Doc, Pretty, text)
 import Blockchain.Analyze.Servant.API (API, RootPage(..), User(..), Users(..))
 import qualified Blockchain.Analyze.Servant.Server.Logging as Log
 
--- | hi-ckev-in-servant API implementation.
+-- | ethereum-analyzer API implementation.
 server :: Severity -> Server API
 server logLevel = enter (toHandler logLevel) handlers
   where

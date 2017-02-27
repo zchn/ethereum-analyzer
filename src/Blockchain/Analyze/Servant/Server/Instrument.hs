@@ -1,4 +1,4 @@
--- | Prometheus instrumentation for hi-ckev-in-servant.
+-- | Prometheus instrumentation for ethereum-analyzer.
 module Blockchain.Analyze.Servant.Server.Instrument
   ( metrics
   , requestDuration

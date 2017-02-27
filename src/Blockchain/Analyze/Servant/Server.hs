@@ -82,7 +82,7 @@ options = info (helper <*> parser) description
       fold
         [ fullDesc
         , progDesc "I serve everything from hi.ckev.in"
-        , header "hi-ckev-in-servant - TODO fill this in"
+        , header "ethereum-analyzer - TODO fill this in"
         ]
 
 runApp :: Config -> IO ()
