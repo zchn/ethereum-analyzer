@@ -56,13 +56,13 @@ library
                        
   exposed-modules:     Blockchain.Analyze,
                        Blockchain.Analyze.CfgAugmentPass,
-                       Blockchain.Analyze.IR,
-                       Blockchain.Analyze.InstCounter,
+                       Blockchain.Analyze.Decompile,
                        Blockchain.Analyze.Servant,
                        Blockchain.Analyze.Util,
                        Blockchain.Jsonrpc.Client,
                        Executable.EthAnalyzer
-  other-modules:       Blockchain.Analyze.Servant.API
+  other-modules:       Blockchain.Analyze.IR
+                     , Blockchain.Analyze.Servant.API
                      , Blockchain.Analyze.Servant.API.Internal
                      , Blockchain.Analyze.Servant.Server
                      , Blockchain.Analyze.Servant.Server.Handlers

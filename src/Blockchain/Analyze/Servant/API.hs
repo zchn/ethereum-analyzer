@@ -11,6 +11,7 @@ module Blockchain.Analyze.Servant.API
   , RootPage(..)
   , User(User)
   , Users(..)
+  , DotCfgResp(..)
   ) where
 
 import Protolude
@@ -19,12 +20,13 @@ import Data.Aeson
        (FromJSON(..), ToJSON(..), Value(..), object, (.=), (.:))
 import Data.Aeson.Types (typeMismatch)
 import qualified NeatInterpolation as NI
-import Servant.API ((:>), (:<|>)(..), Get, JSON, MimeRender(..))
+import Servant.API
+       ((:>), (:<|>)(..), Get, JSON, MimeRender(..), QueryParam)
 
 import Blockchain.Analyze.Servant.API.Internal (HTML)
 
 -- | ethereum-analyzer API definition.
-type API = Get '[HTML] RootPage :<|> "users" :> Get '[JSON] Users
+type API = Get '[HTML] RootPage :<|> "users" :> Get '[JSON] Users :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp
 
 -- | Value-level representation of API.
 api :: Proxy API
@@ -40,6 +42,14 @@ data User = User
 instance FromJSON User
 
 instance ToJSON User
+
+data DotCfgResp = DotCfgResp
+  { _dotcfg :: Text
+  } deriving (Eq, Show, Generic)
+
+instance FromJSON DotCfgResp
+
+instance ToJSON DotCfgResp
 
 -- | Represents a list of users.
 --
@@ -59,8 +69,7 @@ instance ToJSON Users where
 data RootPage =
   RootPage
 
--- | Very simple root HTML page. Replace this with your own simple page that
--- describes your API to other developers and sysadmins.
+-- | Very simple root HTML page.
 instance MimeRender HTML RootPage where
   mimeRender _ _ =
     toS
@@ -72,10 +81,11 @@ instance MimeRender HTML RootPage where
          <h1>ethereum-analyzer</h1>
          <ul>
          <li><a href="/users">users</a></li>
+         <li><a href="/ea/dotcfg">/ea/dotcfg</a></li>
          <li><a href="/metrics"><code>/metrics</code></a></li>
          </ul>
          <p>
-         Source code at <a href="https://github.com/zchn/ethereum-analyzer">https://github.com/zchn/ethereum-analyzer/</a>
+         Source code at <a href="https://github.com/ethereumK/ethereum-analyzer">https://github.com/ethereumK/ethereum-analyzer/</a>
          </p>
          </body>
          <html>

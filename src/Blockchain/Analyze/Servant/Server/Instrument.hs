@@ -1,4 +1,5 @@
-{-# LANGUAGE NoImplicitPrelude, OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE NoImplicitPrelude, OverloadedStrings, RecordWildCards
+  #-}
 
 -- | Prometheus instrumentation for ethereum-analyzer.
 module Blockchain.Analyze.Servant.Server.Instrument

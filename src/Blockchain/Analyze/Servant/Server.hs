@@ -1,4 +1,5 @@
-{-# LANGUAGE NoImplicitPrelude, OverloadedStrings, RecordWildCards #-}
+{-# LANGUAGE NoImplicitPrelude, OverloadedStrings, RecordWildCards
+  #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE DataKinds #-}
 
@@ -74,7 +75,8 @@ options = info (helper <*> parser) description
            , help "Export GHC metrics. Requires running with +RTS."
            ])
     invalidLogLevel = "Log level must be one of: " <> allLogLevels
-    allLogLevels = fold . List.intersperse "," . List.map Log.toKeyword $ enumFrom minBound
+    allLogLevels =
+      fold . List.intersperse "," . List.map Log.toKeyword $ enumFrom minBound
     parseAccessLogs "none" = pure Disabled
     parseAccessLogs "basic" = pure Enabled
     parseAccessLogs "dev" = pure DevMode
@@ -102,7 +104,7 @@ runApp config@Config {..} = do
   where
     settings = warpSettings config
     middleware r =
-      logging . prometheus defaultPrometheusSettings r "hi_ckev_in_servant" $ app
+      logging . prometheus defaultPrometheusSettings r "ethereum_analyzer" $ app
     logging =
       case accessLogs of
         Disabled -> identity

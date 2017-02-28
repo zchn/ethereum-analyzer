@@ -12,19 +12,21 @@ module Blockchain.Analyze.Servant.Server.Handlers
 -- monitoring, starting the HTTP server) should be in a different module.
 import Protolude hiding (Handler)
 
+import Blockchain.Analyze.Util
+import Blockchain.Analyze.Servant.API
+       (API, RootPage(..), User(..), Users(..), DotCfgResp(..))
+import qualified Blockchain.Analyze.Servant.Server.Logging as Log
 import Control.Monad.Except (ExceptT(..))
 import Control.Monad.Log (Severity, logInfo)
+import qualified Data.Text.Lazy as DTL
 import Servant (ServantErr, Server, (:<|>)(..), (:~>)(..), enter)
 import Text.PrettyPrint.Leijen.Text (Doc, Pretty, text)
-
-import Blockchain.Analyze.Servant.API (API, RootPage(..), User(..), Users(..))
-import qualified Blockchain.Analyze.Servant.Server.Logging as Log
 
 -- | ethereum-analyzer API implementation.
 server :: Severity -> Server API
 server logLevel = enter (toHandler logLevel) handlers
   where
-    handlers = pure RootPage :<|> users
+    handlers = pure RootPage :<|> users :<|> dotcfg
 
 -- | Our custom handler type.
 type Handler msg = ExceptT ServantErr (Log.LogM msg IO)
@@ -48,3 +50,7 @@ users :: Handler Doc Users
 users = do
   logInfo (text "Example of logging")
   pure (Users [User 1 "Isaac" "Newton", User 2 "Albert" "Einstein"])
+
+dotcfg :: Maybe Text -> Handler Doc DotCfgResp
+dotcfg (Just t) = pure (DotCfgResp $ decompileToDotText t)
+dotcfg _ = pure (DotCfgResp "")

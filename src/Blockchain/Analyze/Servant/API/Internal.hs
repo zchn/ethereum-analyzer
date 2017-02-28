@@ -7,7 +7,8 @@ import Network.HTTP.Media ((//), (/:))
 import Servant.API (Accept(..))
 
 -- | HTML content type.
-data HTML = HTML
+data HTML =
+  HTML
 
 instance Accept HTML where
   contentType _ = "text" // "html" /: ("charset", "utf-8")

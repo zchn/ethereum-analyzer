@@ -1,27 +1,40 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts,
-  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies,
-  UndecidableInstances #-}
+  OverloadedStrings, FlexibleInstances, GADTs, Rank2Types,
+  DeriveGeneric, TypeFamilies, UndecidableInstances #-}
 
 module Blockchain.Analyze.Util
   ( toDotText
+  , decompileToDotText
   ) where
 
+import Blockchain.Analyze.Decompile
 import Blockchain.Analyze.IR
+import Blockchain.Analyze.CfgAugmentPass
 import Compiler.Hoopl
+import Data.ByteString.Char8 as DBC
 import Data.GraphViz
-
--- import Data.GraphViz.Attributes
 import Data.GraphViz.Printing
 import Data.Graph.Inductive.Graph as DGIG
 import Data.Graph.Inductive.PatriciaTree
-import Data.Text.Lazy as DTL
+import Data.Text as DT
+import qualified Data.Text.Lazy as DTL
+
+decompileToDotText :: Text -> Text
+decompileToDotText hexcode =
+  let decompiled@((loc, _):_) = decompileHexString $ DBC.pack $ DT.unpack hexcode
+      result =
+        unWordLabelMapM $
+        do entry <- labelFor loc
+           body <- evmOps2HplBody decompiled
+           toDotText <$> doCfgAugmentPass entry body
+  in result
 
 toDotText :: HplBody -> Text
 toDotText bd =
   let bdGr = toGr bd
       dotG = toDotGraph bdGr
       dotCode = toDot dotG
-  in renderDot dotCode
+  in DTL.toStrict $ renderDot dotCode
 
 toGr :: HplBody -> Gr (Block HplOp C C) ()
 toGr bd =

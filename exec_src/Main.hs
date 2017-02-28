@@ -1,7 +1,7 @@
 -- | Launch ethereum-analyzer server.
 module Main
-    ( main
-    ) where
+  ( main
+  ) where
 
 import Blockchain.Analyze.Servant (startApp)
 

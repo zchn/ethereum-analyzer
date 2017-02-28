@@ -1,3 +1,5 @@
-module Blockchain.Analyze.Servant (startApp) where
+module Blockchain.Analyze.Servant
+  ( startApp
+  ) where
 
 import Blockchain.Analyze.Servant.Server (startApp)

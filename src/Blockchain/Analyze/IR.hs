@@ -23,6 +23,7 @@ import Data.Bimap as DB
 
 -- import Data.Graph.Inductive.Graph as DGIG
 import Data.Text as DT
+import qualified Data.Text.Lazy as DTL
 import Data.List as DL
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
@@ -231,6 +232,9 @@ instance UnWordLabelMapM String where
   unWordLabelMapM = internalUnWordLabelMapM
 
 instance UnWordLabelMapM Text where
+  unWordLabelMapM = internalUnWordLabelMapM
+
+instance UnWordLabelMapM DTL.Text where
   unWordLabelMapM = internalUnWordLabelMapM
 
 internalUnWordLabelMapM :: WordLabelMapM a -> a

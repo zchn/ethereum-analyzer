@@ -1,4 +1,5 @@
-{-# LANGUAGE  NoImplicitPrelude, OverloadedStrings, RecordWildCards, FlexibleContexts #-}
+{-# LANGUAGE NoImplicitPrelude, OverloadedStrings, RecordWildCards,
+  FlexibleContexts #-}
 
 -- | Logging helpers for ethereum-analyzer.
 module Blockchain.Analyze.Servant.Server.Logging
