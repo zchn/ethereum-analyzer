@@ -12,7 +12,15 @@ import Test.Hspec
 spec :: Spec
 spec = do
   describe "doCfgAugmentPass" $
-    do it "works" $
+    do it "works for hexcode1" $
+         do let decompiled@((loc, _):_) = decompileHexString hexcode1
+                result =
+                  unWordLabelMapM $
+                  do entry <- labelFor loc
+                     body <- evmOps2HplBody decompiled
+                     show <$> doCfgAugmentPass entry body
+            length result `shouldBe` 4632
+       it "works for hexcode2" $
          do let decompiled@((loc, _):_) = decompileHexString hexcode2
                 result =
                   unWordLabelMapM $

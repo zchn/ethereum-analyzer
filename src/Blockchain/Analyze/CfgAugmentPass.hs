@@ -10,9 +10,11 @@ import Blockchain.Analyze
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes
 import Compiler.Hoopl
+import Data.Bits
 import Data.ByteString as DB
+import Data.List as DL
 import Data.Maybe
-import Data.Set
+import Data.Set as DS
 import Data.Word
 
 zero256 :: ByteString
@@ -29,7 +31,7 @@ joinJumpTargets
 joinJumpTargets _ (OldFact oldF) (NewFact newF) =
   if newF `isSubsetOf` oldF
     then (NoChange, oldF)
-    else (SomeChange, oldF `union` newF)
+    else (SomeChange, oldF `DS.union` newF)
 
 joinStackTopFact
   :: Label
@@ -42,7 +44,7 @@ stackTopLattice :: DataflowLattice StackTopFact
 stackTopLattice =
   DataflowLattice
   { fact_name = "stackTopLattice"
-  , fact_bot = PElem Data.Set.empty
+  , fact_bot = PElem DS.empty
   , fact_join = joinStackTopFact
   }
 
@@ -56,20 +58,27 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
   where
     coT :: HplOp C O -> StackTopFact -> StackTopFact
     coT _ f = f
+
     ooT :: HplOp O O -> StackTopFact -> StackTopFact
-    ooT op@(OoOp (_, PUSH w8l)) f =
-      PElem $ Data.Set.singleton $ varBytesToWord256 w8l
-    ooT (OoOp (_, JUMPDEST)) f = f
-    ooT (OoOp (_, LOG3)) f = Top
-    ooT (OoOp (_, POP)) f = Top
-    ooT op _ = error ("Unimplemented(ooT):" ++ show op)
+    ooT (OoOp (_, op)) f = opT op f
+
     ocT :: HplOp O C -> StackTopFact -> FactBase StackTopFact
-    ocT op@(OcOp (_, JUMP) _) f = distributeFact op Top
-    ocT op@(OcOp (_, JUMPI) _) f = distributeFact op Top
-    ocT op@(OcOp (_, SUICIDE) _) f = distributeFact op Top
-    ocT op@(OcOp (_, CALL) _) f = distributeFact op Top
-    ocT op@(OcOp (_, LOG3) _) f = distributeFact op Top
-    ocT op _ = error ("Unimplemented(ocT): " ++ show op)
+    ocT hplop@(OcOp (_, op) _) f = distributeFact hplop (opT op f)
+
+    opT :: Operation -> StackTopFact -> StackTopFact
+    opT DUP1 f = f
+    opT ISZERO (PElem st) = PElem $ DS.map (\wd -> if wd == 0 then 1 else 0) st
+    opT JUMPDEST f = f
+    opT NEG (PElem st) = PElem $ DS.map (\wd -> -wd) st
+    opT NOT (PElem st) = PElem $ DS.map (\wd -> bytesToWord256 $ DL.map
+                                          complement $ word256ToBytes wd) st
+    opT (PUSH w8l) f = PElem $ DS.singleton $ varBytesToWord256 w8l
+    opT op@LABEL{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@PUSHLABEL{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@PUSHDIFF{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@DATA{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@MalformedOpcode{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT _ _ = Top
 
 opGUnit :: HplOp e x -> Graph HplOp e x
 opGUnit co@CoOp {} = gUnitCO $ BlockCO co BNil
