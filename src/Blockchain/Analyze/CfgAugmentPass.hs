@@ -58,26 +58,32 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
   where
     coT :: HplOp C O -> StackTopFact -> StackTopFact
     coT _ f = f
-
     ooT :: HplOp O O -> StackTopFact -> StackTopFact
     ooT (OoOp (_, op)) f = opT op f
-
     ocT :: HplOp O C -> StackTopFact -> FactBase StackTopFact
     ocT hplop@(OcOp (_, op) _) f = distributeFact hplop (opT op f)
-
     opT :: Operation -> StackTopFact -> StackTopFact
     opT DUP1 f = f
-    opT ISZERO (PElem st) = PElem $ DS.map (\wd -> if wd == 0 then 1 else 0) st
+    opT ISZERO (PElem st) =
+      PElem $
+      DS.map
+        (\wd ->
+            if wd == 0
+              then 1
+              else 0)
+        st
     opT JUMPDEST f = f
     opT NEG (PElem st) = PElem $ DS.map (\wd -> -wd) st
-    opT NOT (PElem st) = PElem $ DS.map (\wd -> bytesToWord256 $ DL.map
-                                          complement $ word256ToBytes wd) st
+    opT NOT (PElem st) =
+      PElem $
+      DS.map (\wd -> bytesToWord256 $ DL.map complement $ word256ToBytes wd) st
     opT (PUSH w8l) f = PElem $ DS.singleton $ varBytesToWord256 w8l
-    opT op@LABEL{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@PUSHLABEL{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@PUSHDIFF{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@DATA{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@MalformedOpcode{} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@LABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@PUSHLABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@PUSHDIFF {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@DATA {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@MalformedOpcode {} _ =
+      error $ "Unexpected(stackTopTransfer): " ++ show op
     opT _ _ = Top
 
 opGUnit :: HplOp e x -> Graph HplOp e x

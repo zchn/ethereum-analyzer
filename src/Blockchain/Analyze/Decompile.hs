@@ -1,4 +1,7 @@
-module Blockchain.Analyze.Decompile (decompile, decompileHexString) where
+module Blockchain.Analyze.Decompile
+  ( decompile
+  , decompileHexString
+  ) where
 
 import Blockchain.Data.Code
 import Blockchain.ExtWord
