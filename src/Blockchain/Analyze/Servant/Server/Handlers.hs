@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeOperators #-}
 
@@ -19,12 +20,13 @@ import qualified Blockchain.Analyze.Servant.Server.Logging as Log
 import Control.Monad.Except (ExceptT(..))
 import Control.Monad.Log (Severity, logInfo)
 import qualified Data.Text.Lazy as DTL
-import Servant (ServantErr, Server, (:<|>)(..), (:~>)(..), enter)
+import Servant (ServantErr, Server, (:<|>)(..), (:>), (:~>)(..), enter, Raw)
+import Servant.Utils.StaticFiles (serveDirectory)
 import Text.PrettyPrint.Leijen.Text (Doc, Pretty, text)
 
 -- | ethereum-analyzer API implementation.
-server :: Severity -> Server API
-server logLevel = enter (toHandler logLevel) handlers
+server :: Severity -> Server (API :<|> "web" :> Raw)
+server logLevel = enter (toHandler logLevel) handlers :<|> serveDirectory "web"
   where
     handlers = pure RootPage :<|> users :<|> dotcfg
 

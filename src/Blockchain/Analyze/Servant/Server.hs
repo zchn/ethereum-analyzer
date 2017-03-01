@@ -26,7 +26,7 @@ import qualified Prometheus.Metric.GHC as Prom
 import Servant (serve)
 import Text.PrettyPrint.Leijen.Text (int, text)
 
-import Blockchain.Analyze.Servant.API (api)
+import Blockchain.Analyze.Servant.API (apiraw)
 import Blockchain.Analyze.Servant.Server.Handlers (server)
 import Blockchain.Analyze.Servant.Server.Instrument
        (defaultPrometheusSettings, prometheus, requestDuration)
@@ -84,8 +84,8 @@ options = info (helper <*> parser) description
     description =
       fold
         [ fullDesc
-        , progDesc "I serve everything from hi.ckev.in"
-        , header "ethereum-analyzer - TODO fill this in"
+        , progDesc "Ethereum Analyzer"
+        , header "ethereum-analyzer"
         ]
 
 runApp :: Config -> IO ()
@@ -110,7 +110,7 @@ runApp config@Config {..} = do
         Disabled -> identity
         Enabled -> RL.logStdout
         DevMode -> RL.logStdoutDev
-    app = serve api (server logLevel)
+    app = serve apiraw (server logLevel)
 
 -- | Generate warp settings from config
 --

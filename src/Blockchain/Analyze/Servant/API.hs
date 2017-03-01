@@ -7,7 +7,7 @@
 -- | API definition for ethereum-analyzer.
 module Blockchain.Analyze.Servant.API
   ( API
-  , api
+  , apiraw
   , RootPage(..)
   , User(User)
   , Users(..)
@@ -21,16 +21,18 @@ import Data.Aeson
 import Data.Aeson.Types (typeMismatch)
 import qualified NeatInterpolation as NI
 import Servant.API
-       ((:>), (:<|>)(..), Get, JSON, MimeRender(..), QueryParam)
+       ((:>), (:<|>)(..), Get, JSON, MimeRender(..), QueryParam, Raw)
 
 import Blockchain.Analyze.Servant.API.Internal (HTML)
 
 -- | ethereum-analyzer API definition.
-type API = Get '[HTML] RootPage :<|> "users" :> Get '[JSON] Users :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp
+type API = Get '[HTML] RootPage
+  :<|> "users" :> Get '[JSON] Users
+  :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp
 
 -- | Value-level representation of API.
-api :: Proxy API
-api = Proxy
+apiraw :: Proxy (API :<|> "web" :> Raw)
+apiraw = Proxy
 
 -- | Example object. Replace this with something relevant to your app.
 data User = User
