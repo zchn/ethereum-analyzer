@@ -1,1 +1,29 @@
-hello world!
+<html>
+  <head>
+      <script src="/web/jquery-3.1.1.min.js"></script>
+      <script src="/web/viz-lite.js"></script>
+      <script>
+       $(document).ready(function(){
+           $("#showbtn").click(function(){
+               var hexcode = $("#code").val();
+               $.getJSON("/ea/dotcfg?code=" + hexcode, function(data, status, xhr){
+                   if(status !== "success") {
+                       $("#cfg").text(status);
+                       dotcfg = status;
+                   } else {
+                       var dotcfg = data._dotcfg;
+                       svgcfg = Viz(dotcfg);
+                       $("#cfg").html(svgcfg);
+                   }
+               });
+           });
+       });
+      </script>
+  </head>
+  <body>
+      <textarea id="code" cols="120" rows="40"></textarea>
+      <br />
+      <button id="showbtn">Show CFG</button>
+      <div id="cfg"></div>
+  </body>
+</html>
