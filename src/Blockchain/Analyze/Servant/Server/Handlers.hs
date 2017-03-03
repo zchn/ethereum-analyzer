@@ -29,7 +29,7 @@ import Text.PrettyPrint.Leijen.Text (Doc, Pretty, text)
 server :: Severity -> Server (API :<|> "web" :> Raw)
 server logLevel = enter (toHandler logLevel) handlers :<|> serveDirectory "web"
   where
-    handlers = pure RootPage :<|> users :<|> dotcfg
+    handlers = pure RootPage :<|> users :<|> dotcfg :<|> dotcfg2
 
 -- | Our custom handler type.
 type Handler msg = ExceptT ServantErr (Log.LogM msg IO)
@@ -57,3 +57,7 @@ users = do
 dotcfg :: Maybe Text -> Handler Doc DotCfgResp
 dotcfg (Just t) = pure (DotCfgResp $ decompileToDotText t)
 dotcfg _ = pure (DotCfgResp "")
+
+dotcfg2 :: Maybe Text -> Handler Doc DotCfgResp
+dotcfg2 (Just t) = pure (DotCfgResp $ decompileToDotText2 t)
+dotcfg2 _ = pure (DotCfgResp "")

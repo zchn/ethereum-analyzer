@@ -17,6 +17,19 @@
                    }
                });
            });
+           $("#showbtn2").click(function(){
+               var hexcode = $("#code").val();
+               $.getJSON("/ea/dotcfg2?code=" + hexcode, function(data, status, xhr){
+                   if(status !== "success") {
+                       $("#cfg").text(status);
+                       dotcfg = status;
+                   } else {
+                       var dotcfg = data._dotcfg;
+                       svgcfg = Viz(dotcfg);
+                       $("#cfg").html(svgcfg);
+                   }
+               });
+           });
        });
       </script>
   </head>
@@ -24,6 +37,7 @@
       <textarea id="code" cols="120" rows="40"></textarea>
       <br />
       <button id="showbtn">Show CFG</button>
+      <button id="showbtn2">Show CFG2</button>
       <div id="cfg"></div>
   </body>
 </html>

@@ -5,10 +5,12 @@
 module Blockchain.Analyze.Util
   ( toDotText
   , decompileToDotText
+  , decompileToDotText2
   ) where
 
 import Blockchain.Analyze.Decompile
 import Blockchain.Analyze.IR
+import Blockchain.Analyze.CfgAugWithTopNPass
 import Blockchain.Analyze.CfgAugmentPass
 import Compiler.Hoopl
 import Data.ByteString.Char8 as DBC
@@ -27,6 +29,16 @@ decompileToDotText hexcode =
         do entry <- labelFor loc
            body <- evmOps2HplBody decompiled
            toDotText <$> doCfgAugmentPass entry body
+  in result
+
+decompileToDotText2 :: Text -> Text
+decompileToDotText2 hexcode =
+  let decompiled@((loc, _):_) = decompileHexString $ DBC.pack $ DT.unpack hexcode
+      result =
+        unWordLabelMapM $
+        do entry <- labelFor loc
+           body <- evmOps2HplBody decompiled
+           toDotText <$> doCfgAugWithTopNPass entry body
   in result
 
 toDotText :: HplBody -> Text
