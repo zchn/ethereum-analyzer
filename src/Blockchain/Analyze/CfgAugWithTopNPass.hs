@@ -293,7 +293,7 @@ cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
                 opGUnit $ OcOp (loc, ope) $ toList $ fromList (ll ++ newll)
 
 _depthBound :: Int
-_depthBound = 10
+_depthBound = 16
 
 cfgAugWithTopNPass :: FwdPass WordLabelMapFuelM HplOp StackNFact
 cfgAugWithTopNPass =
