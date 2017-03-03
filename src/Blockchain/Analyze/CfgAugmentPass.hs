@@ -7,20 +7,14 @@ module Blockchain.Analyze.CfgAugmentPass
   ) where
 
 import Blockchain.Analyze
+import Blockchain.Analyze.Common
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes
 import Compiler.Hoopl
 import Data.Bits
-import Data.ByteString as DB
 import Data.List as DL
-import Data.Maybe
 import Data.Set as DS
-import Data.Word
 
-zero256 :: ByteString
-zero256 = DB.replicate 32 0
-
--- TODO(zchn): Use WithTop and liftJoinTop and nub for List instead
 type StackTopFact = WithTop (Set Word256)
 
 joinJumpTargets
@@ -48,11 +42,6 @@ stackTopLattice =
   , fact_join = joinStackTopFact
   }
 
-varBytesToWord256 :: [Word8] -> Word256
-varBytesToWord256 w8l =
-  let extended = (zero256 `append` DB.pack w8l)
-  in bytesToWord256 $ DB.unpack $ DB.drop (DB.length extended - 32) extended
-
 stackTopTransfer :: FwdTransfer HplOp StackTopFact
 stackTopTransfer = mkFTransfer3 coT ooT ocT
   where
@@ -77,7 +66,7 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
     opT NOT (PElem st) =
       PElem $
       DS.map (\wd -> bytesToWord256 $ DL.map complement $ word256ToBytes wd) st
-    opT (PUSH w8l) f = PElem $ DS.singleton $ varBytesToWord256 w8l
+    opT (PUSH w8l) _ = PElem $ DS.singleton $ varBytesToWord256 w8l
     opT op@LABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
     opT op@PUSHLABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
     opT op@PUSHDIFF {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
@@ -133,4 +122,5 @@ doCfgAugmentPass :: Label -> HplBody -> WordLabelMapM HplBody
 doCfgAugmentPass entry body =
   runWithFuel
     1000000
-    (fst <$> analyzeAndRewriteFwdBody cfgAugmentPass entry body noFacts)
+    (fst <$>
+     analyzeAndRewriteFwdBody cfgAugmentPass entry body (mapSingleton entry Top))

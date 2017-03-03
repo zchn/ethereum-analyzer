@@ -25,6 +25,7 @@ library
                        containers,
                        ethereum-vm,
                        exceptions,
+                       extra,
                        fgl,
                        graphviz,
                        hexstring,
@@ -55,7 +56,9 @@ library
                        wl-pprint-text
                        
   exposed-modules:     Blockchain.Analyze,
+                       Blockchain.Analyze.Common,
                        Blockchain.Analyze.CfgAugmentPass,
+                       Blockchain.Analyze.CfgAugWithTopNPass,
                        Blockchain.Analyze.Decompile,
                        Blockchain.Analyze.Servant,
                        Blockchain.Analyze.Util,

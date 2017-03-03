@@ -20,7 +20,8 @@ import qualified Blockchain.Analyze.Servant.Server.Logging as Log
 import Control.Monad.Except (ExceptT(..))
 import Control.Monad.Log (Severity, logInfo)
 import qualified Data.Text.Lazy as DTL
-import Servant (ServantErr, Server, (:<|>)(..), (:>), (:~>)(..), enter, Raw)
+import Servant
+       (ServantErr, Server, (:<|>)(..), (:>), (:~>)(..), enter, Raw)
 import Servant.Utils.StaticFiles (serveDirectory)
 import Text.PrettyPrint.Leijen.Text (Doc, Pretty, text)
 

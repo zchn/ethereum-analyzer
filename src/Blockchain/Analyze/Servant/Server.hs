@@ -82,11 +82,7 @@ options = info (helper <*> parser) description
     parseAccessLogs "dev" = pure DevMode
     parseAccessLogs _ = throwError "One of 'none', 'basic', or 'dev'"
     description =
-      fold
-        [ fullDesc
-        , progDesc "Ethereum Analyzer"
-        , header "ethereum-analyzer"
-        ]
+      fold [fullDesc, progDesc "Ethereum Analyzer", header "ethereum-analyzer"]
 
 runApp :: Config -> IO ()
 runApp config@Config {..} = do

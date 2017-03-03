@@ -26,9 +26,7 @@ import Servant.API
 import Blockchain.Analyze.Servant.API.Internal (HTML)
 
 -- | ethereum-analyzer API definition.
-type API = Get '[HTML] RootPage
-  :<|> "users" :> Get '[JSON] Users
-  :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp
+type API = Get '[HTML] RootPage :<|> "users" :> Get '[JSON] Users :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp
 
 -- | Value-level representation of API.
 apiraw :: Proxy (API :<|> "web" :> Raw)
