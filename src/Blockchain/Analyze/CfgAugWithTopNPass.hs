@@ -40,19 +40,22 @@ joinStackElemFact = liftJoinTop joinStackElemBase
 
 type StackNFact = [StackElemFact]
 
-joinStackNFact
-  :: Label
-  -> OldFact StackNFact
-  -> NewFact StackNFact
-  -> (ChangeFlag, StackNFact)
+joinStackNFact :: Label
+               -> OldFact StackNFact
+               -> NewFact StackNFact
+               -> (ChangeFlag, StackNFact)
 joinStackNFact l (OldFact oldF) (NewFact newF) =
-  let zipped = DL.zipWith (
-        \a b -> joinStackElemFact l (OldFact a) (NewFact b)) oldF newF
+  let zipped =
+        DL.zipWith (\a b -> joinStackElemFact l (OldFact a) (NewFact b)) oldF newF
       (changedL, joinedF) = DL.unzip zipped
-  in
-      (changeIf $ DL.any (\c -> case c of
-                             SomeChange -> True
-                             NoChange -> False) changedL, joinedF)
+  in ( changeIf $
+       DL.any
+         (\c ->
+             case c of
+               SomeChange -> True
+               NoChange -> False)
+         changedL
+     , joinedF)
 
 stackNLattice :: Int -> DataflowLattice StackNFact
 stackNLattice depth =
@@ -69,17 +72,20 @@ mkTopList l = DL.map (const Top) l
 
 pairCompute :: (Word256 -> Word256 -> Word256) -> StackNFact -> StackNFact
 pairCompute fun flist =
-  if DL.length flist < 2 then mkTopList flist
-  else case flist of
-    Top : _ : tl -> (Top : tl) ++ [Top]
-    _ : Top : tl -> (Top : tl) ++ [Top]
-    PElem st1 : PElem st2 : tl ->
-      let l1 = toList st1 in
-        ((PElem $ DS.unions $ DL.map (\e1 -> DS.map (fun e1) st2) l1) : tl) ++ [Top]
+  if DL.length flist < 2
+    then mkTopList flist
+    else case flist of
+           Top:_:tl -> (Top : tl) ++ [Top]
+           _:Top:tl -> (Top : tl) ++ [Top]
+           PElem st1:PElem st2:tl ->
+             let l1 = toList st1
+             in ((PElem $ DS.unions $ DL.map (\e1 -> DS.map (fun e1) st2) l1) :
+                 tl) ++
+                [Top]
 
 popStack :: Int -> StackNFact -> StackNFact
 popStack 0 f = f
-popStack n (h:t) = popStack (n-1) (t++[Top])
+popStack n (h:t) = popStack (n - 1) (t ++ [Top])
 
 pushStack' :: StackElemFact -> StackNFact -> StackNFact
 pushStack' e flist = e : (dropEnd 1 flist)
@@ -98,37 +104,43 @@ w256Not :: Word256 -> Word256
 w256Not wd = bytesToWord256 $ DL.map complement $ word256ToBytes wd
 
 w256And :: Word256 -> Word256 -> Word256
-w256And wd1 wd2 = bytesToWord256 $ DL.zipWith (.&.) (
-  word256ToBytes wd1) (word256ToBytes wd2)
+w256And wd1 wd2 =
+  bytesToWord256 $ DL.zipWith (.&.) (word256ToBytes wd1) (word256ToBytes wd2)
 
 w256Or :: Word256 -> Word256 -> Word256
-w256Or wd1 wd2 = bytesToWord256 $ DL.zipWith (.|.) (
-  word256ToBytes wd1) (word256ToBytes wd2)
+w256Or wd1 wd2 =
+  bytesToWord256 $ DL.zipWith (.|.) (word256ToBytes wd1) (word256ToBytes wd2)
 
 w256Xor :: Word256 -> Word256 -> Word256
-w256Xor wd1 wd2 = bytesToWord256 $ DL.zipWith Db.xor (
-  word256ToBytes wd1) (word256ToBytes wd2)
+w256Xor wd1 wd2 =
+  bytesToWord256 $ DL.zipWith Db.xor (word256ToBytes wd1) (word256ToBytes wd2)
 
 peekStack :: Int -> StackNFact -> StackElemFact
 peekStack _ [] = Top
 peekStack 1 (h:t) = h
-peekStack n (h:t) = peekStack (n-1) t
+peekStack n (h:t) = peekStack (n - 1) t
 
 swapStack :: Int -> StackNFact -> StackNFact
 swapStack n stk =
-  if n + 1 > DL.length stk then pushTop $ popStack 1 stk
-  else
-    let (h1:t1, h2:t2) = DL.splitAt n stk
-    in (h2:t1) ++ (h1:t2)
+  if n + 1 > DL.length stk
+    then pushTop $ popStack 1 stk
+    else let (h1:t1, h2:t2) = DL.splitAt n stk
+         in (h2 : t1) ++ (h1 : t2)
 
 stackNTransfer :: FwdTransfer HplOp StackNFact
 stackNTransfer = mkFTransfer3 coT ooT ocT
   where
     coT :: HplOp C O -> StackNFact -> StackNFact
-    coT _ flist = DL.map (
-      \f -> case f of
-        Top -> Top
-        PElem st -> if DS.size st > _sizeBound then Top else PElem st) flist
+    coT _ flist =
+      DL.map
+        (\f ->
+            case f of
+              Top -> Top
+              PElem st ->
+                if DS.size st > _sizeBound
+                  then Top
+                  else PElem st)
+        flist
     ooT :: HplOp O O -> StackNFact -> StackNFact
     ooT (OoOp (_, op)) f = opT op f
     ocT :: HplOp O C -> StackNFact -> FactBase StackNFact
@@ -259,8 +271,9 @@ opGUnit oc@OcOp {} = gUnitOC $ BlockOC BNil oc
 
 catPElems :: [Pointed e x t] -> [t]
 catPElems plist = DM.catMaybes (DL.map maybePElem plist)
-  where maybePElem (PElem v) = Just v
-        maybePElem _ = Nothing
+  where
+    maybePElem (PElem v) = Just v
+    maybePElem _ = Nothing
 
 cfgAugWithTopNRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackNFact
 cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
@@ -307,6 +320,9 @@ doCfgAugWithTopNPass :: Label -> HplBody -> WordLabelMapM HplBody
 doCfgAugWithTopNPass entry body =
   runWithFuel
     1000000
-    (fst <$> analyzeAndRewriteFwdBody cfgAugWithTopNPass entry body (
-        mapSingleton entry $
-        fact_bot $ fp_lattice $ cfgAugWithTopNPass))
+    (fst <$>
+     analyzeAndRewriteFwdBody
+       cfgAugWithTopNPass
+       entry
+       body
+       (mapSingleton entry $ fact_bot $ fp_lattice $ cfgAugWithTopNPass))

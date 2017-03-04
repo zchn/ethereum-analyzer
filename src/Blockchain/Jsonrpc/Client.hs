@@ -3,6 +3,7 @@
 
 module Blockchain.Jsonrpc.Client
   ( web3ClientVersion
+  , ethBlockNumber
   , ethGetCode
   , getCode
   ) where
@@ -21,6 +22,9 @@ import qualified Data.Vector as V
 
 data Req
   = Web3_clientVersionReq
+  | Eth_blockNumberReq
+    -- TODO: eth_getBlockByNumber
+    -- TODO: eth_getTransactionReceipt
   | Eth_getCodeReq Text
                    Text -- codeAddres codeBlockNum
   deriving (Show, Eq)
@@ -32,6 +36,7 @@ parseJSONElemAtIndex idx ary = parseJSON (V.unsafeIndex ary idx)
 
 instance FromRequest Req where
   parseParams "web3_clientVersion" = Just $ const $ return Web3_clientVersionReq
+  parseParams "eth_blockNumber" = Just $ const $ return Eth_blockNumberReq
   parseParams "eth_getCode" =
     Just $
     withArray "(address, blockNum)" $
@@ -49,26 +54,32 @@ instance FromRequest Req where
 
 instance ToRequest Req where
   requestMethod Web3_clientVersionReq = "web3_clientVersion"
+  requestMethod Eth_blockNumberReq = "eth_blockNumber"
   requestMethod (Eth_getCodeReq _ _) = "eth_getCode"
   requestIsNotif = const False
 
 instance ToJSON Req where
   toJSON Web3_clientVersionReq = emptyArray
+  toJSON Eth_blockNumberReq = emptyArray
   toJSON (Eth_getCodeReq addr blk) = toJSON (addr, blk)
 
 data Res
   = Web3_clientVersionRes { clientVersion :: Text}
+  | Eth_blockNumberRes { blockNumber :: Text}
   | Eth_getCodeRes { code :: Text}
   deriving (Show, Eq)
 
 instance FromResponse Res where
   parseResult "web3_clientVersion" =
     Just $ withText "clientVersion" (return . Web3_clientVersionRes)
+  parseResult "eth_blockNumber" =
+    Just $ withText "blockNumber" (return . Eth_blockNumberRes)
   parseResult "eth_getCode" = Just $ withText "code" (return . Eth_getCodeRes)
   parseResult _ = Nothing
 
 instance ToJSON Res where
   toJSON (Web3_clientVersionRes result) = toJSON result
+  toJSON (Eth_blockNumberRes result) = toJSON result
   toJSON (Eth_getCodeRes codeRes) = toJSON codeRes
 
 callJsonRpc
@@ -96,7 +107,12 @@ callJsonRpc server port req = do
 web3ClientVersion
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> m Text
-web3ClientVersion server port = fmap clientVersion $ callJsonRpc server port Web3_clientVersionReq
+web3ClientVersion server port = clientVersion <$> callJsonRpc server port Web3_clientVersionReq
+
+ethBlockNumber
+  :: (MonadIO m, MonadCatch m)
+  => String -> Int -> m Text
+ethBlockNumber server port = blockNumber <$> callJsonRpc server port Eth_blockNumberReq
 
 ethGetCode
   :: (MonadIO m, MonadCatch m)

@@ -1,4 +1,6 @@
-module Blockchain.Analyze.Common (varBytesToWord256) where
+module Blockchain.Analyze.Common
+  ( varBytesToWord256
+  ) where
 
 import Data.ByteString as DB
 import Data.Word
