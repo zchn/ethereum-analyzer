@@ -48,6 +48,7 @@ library
                        servant-server,
                        text,
                        time,
+                       unordered-containers,
                        vector,
                        wai,
                        wai-extra,

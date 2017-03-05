@@ -1,9 +1,10 @@
-{-# LANGUAGE FlexibleContexts, OverloadedStrings, TemplateHaskell
-  #-}
+{-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings, TemplateHaskell #-}
 
 module Blockchain.Jsonrpc.Client
   ( web3ClientVersion
   , ethBlockNumber
+  , ethGetTransactionsByBlockNumber
   , ethGetCode
   , getCode
   ) where
@@ -13,6 +14,8 @@ import Conduit
 import Control.Monad.Catch
 import Data.Aeson
 import Data.Aeson.Types hiding (Error)
+import Data.Foldable as DF
+import Data.HashMap.Strict as DHS
 import Data.HexString
 import Data.Text as T
 import Network.HTTP.Conduit as NHC hiding (port)
@@ -23,10 +26,13 @@ import qualified Data.Vector as V
 data Req
   = Web3_clientVersionReq
   | Eth_blockNumberReq
-    -- TODO: eth_getBlockByNumber
+    -- blockNumber, returnFullTransation
+  | Eth_getBlockByNumberReq Text
+                            Bool
     -- TODO: eth_getTransactionReceipt
+    -- codeAddres codeBlockNum
   | Eth_getCodeReq Text
-                   Text -- codeAddres codeBlockNum
+                   Text
   deriving (Show, Eq)
 
 parseJSONElemAtIndex
@@ -37,6 +43,19 @@ parseJSONElemAtIndex idx ary = parseJSON (V.unsafeIndex ary idx)
 instance FromRequest Req where
   parseParams "web3_clientVersion" = Just $ const $ return Web3_clientVersionReq
   parseParams "eth_blockNumber" = Just $ const $ return Eth_blockNumberReq
+  parseParams "eth_getBlockByNumber" =
+    Just $
+    withArray "(blockNumber, returnFullTransation)" $
+    \ab ->
+       let n = V.length ab
+       in if n == 2
+            then do
+              bn <- parseJSONElemAtIndex 0 ab
+              full <- parseJSONElemAtIndex 1 ab
+              return $ Eth_getBlockByNumberReq bn full
+            else fail $
+                 "cannot unpack array of length " ++
+                 show n ++ " into a Eth_getBlockByNumberReq"
   parseParams "eth_getCode" =
     Just $
     withArray "(address, blockNum)" $
@@ -55,17 +74,20 @@ instance FromRequest Req where
 instance ToRequest Req where
   requestMethod Web3_clientVersionReq = "web3_clientVersion"
   requestMethod Eth_blockNumberReq = "eth_blockNumber"
+  requestMethod (Eth_getBlockByNumberReq _ _) = "eth_getBlockByNumber"
   requestMethod (Eth_getCodeReq _ _) = "eth_getCode"
   requestIsNotif = const False
 
 instance ToJSON Req where
   toJSON Web3_clientVersionReq = emptyArray
   toJSON Eth_blockNumberReq = emptyArray
+  toJSON (Eth_getBlockByNumberReq blk full) = toJSON (blk, full)
   toJSON (Eth_getCodeReq addr blk) = toJSON (addr, blk)
 
 data Res
   = Web3_clientVersionRes { clientVersion :: Text}
   | Eth_blockNumberRes { blockNumber :: Text}
+  | Eth_getBlockByNumberRes { blockInfo :: Object}
   | Eth_getCodeRes { code :: Text}
   deriving (Show, Eq)
 
@@ -74,12 +96,15 @@ instance FromResponse Res where
     Just $ withText "clientVersion" (return . Web3_clientVersionRes)
   parseResult "eth_blockNumber" =
     Just $ withText "blockNumber" (return . Eth_blockNumberRes)
+  parseResult "eth_getBlockByNumber" =
+    Just $ withObject "result" (return . Eth_getBlockByNumberRes)
   parseResult "eth_getCode" = Just $ withText "code" (return . Eth_getCodeRes)
   parseResult _ = Nothing
 
 instance ToJSON Res where
   toJSON (Web3_clientVersionRes result) = toJSON result
   toJSON (Eth_blockNumberRes result) = toJSON result
+  toJSON (Eth_getBlockByNumberRes result) = toJSON result
   toJSON (Eth_getCodeRes codeRes) = toJSON codeRes
 
 callJsonRpc
@@ -113,6 +138,15 @@ ethBlockNumber
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> m Text
 ethBlockNumber server port = blockNumber <$> callJsonRpc server port Eth_blockNumberReq
+
+ethGetTransactionsByBlockNumber
+  :: (MonadIO m, MonadCatch m)
+  => String -> Int -> Text -> m [Text]
+ethGetTransactionsByBlockNumber server port blk =
+  (Prelude.map $ \(String s) -> s) <$> (\(Array a) -> DF.toList $ a) <$>
+  (lookupDefault (Array $ V.singleton (String "error")) "transactions") <$>
+  blockInfo <$>
+  callJsonRpc server port (Eth_getBlockByNumberReq blk False)
 
 ethGetCode
   :: (MonadIO m, MonadCatch m)
