@@ -5,6 +5,7 @@ module Blockchain.Jsonrpc.Client
   ( web3ClientVersion
   , ethBlockNumber
   , ethGetTransactionsByBlockNumber
+  , ethGetContractAddrByTxHash
   , ethGetCode
   , getCode
   ) where
@@ -29,7 +30,8 @@ data Req
     -- blockNumber, returnFullTransation
   | Eth_getBlockByNumberReq Text
                             Bool
-    -- TODO: eth_getTransactionReceipt
+    -- txHash
+  | Eth_getTransactionReceiptReq Text
     -- codeAddres codeBlockNum
   | Eth_getCodeReq Text
                    Text
@@ -56,6 +58,18 @@ instance FromRequest Req where
             else fail $
                  "cannot unpack array of length " ++
                  show n ++ " into a Eth_getBlockByNumberReq"
+  parseParams "eth_getTransactionReceipt" =
+    Just $
+    withArray "(txHash)" $
+    \ab ->
+       let n = V.length ab
+       in if n == 1
+            then do
+              txhash <- parseJSONElemAtIndex 0 ab
+              return $ Eth_getTransactionReceiptReq txhash
+            else fail $
+                 "cannot unpack array of length " ++
+                 show n ++ " into a Eth_getTransactionReceiptReq"
   parseParams "eth_getCode" =
     Just $
     withArray "(address, blockNum)" $
@@ -75,6 +89,7 @@ instance ToRequest Req where
   requestMethod Web3_clientVersionReq = "web3_clientVersion"
   requestMethod Eth_blockNumberReq = "eth_blockNumber"
   requestMethod (Eth_getBlockByNumberReq _ _) = "eth_getBlockByNumber"
+  requestMethod (Eth_getTransactionReceiptReq _) = "eth_getTransactionReceipt"
   requestMethod (Eth_getCodeReq _ _) = "eth_getCode"
   requestIsNotif = const False
 
@@ -82,12 +97,14 @@ instance ToJSON Req where
   toJSON Web3_clientVersionReq = emptyArray
   toJSON Eth_blockNumberReq = emptyArray
   toJSON (Eth_getBlockByNumberReq blk full) = toJSON (blk, full)
+  toJSON (Eth_getTransactionReceiptReq txhash) = toJSON [txhash]
   toJSON (Eth_getCodeReq addr blk) = toJSON (addr, blk)
 
 data Res
   = Web3_clientVersionRes { clientVersion :: Text}
   | Eth_blockNumberRes { blockNumber :: Text}
   | Eth_getBlockByNumberRes { blockInfo :: Object}
+  | Eth_getTransactionReceiptRes { txReceipt :: Object}
   | Eth_getCodeRes { code :: Text}
   deriving (Show, Eq)
 
@@ -98,6 +115,8 @@ instance FromResponse Res where
     Just $ withText "blockNumber" (return . Eth_blockNumberRes)
   parseResult "eth_getBlockByNumber" =
     Just $ withObject "result" (return . Eth_getBlockByNumberRes)
+  parseResult "eth_getTransactionReceipt" =
+    Just $ withObject "result" (return . Eth_getTransactionReceiptRes)
   parseResult "eth_getCode" = Just $ withText "code" (return . Eth_getCodeRes)
   parseResult _ = Nothing
 
@@ -105,6 +124,7 @@ instance ToJSON Res where
   toJSON (Web3_clientVersionRes result) = toJSON result
   toJSON (Eth_blockNumberRes result) = toJSON result
   toJSON (Eth_getBlockByNumberRes result) = toJSON result
+  toJSON (Eth_getTransactionReceiptRes result) = toJSON result
   toJSON (Eth_getCodeRes codeRes) = toJSON codeRes
 
 callJsonRpc
@@ -147,6 +167,22 @@ ethGetTransactionsByBlockNumber server port blk =
   (lookupDefault (Array $ V.singleton (String "error")) "transactions") <$>
   blockInfo <$>
   callJsonRpc server port (Eth_getBlockByNumberReq blk False)
+
+ethGetContractAddrByTxHash
+  :: (MonadIO m, MonadCatch m)
+  => String -> Int -> Text -> m (Maybe Text)
+ethGetContractAddrByTxHash server port txhash =
+  (\ares ->
+      case ares of
+        (String a) ->
+          if toLower a == "null"
+            then Nothing
+            else Just a
+        Null -> Nothing
+        other -> error $ show other) <$>
+  (lookupDefault (String "error") "contractAddress") <$>
+  txReceipt <$>
+  callJsonRpc server port (Eth_getTransactionReceiptReq txhash)
 
 ethGetCode
   :: (MonadIO m, MonadCatch m)

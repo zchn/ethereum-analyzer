@@ -96,10 +96,12 @@ executable ea-dump-contract
   main-is:             DumpCodeMain.hs
   build-depends:       base >= 4 && < 5
                      , blockapps-util
+                     , directory
                      , ethereum-analyzer
                      , ethereum-vm
                      , hflags
                      , monad-logger
+                     , mtl
                      , text
                        
   ghc-options:         -Wall -O2                       
