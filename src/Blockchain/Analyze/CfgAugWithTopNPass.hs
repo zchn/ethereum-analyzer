@@ -338,5 +338,5 @@ doCfgAugWithTopNPass contract =
                 (mapSingleton entry $ fact_bot $ fp_lattice $ cfgAugWithTopNPass))
          return
            contract
-           { ctorOf = HplCode (Just entry) body
+           { ctorOf = HplCode (Just entry) newBody
            }
