@@ -34,6 +34,7 @@ data HplOp e x where
         CoOp :: Label -> HplOp C O
         OoOp :: (Word256, Operation) -> HplOp O O
         OcOp :: (Word256, Operation) -> [Label] -> HplOp O C
+        HpCodeCopy :: Word256 -> HplOp O O
 
 showLoc :: Word256 -> String
 showLoc = show . getBigWordInteger
@@ -48,6 +49,7 @@ instance Show (HplOp e x) where
   show (CoOp l) = "CO: " ++ show l
   show (OoOp op) = "OO: " ++ showOp op
   show (OcOp op ll) = "OC: " ++ showOp op ++ " -> " ++ show ll
+  show (HpCodeCopy offset) = "HpCodeCopy " ++ show offset
 
 instance Show (Block HplOp C C) where
   show a =
@@ -59,6 +61,8 @@ instance Eq (HplOp C O) where
 
 instance Eq (HplOp O O) where
   (==) (OoOp a) (OoOp b) = a == b
+  (==) (HpCodeCopy a) (HpCodeCopy b) = a == b
+  (==) _ _ = False
 
 instance Eq (HplOp O C) where
   (==) (OcOp a _) (OcOp b _) = a == b
@@ -112,46 +116,34 @@ _evmOps2HplBody el@((loc, _):_) = do
                      -> (Block HplOp C O)
                      -> [(Word256, Operation)]
                      -> WordLabelMapM HplBody
-    doEvmOps2HplBody body hd [] = return body -- sliently discarding bad hds
-    doEvmOps2HplBody body hd (h':[]) =
+    doEvmOps2HplBody body _ [] = return body -- sliently discarding bad hds
+    doEvmOps2HplBody body hd [h'] =
       if isTerminator (snd h')
         then return $ addBlock (blockJoinTail hd (OcOp h' [])) body
         else return body
-    doEvmOps2HplBody body hd (h':(t'@((loc', op'):_))) =
-      if isTerminator (snd h')
-        then do
-          l' <- labelFor loc'
-          doEvmOps2HplBody
-            (addBlock
-               (blockJoinTail
-                  hd
-                  (OcOp
-                     h'
-                     (if canPassThrough (snd h')
-                        then [l']
-                        else [])))
+    doEvmOps2HplBody body hd (h' : (t'@((loc', op') : _)))
+      | isTerminator (snd h') =
+        do l' <- labelFor loc'
+           doEvmOps2HplBody
+             (addBlock
+               (blockJoinTail hd
+                 (OcOp h' (if canPassThrough (snd h') then [l'] else [])))
                body)
-            (blockJoinHead (CoOp l') emptyBlock)
-            t'
-        else if op' /= JUMPDEST
-               then doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
-               else do
-                 l' <- labelFor loc'
-                 doEvmOps2HplBody
-                   (addBlock
-                      (blockJoinTail
-                         hd
-                         (OcOp
-                            h'
-                            (if canPassThrough (snd h')
-                               then [l']
-                               else [])))
-                      body)
-                   (blockJoinHead (CoOp l') emptyBlock)
-                   t'
+             (blockJoinHead (CoOp l') emptyBlock)
+             t'
+      | op' /= JUMPDEST =
+        doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
+      | otherwise =
+        do l' <- labelFor loc'
+           doEvmOps2HplBody
+             (addBlock
+               (blockJoinTail hd
+                 (OcOp h' (if canPassThrough (snd h') then [l'] else [])))
+               body)
+             (blockJoinHead (CoOp l') emptyBlock)
+             t'
 
 isTerminator :: Operation -> Bool
-isTerminator CODECOPY = True
 isTerminator STOP = True
 isTerminator JUMP = True
 isTerminator JUMPI = True

@@ -14,7 +14,7 @@ spec = do
          do let decompiled = decompileHexString hexcode1
             unWordLabelMapM
               (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract decompiled)) `shouldBe`
-              329
+              327
        it "works for hexcode2" $
          do let decompiled = decompileHexString hexcode2
             unWordLabelMapM

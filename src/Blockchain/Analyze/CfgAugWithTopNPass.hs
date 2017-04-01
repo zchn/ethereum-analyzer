@@ -144,10 +144,6 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
     ooT :: HplOp O O -> StackNFact -> StackNFact
     ooT (OoOp (_, op)) f = opT op f
     ocT :: HplOp O C -> StackNFact -> FactBase StackNFact
-    ocT (OcOp (_, CODECOPY) (hL:tL)) f =
-      mapFromList
-        ([(hL, opT CODECOPY f)] ++
-         DL.map (\l -> (l, fact_bot $ fp_lattice $ cfgAugWithTopNPass)) tL)
     -- TODO(zchn): Implement JUMPI narrowing
     ocT hplop@(OcOp (_, op) _) f = distributeFact hplop (opT op f)
     opT :: Operation -> StackNFact -> StackNFact
@@ -289,20 +285,23 @@ cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
     ooR :: HplOp O O
         -> StackNFact
         -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
+    ooR op@(OoOp (_, CODECOPY)) f =
+      case peekStack 1 f of
+        Top -> return $ Just $ opGUnit op
+        PElem vals -> return $ Just $ DS.foldl (\a b -> catGraphNodeOO a $ HpCodeCopy b) (opGUnit op) vals
     ooR op _ = return $ Just $ opGUnit op
     ocR :: HplOp O C
         -> StackNFact
         -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
     ocR op@(OcOp (loc, ope) ll) f =
       case ope of
-        JUMP -> handleJmp 0
-        JUMPI -> handleJmp 0
-        CODECOPY -> handleJmp 1
+        JUMP -> handleJmp
+        JUMPI -> handleJmp
         _ -> return $ Just $ opGUnit op
       where
-        handleJmp :: Int -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
-        handleJmp opIdx =
-          case f !! opIdx of
+        handleJmp :: WordLabelMapFuelM (Maybe (Graph HplOp O C))
+        handleJmp =
+          case DL.head f of
             Top -> return $ Just $ opGUnit op -- TODO(zchn): Should return all targets
             PElem st -> do
               newll <- liftFuel $ labelsFor $ toList st
