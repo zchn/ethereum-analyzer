@@ -121,10 +121,20 @@ cfgAugmentPass =
 doCfgAugmentPass :: HplContract -> WordLabelMapM HplContract
 doCfgAugmentPass contract =
   let entry_ = entryOf $ ctorOf contract
-      body = bodyOf $ ctorOf contract in
-  case entry_ of
-    Nothing -> return contract
-    Just entry ->  do
-      newBody <- runWithFuel 1000000 (
-        fst <$> analyzeAndRewriteFwdBody cfgAugmentPass entry body (mapSingleton entry Top))
-      return contract { ctorOf = HplCode (Just entry) newBody }
+      body = bodyOf $ ctorOf contract
+  in case entry_ of
+       Nothing -> return contract
+       Just entry -> do
+         newBody <-
+           runWithFuel
+             1000000
+             (fst <$>
+              analyzeAndRewriteFwdBody
+                cfgAugmentPass
+                entry
+                body
+                (mapSingleton entry Top))
+         return
+           contract
+           { ctorOf = HplCode (Just entry) newBody
+           }

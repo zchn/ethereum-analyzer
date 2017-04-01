@@ -37,8 +37,9 @@ decompileToDotText2 hexcode =
         unWordLabelMapM $
         do contract <- evmOps2HplContract decompiled
            contract' <- doCfgAugWithTopNPass contract
-           return (toDotText $ bodyOf (ctorOf contract'),
-                    toDotText $ bodyOf (ctorOf contract'))
+           return
+             ( toDotText $ bodyOf (ctorOf contract')
+             , toDotText $ bodyOf (ctorOf contract'))
   in result
 
 toDotText :: HplBody -> Text

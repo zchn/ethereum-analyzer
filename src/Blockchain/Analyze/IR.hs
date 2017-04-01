@@ -69,11 +69,15 @@ instance NonLocal HplOp where
 
 type HplBody = Body HplOp
 
-data HplCode = HplCode { entryOf :: Maybe Label, bodyOf :: HplBody }
-  deriving Show
+data HplCode = HplCode
+  { entryOf :: Maybe Label
+  , bodyOf :: HplBody
+  } deriving (Show)
 
-data HplContract = HplContract { ctorOf :: HplCode, dispatcherOf :: HplCode }
-  deriving Show
+data HplContract = HplContract
+  { ctorOf :: HplCode
+  , dispatcherOf :: HplCode
+  } deriving (Show)
 
 emptyCode :: HplCode
 emptyCode = HplCode Nothing emptyBody
@@ -81,14 +85,22 @@ emptyCode = HplCode Nothing emptyBody
 evmOps2HplContract :: [(Word256, Operation)] -> WordLabelMapM HplContract
 evmOps2HplContract l = do
   ctorBody <- evmOps2HplCode l
-  return HplContract { ctorOf = ctorBody, dispatcherOf = emptyCode }
+  return
+    HplContract
+    { ctorOf = ctorBody
+    , dispatcherOf = emptyCode
+    }
 
 evmOps2HplCode :: [(Word256, Operation)] -> WordLabelMapM HplCode
 evmOps2HplCode [] = return emptyCode
-evmOps2HplCode l@((loc, _): _) = do
+evmOps2HplCode l@((loc, _):_) = do
   entry <- labelFor loc
   body <- _evmOps2HplBody l
-  return HplCode { entryOf = Just entry, bodyOf = body }
+  return
+    HplCode
+    { entryOf = Just entry
+    , bodyOf = body
+    }
 
 _evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM HplBody
 _evmOps2HplBody [] = return emptyBody
@@ -231,7 +243,8 @@ instance UnWordLabelMapM Text where
 instance UnWordLabelMapM DTL.Text where
   unWordLabelMapM = internalUnWordLabelMapM
 
-instance (UnWordLabelMapM a, UnWordLabelMapM b) => UnWordLabelMapM (a,b) where
+instance (UnWordLabelMapM a, UnWordLabelMapM b) =>
+         UnWordLabelMapM (a, b) where
   unWordLabelMapM = internalUnWordLabelMapM
 
 internalUnWordLabelMapM :: WordLabelMapM a -> a
