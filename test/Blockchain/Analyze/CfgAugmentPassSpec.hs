@@ -13,20 +13,18 @@ spec :: Spec
 spec = do
   describe "doCfgAugmentPass" $
     do it "works for hexcode1" $
-         do let decompiled@((loc, _):_) = decompileHexString hexcode1
+         do let decompiled = decompileHexString hexcode1
                 result =
                   unWordLabelMapM $
-                  do entry <- labelFor loc
-                     body <- evmOps2HplBody decompiled
-                     show <$> doCfgAugmentPass entry body
-            length result `shouldBe` 4632
+                  do contract <- evmOps2HplContract decompiled
+                     show <$> doCfgAugmentPass contract
+            length result `shouldBe` 4792
        it "works for hexcode2" $
          do let decompiled@((loc, _):_) = decompileHexString hexcode2
                 result =
                   unWordLabelMapM $
-                  do entry <- labelFor loc
-                     body <- evmOps2HplBody decompiled
-                     show <$> doCfgAugmentPass entry body
+                  do contract <- evmOps2HplContract decompiled
+                     show . bodyOf . ctorOf <$> doCfgAugmentPass contract
             result `shouldBe` "LM (UM (fromList [(1,CO: L1\n" ++
               "OO: 0: PUSH [96]\n" ++
               "OO: 2: PUSH [64]\n" ++

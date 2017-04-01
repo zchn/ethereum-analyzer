@@ -14,7 +14,8 @@ spec = do
   describe "toDotText" $
     do it "shows HplBody's dot graph" $
          do let decompiled = decompileHexString hexcode2
-            unWordLabelMapM (unpack . toDotText <$> (evmOps2HplBody decompiled)) `shouldBe`
+            unWordLabelMapM (unpack . toDotText . bodyOf . ctorOf
+                             <$> (evmOps2HplContract decompiled)) `shouldBe`
               "digraph {\n" ++
               "    1 [label=\"CO: L1\\n" ++
               "OO: 0: PUSH [96]\\n" ++
@@ -199,9 +200,9 @@ spec = do
          do let decompiled@((loc, _):_) = decompileHexString hexcode2
                 result =
                   unWordLabelMapM $
-                  do entry <- labelFor loc
-                     body <- evmOps2HplBody decompiled
-                     unpack . toDotText <$> doCfgAugmentPass entry body
+                  do contract <- evmOps2HplContract decompiled
+                     unpack . toDotText . bodyOf . ctorOf
+                       <$> doCfgAugmentPass contract
             result `shouldBe` "digraph {\n" ++
               "    1 [label=\"CO: L1\\n" ++
               "OO: 0: PUSH [96]\\n" ++

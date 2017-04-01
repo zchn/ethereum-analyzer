@@ -44,7 +44,8 @@ instance FromJSON User
 instance ToJSON User
 
 data DotCfgResp = DotCfgResp
-  { _dotcfg :: Text
+  { _ctorDot :: Text
+  , _dispatcherDot :: Text
   } deriving (Eq, Show, Generic)
 
 instance FromJSON DotCfgResp

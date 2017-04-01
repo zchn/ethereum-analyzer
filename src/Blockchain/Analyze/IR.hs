@@ -4,11 +4,14 @@
 
 module Blockchain.Analyze.IR
   ( HplBody
+  , HplCode(..)
+  , HplContract(..)
   , HplOp(..)
   , WordLabelMapM
   , WordLabelMapFuelM
   , unWordLabelMapM
-  , evmOps2HplBody
+  , evmOps2HplCode
+  , evmOps2HplContract
   , labelFor
   , labelsFor
   , showOp
@@ -66,42 +69,30 @@ instance NonLocal HplOp where
 
 type HplBody = Body HplOp
 
--- type HplGr = Gr (Block C C) ()
--- instance DGIG.Graph  where
---   empty :: emptyBody
---   isEmpty = mapEmpty
---   match nd g =
---     let toStrLbl n= "L" + show n
---         fromStrLbl sLbl = read (DL.drop 1 sLbl)
---         strLbl = toStrLbl nd
---         blkList = bodyList g
---         (tgtBL, dirtyBL) = DL.partition (\(lbl', blk) -> strLbl == show lbl') blkList
---         (inLs, remainBL) = DL.foldr (
---           \(lbl', blk) (inLs', remainBL') ->
---             let (hd, (OcOp op ll)) = blockSplitTail blk
---                 (tgtLL, remainLL) = DL.partition (\l' -> show l' == strLbl) ll
---             in
---               if DL.null tgtLL
---               then (inLs', remainBL' ++ [(lbl', blk)])
---               else (inLs' ++ [lbl'], remainBL' ++ [
---                        (lbl', blockJoinTail hd (
---                            OcOp op remainLL))])) ([], []) dirtyBL
---         remainG = mapFromList remainBL
---     in
---       if DL.null tgtBL
---       then (Nothing, g)
---       else let (lbl', blk) = DL.head tgtBL
---                (OcOp op outLs) = lastNode blk
---                ins = DL.map (\l -> ((), fromStrLbl l)) inLs
---                outs = DL.map (\l -> ((), fromStrLbl l)) outLs
---            in
---              (Just $ (ins, nd, outs), remainG)
--- evmOp2HplOp :: (Word256, Operation) -> WordLabelMapM (Either (HplOp O O) (HplOp O C))
--- evmOp2HplOp op@(loc, STOP) = return $ Right $ OcOp op []
--- evmOp2HplOp op = error ("Unimplemented(evmOp2HplOp):" ++ show op)
-evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM HplBody
-evmOps2HplBody [] = return emptyBody
-evmOps2HplBody el@((loc, _):_) = do
+data HplCode = HplCode { entryOf :: Maybe Label, bodyOf :: HplBody }
+  deriving Show
+
+data HplContract = HplContract { ctorOf :: HplCode, dispatcherOf :: HplCode }
+  deriving Show
+
+emptyCode :: HplCode
+emptyCode = HplCode Nothing emptyBody
+
+evmOps2HplContract :: [(Word256, Operation)] -> WordLabelMapM HplContract
+evmOps2HplContract l = do
+  ctorBody <- evmOps2HplCode l
+  return HplContract { ctorOf = ctorBody, dispatcherOf = emptyCode }
+
+evmOps2HplCode :: [(Word256, Operation)] -> WordLabelMapM HplCode
+evmOps2HplCode [] = return emptyCode
+evmOps2HplCode l@((loc, _): _) = do
+  entry <- labelFor loc
+  body <- _evmOps2HplBody l
+  return HplCode { entryOf = Just entry, bodyOf = body }
+
+_evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM HplBody
+_evmOps2HplBody [] = return emptyBody
+_evmOps2HplBody el@((loc, _):_) = do
   l <- labelFor loc
   doEvmOps2HplBody emptyBody (blockJoinHead (CoOp l) emptyBlock) el
   where
@@ -148,6 +139,7 @@ evmOps2HplBody el@((loc, _):_) = do
                    t'
 
 isTerminator :: Operation -> Bool
+isTerminator CODECOPY = True
 isTerminator STOP = True
 isTerminator JUMP = True
 isTerminator JUMPI = True
@@ -155,6 +147,7 @@ isTerminator CALL = True
 isTerminator CALLCODE = True
 isTerminator RETURN = True
 isTerminator DELEGATECALL = True
+isTerminator INVALID = True
 isTerminator SUICIDE = True
 isTerminator _ = False
 
@@ -162,6 +155,7 @@ canPassThrough :: Operation -> Bool
 canPassThrough STOP = False
 canPassThrough JUMP = False
 canPassThrough RETURN = False
+canPassThrough INVALID = False
 canPassThrough SUICIDE = False
 canPassThrough _ = True
 
@@ -235,6 +229,9 @@ instance UnWordLabelMapM Text where
   unWordLabelMapM = internalUnWordLabelMapM
 
 instance UnWordLabelMapM DTL.Text where
+  unWordLabelMapM = internalUnWordLabelMapM
+
+instance (UnWordLabelMapM a, UnWordLabelMapM b) => UnWordLabelMapM (a,b) where
   unWordLabelMapM = internalUnWordLabelMapM
 
 internalUnWordLabelMapM :: WordLabelMapM a -> a

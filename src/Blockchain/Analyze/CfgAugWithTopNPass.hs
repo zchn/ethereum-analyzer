@@ -144,6 +144,10 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
     ooT :: HplOp O O -> StackNFact -> StackNFact
     ooT (OoOp (_, op)) f = opT op f
     ocT :: HplOp O C -> StackNFact -> FactBase StackNFact
+    ocT (OcOp (_, CODECOPY) (hL:tL)) f =
+      mapFromList (
+        [(hL, opT CODECOPY f)]
+          ++ DL.map (\l -> (l, fact_bot $ fp_lattice $ cfgAugWithTopNPass)) tL)
     -- TODO(zchn): Implement JUMPI narrowing
     ocT hplop@(OcOp (_, op) _) f = distributeFact hplop (opT op f)
     opT :: Operation -> StackNFact -> StackNFact
@@ -291,13 +295,14 @@ cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
         -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
     ocR op@(OcOp (loc, ope) ll) f =
       case ope of
-        JUMP -> handleJmp
-        JUMPI -> handleJmp
+        JUMP -> handleJmp 0
+        JUMPI -> handleJmp 0
+        CODECOPY -> handleJmp 1
         _ -> return $ Just $ opGUnit op
       where
-        handleJmp :: WordLabelMapFuelM (Maybe (Graph HplOp O C))
-        handleJmp =
-          case DL.head f of
+        handleJmp :: Int -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
+        handleJmp opIdx =
+          case f !! opIdx of
             Top -> return $ Just $ opGUnit op -- TODO(zchn): Should return all targets
             PElem st -> do
               newll <- liftFuel $ labelsFor $ toList st
@@ -316,13 +321,19 @@ cfgAugWithTopNPass =
   , fp_rewrite = cfgAugWithTopNRewrite
   }
 
-doCfgAugWithTopNPass :: Label -> HplBody -> WordLabelMapM HplBody
-doCfgAugWithTopNPass entry body =
-  runWithFuel
-    1000000
-    (fst <$>
-     analyzeAndRewriteFwdBody
-       cfgAugWithTopNPass
-       entry
-       body
-       (mapSingleton entry $ fact_bot $ fp_lattice $ cfgAugWithTopNPass))
+doCfgAugWithTopNPass :: HplContract -> WordLabelMapM HplContract
+doCfgAugWithTopNPass contract =
+  let entry_ = entryOf $ ctorOf contract
+      body = bodyOf $ ctorOf contract in
+  case entry_ of
+    Nothing -> return contract
+    Just entry ->  do
+      newBody <- runWithFuel
+        10000000000
+        (fst <$>
+         analyzeAndRewriteFwdBody
+         cfgAugWithTopNPass
+         entry
+         body
+         (mapSingleton entry $ fact_bot $ fp_lattice $ cfgAugWithTopNPass))
+      return contract { ctorOf = HplCode (Just entry) body }

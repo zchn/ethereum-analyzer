@@ -55,9 +55,9 @@ users = do
   pure (Users [User 1 "Isaac" "Newton", User 2 "Albert" "Einstein"])
 
 dotcfg :: Maybe Text -> Handler Doc DotCfgResp
-dotcfg (Just t) = pure (DotCfgResp $ decompileToDotText t)
-dotcfg _ = pure (DotCfgResp "")
+dotcfg (Just t) = pure (DotCfgResp (decompileToDotText t) "")
+dotcfg _ = pure (DotCfgResp "" "")
 
 dotcfg2 :: Maybe Text -> Handler Doc DotCfgResp
-dotcfg2 (Just t) = pure (DotCfgResp $ decompileToDotText2 t)
-dotcfg2 _ = pure (DotCfgResp "")
+dotcfg2 (Just t) = pure (uncurry DotCfgResp $ decompileToDotText2 t)
+dotcfg2 _ = pure (DotCfgResp "" "")

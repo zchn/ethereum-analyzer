@@ -12,15 +12,21 @@ spec = do
   describe "e2h" $
     do it "works for hexcode1" $
          do let decompiled = decompileHexString hexcode1
-            unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled)) `shouldBe`
-              327
+            unWordLabelMapM (mapSize . bodyOf . ctorOf
+                             <$> (evmOps2HplContract decompiled)) `shouldBe`
+              329
        it "works for hexcode2" $
          do let decompiled = decompileHexString hexcode2
-            unWordLabelMapM (mapSize <$> (evmOps2HplBody decompiled)) `shouldBe`
+            unWordLabelMapM (mapSize . bodyOf . ctorOf
+                             <$> (evmOps2HplContract decompiled)) `shouldBe`
               12
+       -- it "shows voteHexcode" $
+       --   do let decompiled = decompileHexString voteHexcode
+       --      unWordLabelMapM (show <$> (evmOps2HplBody decompiled)) `shouldBe` ""
        it "shows HplBody" $
          do let decompiled = decompileHexString hexcode2
-            unWordLabelMapM (show <$> (evmOps2HplBody decompiled)) `shouldBe`
+            unWordLabelMapM (show . bodyOf . ctorOf
+                             <$> (evmOps2HplContract decompiled)) `shouldBe`
               "LM (UM (fromList [(1,CO: L1\n" ++
               "OO: 0: PUSH [96]\n" ++
               "OO: 2: PUSH [64]\n" ++

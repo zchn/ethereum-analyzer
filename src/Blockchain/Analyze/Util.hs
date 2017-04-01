@@ -23,22 +23,22 @@ import qualified Data.Text.Lazy as DTL
 
 decompileToDotText :: Text -> Text
 decompileToDotText hexcode =
-  let decompiled@((loc, _):_) = decompileHexString $ DBC.pack $ DT.unpack hexcode
+  let decompiled = decompileHexString $ DBC.pack $ DT.unpack hexcode
       result =
         unWordLabelMapM $
-        do entry <- labelFor loc
-           body <- evmOps2HplBody decompiled
-           toDotText <$> doCfgAugmentPass entry body
+        do contract <- evmOps2HplContract decompiled
+           toDotText <$> (bodyOf . ctorOf <$> doCfgAugmentPass contract)
   in result
 
-decompileToDotText2 :: Text -> Text
+decompileToDotText2 :: Text -> (Text, Text)
 decompileToDotText2 hexcode =
-  let decompiled@((loc, _):_) = decompileHexString $ DBC.pack $ DT.unpack hexcode
+  let decompiled = decompileHexString $ DBC.pack $ DT.unpack hexcode
       result =
         unWordLabelMapM $
-        do entry <- labelFor loc
-           body <- evmOps2HplBody decompiled
-           toDotText <$> doCfgAugWithTopNPass entry body
+        do contract <- evmOps2HplContract decompiled
+           contract' <- doCfgAugWithTopNPass contract
+           return (toDotText $ bodyOf (ctorOf contract'),
+                    toDotText $ bodyOf (ctorOf contract'))
   in result
 
 toDotText :: HplBody -> Text
