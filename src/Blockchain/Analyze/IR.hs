@@ -121,27 +121,36 @@ _evmOps2HplBody el@((loc, _):_) = do
       if isTerminator (snd h')
         then return $ addBlock (blockJoinTail hd (OcOp h' [])) body
         else return body
-    doEvmOps2HplBody body hd (h' : (t'@((loc', op') : _)))
-      | isTerminator (snd h') =
-        do l' <- labelFor loc'
-           doEvmOps2HplBody
-             (addBlock
-               (blockJoinTail hd
-                 (OcOp h' (if canPassThrough (snd h') then [l'] else [])))
-               body)
-             (blockJoinHead (CoOp l') emptyBlock)
-             t'
-      | op' /= JUMPDEST =
-        doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
-      | otherwise =
-        do l' <- labelFor loc'
-           doEvmOps2HplBody
-             (addBlock
-               (blockJoinTail hd
-                 (OcOp h' (if canPassThrough (snd h') then [l'] else [])))
-               body)
-             (blockJoinHead (CoOp l') emptyBlock)
-             t'
+    doEvmOps2HplBody body hd (h':(t'@((loc', op'):_)))
+      | isTerminator (snd h') = do
+        l' <- labelFor loc'
+        doEvmOps2HplBody
+          (addBlock
+             (blockJoinTail
+                hd
+                (OcOp
+                   h'
+                   (if canPassThrough (snd h')
+                      then [l']
+                      else [])))
+             body)
+          (blockJoinHead (CoOp l') emptyBlock)
+          t'
+      | op' /= JUMPDEST = doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
+      | otherwise = do
+        l' <- labelFor loc'
+        doEvmOps2HplBody
+          (addBlock
+             (blockJoinTail
+                hd
+                (OcOp
+                   h'
+                   (if canPassThrough (snd h')
+                      then [l']
+                      else [])))
+             body)
+          (blockJoinHead (CoOp l') emptyBlock)
+          t'
 
 isTerminator :: Operation -> Bool
 isTerminator STOP = True

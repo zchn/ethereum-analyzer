@@ -143,6 +143,7 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
         flist
     ooT :: HplOp O O -> StackNFact -> StackNFact
     ooT (OoOp (_, op)) f = opT op f
+    ooT (HpCodeCopy _) f = f
     ocT :: HplOp O C -> StackNFact -> FactBase StackNFact
     -- TODO(zchn): Implement JUMPI narrowing
     ocT hplop@(OcOp (_, op) _) f = distributeFact hplop (opT op f)
@@ -286,9 +287,12 @@ cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
         -> StackNFact
         -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
     ooR op@(OoOp (_, CODECOPY)) f =
-      case peekStack 1 f of
+      case peekStack 2 f of
         Top -> return $ Just $ opGUnit op
-        PElem vals -> return $ Just $ DS.foldl (\a b -> catGraphNodeOO a $ HpCodeCopy b) (opGUnit op) vals
+        PElem vals ->
+          return $
+          Just $
+          DS.foldl (\a b -> catGraphNodeOO a $ HpCodeCopy b) (opGUnit op) vals
     ooR op _ = return $ Just $ opGUnit op
     ocR :: HplOp O C
         -> StackNFact

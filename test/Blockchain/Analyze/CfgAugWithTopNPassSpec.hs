@@ -18,9 +18,9 @@ spec = do
                   unWordLabelMapM $
                   do contract <- evmOps2HplContract decompiled
                      show <$> doCfgAugWithTopNPass contract
-            length result `shouldBe` 4769
+            length result `shouldBe` 4815
        it "works for hexcode2" $
-         do let decompiled@((loc, _):_) = decompileHexString hexcode2
+         do let decompiled = decompileHexString hexcode2
                 result =
                   unWordLabelMapM $
                   do contract <- evmOps2HplContract decompiled
