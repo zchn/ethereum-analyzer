@@ -13,16 +13,12 @@ spec :: Spec
 spec = do
   describe "doCfgAugWithTopNPass" $
     do it "works for hexcode1" $
-         do let decompiled@((loc, _):_) = decompileHexString hexcode1
-                result =
+         do let result =
                   unWordLabelMapM $
-                  do contract <- evmOps2HplContract decompiled
-                     show <$> doCfgAugWithTopNPass contract
+                     show <$> doCfgAugWithTopNPass hexcode1
             length result `shouldBe` 4815
        it "works for hexcode2" $
-         do let decompiled = decompileHexString hexcode2
-                result =
+         do let result =
                   unWordLabelMapM $
-                  do contract <- evmOps2HplContract decompiled
-                     show <$> doCfgAugWithTopNPass contract
+                   show <$> doCfgAugWithTopNPass hexcode2
             result `shouldContain` "OC: 9: JUMPI -> [L2,L4]"

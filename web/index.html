@@ -3,32 +3,32 @@
       <script src="/web/jquery-3.1.1.min.js"></script>
       <script src="/web/viz-lite.js"></script>
       <script>
+       function callDotCfg(prefix, hexcodeDiv, ctorDiv, dispDiv) {
+           var hexcode = $(hexcodeDiv).val();
+           $.getJSON(prefix + hexcode, function(data, status, xhr){
+               if(status !== "success") {
+                   $(ctorDiv).text(status);
+                   dotcfg = status;
+               } else {
+                   {
+                       var dotcfg = data._ctorDot;
+                       svgcfg = Viz(dotcfg);
+                       $(ctorDiv).html(svgcfg);
+                   }
+                   {
+                       var dotcfg = data._dispatcherDot;
+                       svgcfg = Viz(dotcfg);
+                       $(dispDiv).html(svgcfg);
+                   }
+               }
+           });
+       }
        $(document).ready(function(){
            $("#showbtn").click(function(){
-               var hexcode = $("#code").val();
-               $.getJSON("/ea/dotcfg?code=" + hexcode, function(data, status, xhr){
-                   if(status !== "success") {
-                       $("#cfg").text(status);
-                       dotcfg = status;
-                   } else {
-                       var dotcfg = data._ctorDot;
-                       svgcfg = Viz(dotcfg);
-                       $("#cfg").html(svgcfg);
-                   }
-               });
+               callDotCfg("/ea/dotcfg?code=", "#code", "#ctorcfg", "#dispcfg");
            });
            $("#showbtn2").click(function(){
-               var hexcode = $("#code").val();
-               $.getJSON("/ea/dotcfg2?code=" + hexcode, function(data, status, xhr){
-                   if(status !== "success") {
-                       $("#cfg").text(status);
-                       dotcfg = status;
-                   } else {
-                       var dotcfg = data._ctorDot;
-                       svgcfg = Viz(dotcfg);
-                       $("#cfg").html(svgcfg);
-                   }
-               });
+               callDotCfg("/ea/dotcfg2?code=", "#code", "#ctorcfg", "#dispcfg");
            });
        });
       </script>
@@ -38,6 +38,7 @@
       <br />
       <button id="showbtn">Show CFG</button>
       <button id="showbtn2">Show CFG2</button>
-      <div id="cfg"></div>
+      <div id="ctorcfg"></div>
+      <div id="dispcfg"></div>
   </body>
 </html>

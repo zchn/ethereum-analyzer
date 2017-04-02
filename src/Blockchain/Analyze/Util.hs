@@ -32,14 +32,13 @@ decompileToDotText hexcode =
 
 decompileToDotText2 :: Text -> (Text, Text)
 decompileToDotText2 hexcode =
-  let decompiled = decompileHexString $ DBC.pack $ DT.unpack hexcode
+  let hexstring = DBC.pack $ DT.unpack hexcode
       result =
         unWordLabelMapM $
-        do contract <- evmOps2HplContract decompiled
-           contract' <- doCfgAugWithTopNPass contract
+        do contract' <- doCfgAugWithTopNPass hexstring
            return
              ( toDotText $ bodyOf (ctorOf contract')
-             , toDotText $ bodyOf (ctorOf contract'))
+             , toDotText $ bodyOf (dispatcherOf contract'))
   in result
 
 toDotText :: HplBody -> Text
