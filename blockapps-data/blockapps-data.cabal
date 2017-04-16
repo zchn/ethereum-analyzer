@@ -1,0 +1,65 @@
+name: blockapps-data
+version: 0.0.1
+cabal-version: >=1.10
+build-type: Simple
+author: Jamshid
+license-file:  LICENSE
+maintainer:    jamshidnh@gmail.com
+synopsis: A Haskell version of an Ethereum client
+category:      Data Structures
+license: Apache-2.0
+description:  
+    The client described in the Ethereum Yellowpaper
+
+source-repository this
+  type:     git
+  location: https://github.com/jamshidh/ethereum-client-haskell
+  branch:   master
+  tag:      v0.0.1
+
+library
+    default-language: Haskell98
+    build-depends: 
+                   base >= 4 && < 5
+                 , aeson
+                 , base-unicode-symbols
+                 , base16-bytestring
+                 , binary
+                 , bytestring
+                 , containers
+                 , crypto-pubkey-types
+                 , cryptohash
+                 , data-default
+                 , directory
+                 , esqueleto
+                 , ethereum-rlp
+                 , filepath
+                 , lens
+                 , leveldb-haskell
+                 , lifted-base
+                 , milena
+                 , monad-logger
+                 , mtl
+                 , nibblestring
+                 , path-pieces
+                 , persistent
+                 , persistent-postgresql
+                 , persistent-template
+                 , resourcet
+                 , text
+                 , time
+                 , transformers
+                 , ansi-wl-pprint
+                 , entropy
+                 , yaml
+                 , entropy
+                 , process
+                 , hflags
+                 , monad-control
+
+    exposed-modules: 
+                   Blockchain.Data.Code
+    ghc-options: -Wall -O2
+    extensions: TemplateHaskell
+    buildable: True
+    hs-source-dirs: src
