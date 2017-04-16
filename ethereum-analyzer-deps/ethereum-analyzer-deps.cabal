@@ -1,12 +1,12 @@
 name: ethereum-analyzer-deps
-version: 0.0.4
+version: 0.0.1
 cabal-version: >=1.10
 build-type: Simple
 author: Jamshid
 license-file:  LICENSE
 maintainer:    k_@berkeley.edu
 synopsis: Stripped dependencies of ethereum-analyzer.
-category:      Data Structures
+category:            Ethereum, Static Analysis
 license: Apache-2.0
 description:  
     Stripped dependencies of ethereum-analyzer.
@@ -15,7 +15,7 @@ source-repository this
   type:     git
   location: https://github.com/zchn/ethereum-analyzer
   branch:   master
-  tag:      v0.0.4
+  tag:      v0.0.1
 
 library
     default-language: Haskell98

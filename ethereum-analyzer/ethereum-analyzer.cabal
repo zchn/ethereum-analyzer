@@ -1,19 +1,23 @@
 name:                ethereum-analyzer
-version:             0.1.0.0
+version:             0.0.1
 synopsis:            A Ethereum contact analyzer.
 homepage:            https://github.com/ethereumK/ethereum-analyzer
 license:             Apache-2.0
 license-file:        LICENSE
 author:              Kevin Chen
 maintainer:          k_@berkeley.edu
-category:            System
+category:            Ethereum, Static Analysis
 build-type:          Simple
 extra-source-files:  ChangeLog.md, README.md
 cabal-version:       >=1.10
 
+source-repository this
+  type:     git
+  location: https://github.com/zchn/ethereum-analyzer
+  branch:   master
+  tag:      v0.0.1
+
 library
-  -- other-modules:       
-  -- other-extensions:    
   build-depends:       base >= 4 && < 5,
                        aeson,
                        bimap,
