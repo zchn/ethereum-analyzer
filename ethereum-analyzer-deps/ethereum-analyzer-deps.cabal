@@ -1,19 +1,19 @@
-name: ethereum-vm
+name: ethereum-analyzer-deps
 version: 0.0.4
 cabal-version: >=1.10
 build-type: Simple
 author: Jamshid
 license-file:  LICENSE
-maintainer:    jamshidnh@gmail.com
-synopsis: A Haskell version of an Ethereum client
+maintainer:    k_@berkeley.edu
+synopsis: Stripped dependencies of ethereum-analyzer.
 category:      Data Structures
 license: Apache-2.0
 description:  
-    The client described in the Ethereum Yellowpaper
+    Stripped dependencies of ethereum-analyzer.
 
 source-repository this
   type:     git
-  location: https://github.com/jamshidh/ethereum-vm
+  location: https://github.com/zchn/ethereum-analyzer
   branch:   master
   tag:      v0.0.4
 
@@ -23,15 +23,16 @@ library
                    base >= 4 && < 5
                  , aeson
                  , base16-bytestring
+                 , deepseq
                  , binary
-                 , blockapps-data
-                 , blockapps-util
                  , bytestring
                  , containers
                  , cryptohash
                  , directory
                  , either
                  , esqueleto
+                 , ethereum-rlp
+                 , split
                  , filepath
                  , hflags
                  , leveldb-haskell
@@ -50,9 +51,20 @@ library
                  , vector
                  , ansi-wl-pprint
                  , nibblestring
-    exposed-modules: 
-                   Blockchain.VM.Code
-                   Blockchain.VM.Opcodes
+                 , global-lock
+                 , fast-logger
+    exposed-modules: Blockchain.Data.Code
+                   , Blockchain.VM.Code
+                   , Blockchain.VM.Opcodes
+                   , Blockchain.ExtWord
+                   , Blockchain.Format
+                   , Blockchain.Util
+                   , Blockchain.Output
+                   , Blockchain.Colors
+                   , Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
+                   , Legacy.Haskoin.V0102.Network.Haskoin.Crypto.Curve
+                   , Legacy.Haskoin.V0102.Network.Haskoin.Crypto.NumberTheory
+                   , Legacy.Haskoin.V0102.Network.Haskoin.Util
     ghc-options: -Wall -O2
     buildable: True
     hs-source-dirs: src

@@ -17,13 +17,11 @@ library
   build-depends:       base >= 4 && < 5,
                        aeson,
                        bimap,
-                       blockapps-data,
-                       blockapps-util,
                        bytestring,
                        conduit-combinators,
                        conduit-extra,
                        containers,
-                       ethereum-vm,
+                       ethereum-analyzer-deps,
                        exceptions,
                        extra,
                        fgl,
@@ -81,9 +79,8 @@ library
 executable ethereum-analyzer
   main-is:             Main.hs
   build-depends:       base >= 4 && < 5,
-                       blockapps-util,
                        ethereum-analyzer,
-                       ethereum-vm,
+                       ethereum-analyzer-deps,
                        hflags,
                        monad-logger
                        
@@ -95,10 +92,9 @@ executable ethereum-analyzer
 executable ea-dump-contract
   main-is:             DumpCodeMain.hs
   build-depends:       base >= 4 && < 5
-                     , blockapps-util
                      , directory
                      , ethereum-analyzer
-                     , ethereum-vm
+                     , ethereum-analyzer-deps
                      , hflags
                      , monad-logger
                      , mtl
@@ -121,10 +117,9 @@ test-suite spec
                      , Blockchain.AnalyzeSpec
                      , SpecCommon
   build-depends:       base
-                     , blockapps-util
                      , bytestring
                      , ethereum-analyzer
-                     , ethereum-vm
+                     , ethereum-analyzer-deps
                      , extra
                      , hoopl
                      , hspec

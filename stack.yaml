@@ -4,10 +4,8 @@ extra-include-dirs:
 extra-lib-dirs:
 - /usr/local/lib
 packages:
-- blockapps-data/
 - ethereum-analyzer/
-- ethereum-vm/
-- blockapps-util/
+- ethereum-analyzer-deps/
 extra-deps:
 - Crypto-4.2.5.1
 - directory-1.2.3.1
