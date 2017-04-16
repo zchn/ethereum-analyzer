@@ -22,37 +22,19 @@ library
     build-depends: 
                    base >= 4 && < 5
                  , aeson
+                 , ansi-wl-pprint
                  , base16-bytestring
-                 , deepseq
                  , binary
                  , bytestring
                  , containers
-                 , cryptohash
-                 , directory
-                 , either
-                 , esqueleto
+                 , deepseq
                  , ethereum-rlp
-                 , split
-                 , filepath
-                 , hflags
-                 , leveldb-haskell
-                 , lens
-                 , milena
-                 , mtl
-                 , monad-control
-                 , monad-logger
-                 , persistent-postgresql
-                 , postgresql-simple
-                 , resourcet
-                 , text
-                 , time
-                 , transformers
-                 , transformers-base
-                 , vector
-                 , ansi-wl-pprint
-                 , nibblestring
-                 , global-lock
                  , fast-logger
+                 , global-lock
+                 , monad-logger
+                 , nibblestring
+                 , split
+                 , text
     exposed-modules: Blockchain.Data.Code
                    , Blockchain.VM.Code
                    , Blockchain.VM.Opcodes
