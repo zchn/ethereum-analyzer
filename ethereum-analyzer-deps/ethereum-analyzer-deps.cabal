@@ -28,7 +28,6 @@ library
                  , bytestring
                  , containers
                  , deepseq
-                 , ethereum-rlp
                  , fast-logger
                  , global-lock
                  , monad-logger
@@ -36,6 +35,8 @@ library
                  , split
                  , text
     exposed-modules: Blockchain.Data.Code
+                   , Blockchain.Data.RLP
+                   , Blockchain.Data.Util
                    , Blockchain.VM.Code
                    , Blockchain.VM.Opcodes
                    , Blockchain.ExtWord
