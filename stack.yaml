@@ -4,7 +4,6 @@ extra-include-dirs:
 extra-lib-dirs:
 - /usr/local/lib
 packages:
-- ethereum-rlp/
 - blockapps-data/
 - ethereum-analyzer/
 - ethereum-vm/
@@ -12,6 +11,7 @@ packages:
 extra-deps:
 - Crypto-4.2.5.1
 - directory-1.2.3.1
+- ethereum-rlp-0.0.1
 - global-lock-0.1
 - hoopl-3.10.2.1
 - json-rpc-0.7.1.1
