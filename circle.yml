@@ -1,12 +1,14 @@
-machine:
-  services:
-    - docker
-
 dependencies:
+  cache_directories:
+    - "~/.stack"
+  pre:
+    - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 575159689BEFB442
+    - echo 'deb http://download.fpcomplete.com/ubuntu trusty main' | sudo tee /etc/apt/sources.list.d/fpco.list
+    - sudo apt-get update && sudo apt-get install stack -y
   override:
-    - docker info
-    - docker build --rm=false -t zchn/ethereumk:circleci .
+    - stack setup
+    - stack build
 
 test:
   override:
-    - docker run zchn/ethereumk:circleci
+    - stack test

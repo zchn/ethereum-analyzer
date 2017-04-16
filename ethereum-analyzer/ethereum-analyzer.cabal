@@ -99,7 +99,6 @@ executable ea-dump-contract
                      , monad-logger
                      , mtl
                      , text
-                       
   ghc-options:         -Wall -O2                       
   hs-source-dirs:      exec_src
   buildable:           True
