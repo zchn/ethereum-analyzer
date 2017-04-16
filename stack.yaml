@@ -1,0 +1,25 @@
+flags: {}
+extra-include-dirs:
+- /usr/local/include
+extra-lib-dirs:
+- /usr/local/lib
+packages:
+- ethereum-rlp/
+- blockapps-data/
+- ethereum-analyzer/
+- ethereum-vm/
+- blockapps-util/
+extra-deps:
+- Crypto-4.2.5.1
+- directory-1.2.3.1
+- global-lock-0.1
+- hoopl-3.10.2.1
+- json-rpc-0.7.1.1
+- logging-effect-1.1.1
+- milena-0.5.0.1
+- murmur3-1.0.0
+- nibblestring-0.0.3
+- normaldistribution-1.1.0.3
+- pbkdf-1.1.1.1
+- secp256k1-0.4.6
+resolver: lts-6.29
