@@ -1,6 +1,6 @@
 name:                ethereum-analyzer
 version:             0.0.1
-synopsis:            A Ethereum contact analyzer.
+synopsis:            A Ethereum contract analyzer.
 homepage:            https://github.com/ethereumK/ethereum-analyzer
 license:             Apache-2.0
 license-file:        LICENSE
@@ -10,6 +10,7 @@ category:            Ethereum, Static Analysis
 build-type:          Simple
 extra-source-files:  ChangeLog.md, README.md
 cabal-version:       >=1.10
+description:         A Ethereum contract analyzer.
 
 source-repository this
   type:     git
@@ -74,7 +75,7 @@ library
                      , Blockchain.Analyze.Servant.Server.Instrument
                      , Blockchain.Analyze.Servant.Server.Logging
                                   
-  ghc-options:         -Wall -O2
+  ghc-options:         -Wall
   hs-source-dirs:      src
   buildable:           True
   default-language:    Haskell98
@@ -88,7 +89,7 @@ executable ethereum-analyzer
                        hflags,
                        monad-logger
                        
-  ghc-options:         -Wall -O2                       
+  ghc-options:         -Wall
   hs-source-dirs:      exec_src
   buildable:           True
   default-language:    Haskell98
@@ -103,7 +104,7 @@ executable ea-dump-contract
                      , monad-logger
                      , mtl
                      , text
-  ghc-options:         -Wall -O2                       
+  ghc-options:         -Wall
   hs-source-dirs:      exec_src
   buildable:           True
   default-language:    Haskell98
