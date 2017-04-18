@@ -32,6 +32,7 @@ library
                        conduit-combinators,
                        conduit-extra,
                        containers,
+                       ethereum-analyzer,
                        ethereum-analyzer-deps,
                        exceptions,
                        extra,
@@ -65,7 +66,8 @@ library
                        warp,
                        wl-pprint-text
                        
-  exposed-modules:     Ethereum.Analyzer.Web.API
+  exposed-modules:     Ethereum.Analyzer.Web
+  other-modules:       Ethereum.Analyzer.Web.API
                      , Ethereum.Analyzer.Web.API.Internal
                      , Ethereum.Analyzer.Web.Server
                      , Ethereum.Analyzer.Web.Server.Handlers
@@ -83,6 +85,7 @@ executable ethereum-analyzer-webui
   build-depends:       base >= 4 && < 5,
                        ethereum-analyzer,
                        ethereum-analyzer-deps,
+                       ethereum-analyzer-webui,
                        hflags,
                        monad-logger
                        

@@ -6,6 +6,7 @@ extra-lib-dirs:
 packages:
 - ethereum-analyzer/
 - ethereum-analyzer-deps/
+- ethereum-analyzer-webui/
 extra-deps:
 - directory-1.2.3.1
 - global-lock-0.1
