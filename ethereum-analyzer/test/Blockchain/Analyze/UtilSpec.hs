@@ -1,10 +1,10 @@
-module Blockchain.Analyze.UtilSpec
+module Ethereum.Analyzer.UtilSpec
   ( spec
   ) where
 
-import Blockchain.Analyze
-import Blockchain.Analyze.CfgAugmentPass
-import Blockchain.Analyze.Util
+import Ethereum.Analyzer
+import Ethereum.Analyzer.CfgAugmentPass
+import Ethereum.Analyzer.Util
 import Data.Text
 import SpecCommon
 import Test.Hspec

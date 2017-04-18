@@ -1,11 +1,11 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
-module Blockchain.Analyze.CfgAugmentPassSpec
+module Ethereum.Analyzer.CfgAugmentPassSpec
   ( spec
   ) where
 
-import Blockchain.Analyze
-import Blockchain.Analyze.CfgAugmentPass
+import Ethereum.Analyzer
+import Ethereum.Analyzer.CfgAugmentPass
 import SpecCommon
 import Test.Hspec
 

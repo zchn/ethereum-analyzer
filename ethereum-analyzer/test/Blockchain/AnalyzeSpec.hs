@@ -1,10 +1,10 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
-module Blockchain.AnalyzeSpec
+module Ethereum.AnalyzerSpec
   ( spec
   ) where
 
-import Blockchain.Analyze
+import Ethereum.Analyzer
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes
 import Data.List as DL

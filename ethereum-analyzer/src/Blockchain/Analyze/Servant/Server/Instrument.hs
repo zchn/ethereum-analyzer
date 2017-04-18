@@ -2,7 +2,7 @@
   #-}
 
 -- | Prometheus instrumentation for ethereum-analyzer.
-module Blockchain.Analyze.Servant.Server.Instrument
+module Ethereum.Analyzer.Servant.Server.Instrument
   ( metrics
   , requestDuration
   , instrumentApp

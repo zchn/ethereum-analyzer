@@ -1,4 +1,4 @@
-module Blockchain.Analyze.Decompile
+module Ethereum.Analyzer.Decompile
   ( decompile
   , decompileHexString
   ) where

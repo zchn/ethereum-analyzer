@@ -1,8 +1,8 @@
-module Blockchain.Analyze.IRSpec
+module Ethereum.Analyzer.IRSpec
   ( spec
   ) where
 
-import Blockchain.Analyze
+import Ethereum.Analyzer
 import Compiler.Hoopl
 import SpecCommon
 import Test.Hspec

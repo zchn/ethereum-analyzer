@@ -4,7 +4,7 @@
 {-# LANGUAGE DataKinds #-}
 
 -- | Serve the API as an HTTP server.
-module Blockchain.Analyze.Servant.Server
+module Ethereum.Analyzer.Servant.Server
   ( server
   , startApp
   ) where
@@ -26,11 +26,11 @@ import qualified Prometheus.Metric.GHC as Prom
 import Servant (serve)
 import Text.PrettyPrint.Leijen.Text (int, text)
 
-import Blockchain.Analyze.Servant.API (apiraw)
-import Blockchain.Analyze.Servant.Server.Handlers (server)
-import Blockchain.Analyze.Servant.Server.Instrument
+import Ethereum.Analyzer.Servant.API (apiraw)
+import Ethereum.Analyzer.Servant.Server.Handlers (server)
+import Ethereum.Analyzer.Servant.Server.Instrument
        (defaultPrometheusSettings, prometheus, requestDuration)
-import qualified Blockchain.Analyze.Servant.Server.Logging as Log
+import qualified Ethereum.Analyzer.Servant.Server.Logging as Log
 
 -- | Configuration for the application.
 data Config = Config

@@ -2,7 +2,7 @@
   FlexibleContexts #-}
 
 -- | Logging helpers for ethereum-analyzer.
-module Blockchain.Analyze.Servant.Server.Logging
+module Ethereum.Analyzer.Servant.Server.Logging
   ( LogM
   , withLogging
   , log

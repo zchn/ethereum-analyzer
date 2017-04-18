@@ -1,1 +1,1 @@
-# ethereum-analyzer-webui
+# ethereum-analyzer

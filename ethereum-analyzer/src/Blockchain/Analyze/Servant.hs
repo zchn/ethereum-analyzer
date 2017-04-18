@@ -1,5 +1,5 @@
-module Blockchain.Analyze.Servant
+module Ethereum.Analyzer.Servant
   ( startApp
   ) where
 
-import Blockchain.Analyze.Servant.Server (startApp)
+import Ethereum.Analyzer.Servant.Server (startApp)

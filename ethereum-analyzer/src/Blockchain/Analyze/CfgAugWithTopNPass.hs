@@ -2,12 +2,12 @@
   FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies,
   UndecidableInstances #-}
 
-module Blockchain.Analyze.CfgAugWithTopNPass
+module Ethereum.Analyzer.CfgAugWithTopNPass
   ( doCfgAugWithTopNPass
   ) where
 
-import Blockchain.Analyze
-import Blockchain.Analyze.Common
+import Ethereum.Analyzer
+import Ethereum.Analyzer.Common
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl

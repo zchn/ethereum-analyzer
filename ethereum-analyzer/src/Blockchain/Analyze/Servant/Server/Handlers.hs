@@ -3,7 +3,7 @@
 {-# LANGUAGE TypeOperators #-}
 
 -- | Implementation of the ethereum-analyzer API.
-module Blockchain.Analyze.Servant.Server.Handlers
+module Ethereum.Analyzer.Servant.Server.Handlers
   ( server
   ) where
 
@@ -13,10 +13,10 @@ module Blockchain.Analyze.Servant.Server.Handlers
 -- monitoring, starting the HTTP server) should be in a different module.
 import Protolude hiding (Handler)
 
-import Blockchain.Analyze.Util
-import Blockchain.Analyze.Servant.API
+import Ethereum.Analyzer.Util
+import Ethereum.Analyzer.Servant.API
        (API, RootPage(..), User(..), Users(..), DotCfgResp(..))
-import qualified Blockchain.Analyze.Servant.Server.Logging as Log
+import qualified Ethereum.Analyzer.Servant.Server.Logging as Log
 import Control.Monad.Except (ExceptT(..))
 import Control.Monad.Log (Severity, logInfo)
 import qualified Data.Text.Lazy as DTL

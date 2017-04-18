@@ -1,4 +1,4 @@
-module Blockchain.Analyze.Common
+module Ethereum.Analyzer.Common
   ( varBytesToWord256
   ) where
 

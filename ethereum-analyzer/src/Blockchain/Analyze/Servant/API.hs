@@ -5,7 +5,7 @@
 {-# LANGUAGE TypeOperators #-}
 
 -- | API definition for ethereum-analyzer.
-module Blockchain.Analyze.Servant.API
+module Ethereum.Analyzer.Servant.API
   ( API
   , apiraw
   , RootPage(..)
@@ -23,7 +23,7 @@ import qualified NeatInterpolation as NI
 import Servant.API
        ((:>), (:<|>)(..), Get, JSON, MimeRender(..), QueryParam, Raw)
 
-import Blockchain.Analyze.Servant.API.Internal (HTML)
+import Ethereum.Analyzer.Servant.API.Internal (HTML)
 
 -- | ethereum-analyzer API definition.
 type API = Get '[HTML] RootPage :<|> "users" :> Get '[JSON] Users :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp :<|> "ea" :> "dotcfg2" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp

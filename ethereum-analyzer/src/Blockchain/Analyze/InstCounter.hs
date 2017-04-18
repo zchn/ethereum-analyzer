@@ -1,8 +1,8 @@
-module Blockchain.Analyze.InstCounter
+module Ethereum.Analyzer.InstCounter
   ( doInstCounter
   ) where
 
-import Blockchain.Analyze
+import Ethereum.Analyzer
 
 doInstCounter :: WordLabelMapM HplBody -> Int
 doInstCounter body = error "Unimplemented(doInstCounter):"

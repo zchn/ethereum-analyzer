@@ -2,16 +2,16 @@
   OverloadedStrings, FlexibleInstances, GADTs, Rank2Types,
   DeriveGeneric, TypeFamilies, UndecidableInstances #-}
 
-module Blockchain.Analyze.Util
+module Ethereum.Analyzer.Util
   ( toDotText
   , decompileToDotText
   , decompileToDotText2
   ) where
 
-import Blockchain.Analyze.Decompile
-import Blockchain.Analyze.IR
-import Blockchain.Analyze.CfgAugWithTopNPass
-import Blockchain.Analyze.CfgAugmentPass
+import Ethereum.Analyzer.Decompile
+import Ethereum.Analyzer.IR
+import Ethereum.Analyzer.CfgAugWithTopNPass
+import Ethereum.Analyzer.CfgAugmentPass
 import Compiler.Hoopl
 import Data.ByteString.Char8 as DBC
 import Data.GraphViz

@@ -1,11 +1,11 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
-module Blockchain.Analyze
+module Ethereum.Analyzer
   ( decompile
   , decompileHexString
-  , module Blockchain.Analyze.Decompile
-  , module Blockchain.Analyze.IR
+  , module Ethereum.Analyzer.Decompile
+  , module Ethereum.Analyzer.IR
   ) where
 
-import Blockchain.Analyze.Decompile
-import Blockchain.Analyze.IR
+import Ethereum.Analyzer.Decompile
+import Ethereum.Analyzer.IR

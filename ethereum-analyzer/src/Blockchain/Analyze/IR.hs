@@ -2,7 +2,7 @@
   FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies,
   UndecidableInstances #-}
 
-module Blockchain.Analyze.IR
+module Ethereum.Analyzer.IR
   ( HplBody
   , HplCode(..)
   , HplContract(..)

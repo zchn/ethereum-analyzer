@@ -59,21 +59,21 @@ library
                        warp,
                        wl-pprint-text
                        
-  exposed-modules:     Blockchain.Analyze
-                     , Blockchain.Analyze.Common
-                     , Blockchain.Analyze.CfgAugmentPass
-                     , Blockchain.Analyze.CfgAugWithTopNPass
-                     , Blockchain.Analyze.Decompile
-                     , Blockchain.Analyze.Servant
-                     , Blockchain.Analyze.Util
+  exposed-modules:     Ethereum.Analyzer
+                     , Ethereum.Analyzer.Common
+                     , Ethereum.Analyzer.CfgAugmentPass
+                     , Ethereum.Analyzer.CfgAugWithTopNPass
+                     , Ethereum.Analyzer.Decompile
+                     , Ethereum.Analyzer.Servant
+                     , Ethereum.Analyzer.Util
                      , Blockchain.Jsonrpc.Client
-  other-modules:       Blockchain.Analyze.IR
-                     , Blockchain.Analyze.Servant.API
-                     , Blockchain.Analyze.Servant.API.Internal
-                     , Blockchain.Analyze.Servant.Server
-                     , Blockchain.Analyze.Servant.Server.Handlers
-                     , Blockchain.Analyze.Servant.Server.Instrument
-                     , Blockchain.Analyze.Servant.Server.Logging
+  other-modules:       Ethereum.Analyzer.IR
+                     , Ethereum.Analyzer.Servant.API
+                     , Ethereum.Analyzer.Servant.API.Internal
+                     , Ethereum.Analyzer.Servant.Server
+                     , Ethereum.Analyzer.Servant.Server.Handlers
+                     , Ethereum.Analyzer.Servant.Server.Instrument
+                     , Ethereum.Analyzer.Servant.Server.Logging
                                   
   ghc-options:         -Wall
   hs-source-dirs:      src
@@ -114,11 +114,11 @@ test-suite spec
   ghc-options:         -Wall
   hs-source-dirs:      test
   main-is:             Spec.hs
-  other-modules:       Blockchain.Analyze.CfgAugmentPassSpec
-                     , Blockchain.Analyze.CfgAugWithTopNPassSpec
-                     , Blockchain.Analyze.IRSpec
-                     , Blockchain.Analyze.UtilSpec
-                     , Blockchain.AnalyzeSpec
+  other-modules:       Ethereum.Analyzer.CfgAugmentPassSpec
+                     , Ethereum.Analyzer.CfgAugWithTopNPassSpec
+                     , Ethereum.Analyzer.IRSpec
+                     , Ethereum.Analyzer.UtilSpec
+                     , Ethereum.AnalyzerSpec
                      , SpecCommon
   build-depends:       base
                      , bytestring
