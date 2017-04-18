@@ -77,6 +77,7 @@ executable ea-dump-contract
   build-depends:       base >= 4 && < 5
                      , directory
                      , ethereum-analyzer
+                     , ethereum-analyzer-cli
                      , ethereum-analyzer-deps
                      , hflags
                      , monad-logger
