@@ -5,6 +5,7 @@ extra-lib-dirs:
 - /usr/local/lib
 packages:
 - ethereum-analyzer/
+- ethereum-analyzer-cli/
 - ethereum-analyzer-deps/
 - ethereum-analyzer-webui/
 extra-deps:

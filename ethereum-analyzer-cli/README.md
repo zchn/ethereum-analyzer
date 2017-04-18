@@ -1,1 +1,1 @@
-# ethereum-analyzer-cli
+# ethereum-analyzer
