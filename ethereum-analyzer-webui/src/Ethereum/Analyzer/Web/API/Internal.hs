@@ -1,5 +1,5 @@
 -- | Definition of HTML content type.
-module Ethereum.Analyzer.Servant.API.Internal
+module Ethereum.Analyzer.Web.API.Internal
   ( HTML
   ) where
 

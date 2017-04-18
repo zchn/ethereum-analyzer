@@ -6,7 +6,7 @@ module Main
   ( main
   ) where
 
-import Blockchain.Jsonrpc.Client
+import Ethereum.Jsonrpc.Client
 import Blockchain.Output
 import Control.Monad.Logger
 import Control.Monad.Trans

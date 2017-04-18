@@ -1,7 +1,7 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE OverloadedStrings, TemplateHaskell #-}
 
-module Blockchain.Jsonrpc.Client
+module Ethereum.Jsonrpc.Client
   ( web3ClientVersion
   , ethBlockNumber
   , ethGetTransactionsByBlockNumber
