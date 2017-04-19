@@ -49,7 +49,6 @@ main = do _ <- $initHFlags "release_to_hackage.hs"
                     package ++ ".cabal"
                   systemOrDie $ "stack upload --no-signature " ++ package
                 ) packages
-              systemOrDie "git diff"
               systemOrDie $ "git commit . -m 'tagging v" ++ flags_version ++ "'"
               systemOrDie $ "git tag v" ++ flags_version
               systemOrDie "git push"
