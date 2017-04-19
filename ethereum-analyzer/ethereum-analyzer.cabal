@@ -25,45 +25,17 @@ source-repository this
   subdir:   ethereum-analyzer
 
 library
-  build-depends:       base >= 4 && < 5,
-                       aeson,
-                       bimap,
-                       bytestring,
-                       conduit-combinators,
-                       conduit-extra,
-                       containers,
-                       ethereum-analyzer-deps,
-                       exceptions,
-                       extra,
-                       fgl,
-                       graphviz,
-                       hexstring,
-                       hflags,
-                       hoopl >= 3.10.2.1,
-                       http-conduit,
-                       http-media,
-                       http-types,
-                       json-rpc,
-                       logging-effect,
-                       monad-logger,
-                       mtl,
-                       neat-interpolation,
-                       network,
-                       optparse-applicative,
-                       prometheus-client,
-                       prometheus-metrics-ghc,
-                       protolude,
-                       servant,
-                       servant-server,
-                       text,
-                       time,
-                       unordered-containers,
-                       vector,
-                       wai,
-                       wai-extra,
-                       wai-middleware-prometheus,
-                       warp,
-                       wl-pprint-text
+  build-depends:       base >= 4 && < 5
+                     , bimap
+                     , bytestring
+                     , containers
+                     , ethereum-analyzer-deps
+                     , extra
+                     , fgl
+                     , graphviz
+                     , hexstring
+                     , hoopl >= 3.10.2.1
+                     , text
                        
   exposed-modules:     Ethereum.Analyzer
                      , Ethereum.Analyzer.Common
