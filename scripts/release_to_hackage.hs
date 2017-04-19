@@ -36,13 +36,22 @@ main = do _ <- $initHFlags "release_to_hackage.hs"
               systemOrDie "git checkout master"
               systemOrDie "git stash"
               _ <- mapM (
-                \package ->
+                \package -> do
                   systemOrDie $
                     "sed -i'' " ++
                     "'s/^version:\\([[:blank:]]*\\)[[:digit:]]\\+.[[:digit:]]\\+.[[:digit:]]\\+" ++
                     "/version:\\1" ++ flags_version ++ "/' " ++ package ++ "/" ++
-                    package ++ ".cabal") packages
+                    package ++ ".cabal"
+                  systemOrDie $
+                    "sed -i'' " ++
+                    "'s/^  tag:\\([[:blank:]]*\\)v[[:digit:]]\\+.[[:digit:]]\\+.[[:digit:]]\\+" ++
+                    "/  tag:\\1v" ++ flags_version ++ "/' " ++ package ++ "/" ++
+                    package ++ ".cabal"
+                  systemOrDie $ "stack upload " + package
+                ) packages
               systemOrDie "git diff"
-              -- systemOrDie $ "git tag v" + flags_version
+              systemOrDie "git commit . -m 'tagging v" ++ flags_version ++ "'"
+              systemOrDie $ "git tag v" + flags_version
+              systemOrDie $ "git push"
             other -> error $ "malformed version: " ++ flags_version ++ " " ++ show other
           return ()
