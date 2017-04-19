@@ -50,8 +50,8 @@ main = do _ <- $initHFlags "release_to_hackage.hs"
                   systemOrDie $ "stack upload " + package
                 ) packages
               systemOrDie "git diff"
-              systemOrDie "git commit . -m 'tagging v" ++ flags_version ++ "'"
-              systemOrDie $ "git tag v" + flags_version
-              systemOrDie $ "git push"
+              systemOrDie $ "git commit . -m 'tagging v" ++ flags_version ++ "'"
+              systemOrDie $ "git tag v" ++ flags_version
+              systemOrDie "git push"
             other -> error $ "malformed version: " ++ flags_version ++ " " ++ show other
           return ()
