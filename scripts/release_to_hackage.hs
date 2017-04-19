@@ -47,7 +47,7 @@ main = do _ <- $initHFlags "release_to_hackage.hs"
                     "'s/^  tag:\\([[:blank:]]*\\)v[[:digit:]]\\+.[[:digit:]]\\+.[[:digit:]]\\+" ++
                     "/  tag:\\1v" ++ flags_version ++ "/' " ++ package ++ "/" ++
                     package ++ ".cabal"
-                  systemOrDie $ "stack upload " ++ package
+                  systemOrDie $ "stack upload --no-signature " ++ package
                 ) packages
               systemOrDie "git diff"
               systemOrDie $ "git commit . -m 'tagging v" ++ flags_version ++ "'"
