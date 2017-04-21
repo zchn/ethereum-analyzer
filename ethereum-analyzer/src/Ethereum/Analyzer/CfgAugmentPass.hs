@@ -8,7 +8,7 @@ module Ethereum.Analyzer.CfgAugmentPass
 
 import Ethereum.Analyzer
 import Ethereum.Analyzer.Common
-import Blockchain.ExtWord
+import Data.LargeWord
 import Blockchain.VM.Opcodes
 import Compiler.Hoopl
 import Data.Bits

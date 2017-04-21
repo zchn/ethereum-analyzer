@@ -4,7 +4,7 @@ module Ethereum.Analyzer.Decompile
   ) where
 
 import Blockchain.Data.Code
-import Blockchain.ExtWord
+import Data.LargeWord
 import Blockchain.Util
 import Blockchain.VM.Code
 import Blockchain.VM.Opcodes

@@ -35,6 +35,7 @@ library
                      , graphviz
                      , hexstring
                      , hoopl >= 3.10.2.1
+                     , largeword
                      , text
                        
   exposed-modules:     Ethereum.Analyzer

@@ -1,4 +1,3 @@
-
 module Blockchain.Util where
 
 import Data.Bits
@@ -10,7 +9,7 @@ import Data.List
 import Data.Word
 import Numeric
 
-import Blockchain.ExtWord
+import Data.LargeWord
 
 showHex4::Word256->String
 showHex4 i = replicate (4 - length rawOutput) '0' ++ rawOutput
@@ -59,9 +58,9 @@ showWord8 _ = '?'
 
 showMem::Int->[Word8]->String
 showMem _ x | length x > 1000 = " mem size greater than 1000 bytes"
-showMem _ [] = "" 
-showMem p (v1:v2:v3:v4:v5:v6:v7:v8:rest) = 
-    padZeros 4 (showHex p "") ++ " " 
+showMem _ [] = ""
+showMem p (v1:v2:v3:v4:v5:v6:v7:v8:rest) =
+    padZeros 4 (showHex p "") ++ " "
              ++ [showWord8 v1] ++ [showWord8 v2] ++ [showWord8 v3] ++ [showWord8 v4]
              ++ [showWord8 v5] ++ [showWord8 v6] ++ [showWord8 v7] ++ [showWord8 v8] ++ " "
              ++ padZeros 2 (showHex v1 "") ++ " " ++ padZeros 2 (showHex v2 "") ++ " " ++ padZeros 2 (showHex v3 "") ++ " " ++ padZeros 2 (showHex v4 "") ++ " "

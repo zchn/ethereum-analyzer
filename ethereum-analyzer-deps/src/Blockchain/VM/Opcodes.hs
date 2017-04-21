@@ -6,7 +6,7 @@ import Data.Binary
 import qualified Data.ByteString as B
 import qualified Data.Map as M
 import Data.Maybe
-import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
+import Data.LargeWord
 import Text.PrettyPrint.ANSI.Leijen hiding ((<$>))
 
 import Blockchain.Util

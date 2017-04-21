@@ -8,7 +8,7 @@ module Ethereum.Analyzer.CfgAugWithTopNPass
 
 import Ethereum.Analyzer
 import Ethereum.Analyzer.Common
-import Blockchain.ExtWord
+import Data.LargeWord
 import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl
 import Control.Monad
@@ -19,7 +19,7 @@ import Data.List.Extra
 import Data.Maybe as DM
 import Data.Set as DS
 import Data.Word
-import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
+import Data.LargeWord
 
 type StackElemFact = WithTop (Set Word256)
 

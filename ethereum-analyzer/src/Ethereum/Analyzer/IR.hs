@@ -18,7 +18,7 @@ module Ethereum.Analyzer.IR
   , showOps
   ) where
 
-import Blockchain.ExtWord as BE
+import Data.LargeWord as BE
 import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl as CH
 import Control.Monad as CM
@@ -28,7 +28,7 @@ import Data.Bimap as DB
 import Data.Text as DT
 import qualified Data.Text.Lazy as DTL
 import Data.List as DL
-import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
+import Data.LargeWord
 
 data HplOp e x where
         CoOp :: Label -> HplOp C O

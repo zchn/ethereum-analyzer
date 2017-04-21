@@ -30,6 +30,7 @@ library
                  , deepseq
                  , fast-logger
                  , global-lock
+                 , largeword
                  , monad-logger
                  , nibblestring
                  , split
@@ -39,12 +40,9 @@ library
                    , Blockchain.Data.Util
                    , Blockchain.VM.Code
                    , Blockchain.VM.Opcodes
-                   , Blockchain.ExtWord
-                   , Blockchain.Format
                    , Blockchain.Util
                    , Blockchain.Output
                    , Blockchain.Colors
-                   , Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
                    , Legacy.Haskoin.V0102.Network.Haskoin.Crypto.Curve
                    , Legacy.Haskoin.V0102.Network.Haskoin.Crypto.NumberTheory
                    , Legacy.Haskoin.V0102.Network.Haskoin.Util
