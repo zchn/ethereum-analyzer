@@ -49,6 +49,7 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
     coT _ f = f
     ooT :: HplOp O O -> StackTopFact -> StackTopFact
     ooT (OoOp (_, op)) f = opT op f
+    ooT (HpCodeCopy _) f = f
     ocT :: HplOp O C -> StackTopFact -> FactBase StackTopFact
     ocT hplop@(OcOp (_, op) _) f = distributeFact hplop (opT op f)
     opT :: Operation -> StackTopFact -> StackTopFact
@@ -78,6 +79,7 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
 opGUnit :: HplOp e x -> Graph HplOp e x
 opGUnit co@CoOp {} = gUnitCO $ BlockCO co BNil
 opGUnit oo@OoOp {} = gUnitOO $ BMiddle oo
+opGUnit oo@HpCodeCopy {} = gUnitOO $ BMiddle oo
 opGUnit oc@OcOp {} = gUnitOC $ BlockOC BNil oc
 
 cfgAugmentRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackTopFact

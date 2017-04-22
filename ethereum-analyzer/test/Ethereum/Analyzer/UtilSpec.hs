@@ -198,7 +198,7 @@ spec = do
               "    5 -> 6;\n" ++
               "    7 -> 8;\n" ++ "    9 -> 10;\n" ++ "    10 -> 11;\n" ++ "}"
        it "shows HplBody after CfgAugmentPass" $
-         do let decompiled@((loc, _):_) = decompileHexString hexcode2
+         do let decompiled@((_, _):_) = decompileHexString hexcode2
                 result =
                   unWordLabelMapM $
                   do contract <- evmOps2HplContract decompiled

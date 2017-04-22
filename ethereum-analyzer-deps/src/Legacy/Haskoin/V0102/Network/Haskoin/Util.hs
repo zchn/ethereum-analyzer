@@ -49,7 +49,6 @@ module Legacy.Haskoin.V0102.Network.Haskoin.Util
 ) where
 
 import Numeric (readHex)
-import Control.Applicative ((<$>))
 import Control.Monad (guard)
 -- -- import Control.Monad.Trans.Either (EitherT, hoistEither)
 

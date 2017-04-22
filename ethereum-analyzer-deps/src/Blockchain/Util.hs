@@ -1,9 +1,7 @@
-
 module Blockchain.Util where
 
 import Data.Bits
 import qualified Data.ByteString as B
-import qualified Data.NibbleString as N
 import Data.ByteString.Internal
 import Data.Char
 import Data.List
@@ -18,13 +16,6 @@ showHex4 i = replicate (4 - length rawOutput) '0' ++ rawOutput
 
 showHexU::Integer->[Char]
 showHexU = map toUpper . flip showHex ""
-
-nibbleString2ByteString::N.NibbleString->B.ByteString
-nibbleString2ByteString (N.EvenNibbleString s) = s
-nibbleString2ByteString (N.OddNibbleString c s) = c `B.cons` s
-
-byteString2NibbleString::B.ByteString->N.NibbleString
-byteString2NibbleString = N.EvenNibbleString
 
 --I hate this, it is an ugly way to create an Integer from its component bytes.
 --There should be an easier way....
@@ -59,9 +50,9 @@ showWord8 _ = '?'
 
 showMem::Int->[Word8]->String
 showMem _ x | length x > 1000 = " mem size greater than 1000 bytes"
-showMem _ [] = "" 
-showMem p (v1:v2:v3:v4:v5:v6:v7:v8:rest) = 
-    padZeros 4 (showHex p "") ++ " " 
+showMem _ [] = ""
+showMem p (v1:v2:v3:v4:v5:v6:v7:v8:rest) =
+    padZeros 4 (showHex p "") ++ " "
              ++ [showWord8 v1] ++ [showWord8 v2] ++ [showWord8 v3] ++ [showWord8 v4]
              ++ [showWord8 v5] ++ [showWord8 v6] ++ [showWord8 v7] ++ [showWord8 v8] ++ " "
              ++ padZeros 2 (showHex v1 "") ++ " " ++ padZeros 2 (showHex v2 "") ++ " " ++ padZeros 2 (showHex v3 "") ++ " " ++ padZeros 2 (showHex v4 "") ++ " "

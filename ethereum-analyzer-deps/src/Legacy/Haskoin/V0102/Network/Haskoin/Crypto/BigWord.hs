@@ -59,7 +59,6 @@ import Data.Aeson
     )
 import Control.DeepSeq (NFData, rnf)
 import Control.Monad (unless, guard)
-import Control.Applicative ((<$>))
 import Data.Ratio (numerator, denominator)
 import qualified Data.ByteString as BS (head, length, reverse)
 import qualified Data.Text as T (pack, unpack)

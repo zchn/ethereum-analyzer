@@ -31,7 +31,6 @@ library
                  , fast-logger
                  , global-lock
                  , monad-logger
-                 , nibblestring
                  , split
                  , text
     exposed-modules: Blockchain.Data.Code

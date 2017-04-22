@@ -5,11 +5,8 @@ module Ethereum.AnalyzerSpec
   ) where
 
 import Ethereum.Analyzer
-import Blockchain.ExtWord
-import Blockchain.VM.Opcodes
 import Data.List as DL
 import Data.List.Extra as DLE
-import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 import SpecCommon
 import Test.Hspec
 

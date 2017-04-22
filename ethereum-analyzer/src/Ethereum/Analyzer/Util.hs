@@ -62,6 +62,9 @@ toGr bd =
           bd
   in mkGraph nList eList
 
+
+visParams :: forall n el.
+             GraphvizParams n (Block HplOp C C) el () (Block HplOp C C)
 visParams =
   nonClusteredParams
   { fmtNode = \(_, nl) -> [toLabel $ show nl, shape BoxShape]

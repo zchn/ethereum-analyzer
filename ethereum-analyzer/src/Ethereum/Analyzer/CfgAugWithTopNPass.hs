@@ -11,14 +11,12 @@ import Ethereum.Analyzer.Common
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl
-import Control.Monad
 import Data.Bits as Db
 import Data.ByteString as DB
 import Data.List as DL
 import Data.List.Extra
 import Data.Maybe as DM
 import Data.Set as DS
-import Data.Word
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 type StackElemFact = WithTop (Set Word256)
@@ -70,6 +68,7 @@ stackNLattice depth =
 _sizeBound :: Int
 _sizeBound = 10
 
+mkTopList :: forall b b1 a. [b] -> [Pointed C b1 a]
 mkTopList = DL.map (const Top)
 
 pairCompute :: (Word256 -> Word256 -> Word256) -> StackNFact -> StackNFact
@@ -87,7 +86,7 @@ pairCompute fun flist =
 
 popStack :: Int -> StackNFact -> StackNFact
 popStack 0 f = f
-popStack n (h:t) = popStack (n - 1) (t ++ [Top])
+popStack n (_:t) = popStack (n - 1) (t ++ [Top])
 
 pushStack' :: StackElemFact -> StackNFact -> StackNFact
 pushStack' e flist = e : (dropEnd 1 flist)
@@ -102,8 +101,8 @@ b2w256 :: Bool -> Word256
 b2w256 True = 1
 b2w256 False = 0
 
-w256Not :: Word256 -> Word256
-w256Not wd = bytesToWord256 $ DL.map complement $ word256ToBytes wd
+-- w256Not :: Word256 -> Word256
+-- w256Not wd = bytesToWord256 $ DL.map complement $ word256ToBytes wd
 
 w256And :: Word256 -> Word256 -> Word256
 w256And wd1 wd2 =
@@ -119,8 +118,8 @@ w256Xor wd1 wd2 =
 
 peekStack :: Int -> StackNFact -> StackElemFact
 peekStack _ [] = Top
-peekStack 1 (h:t) = h
-peekStack n (h:t) = peekStack (n - 1) t
+peekStack 1 (h:_) = h
+peekStack n (_:t) = peekStack (n - 1) t
 
 swapStack :: Int -> StackNFact -> StackNFact
 swapStack n stk =
@@ -269,13 +268,14 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
 opGUnit :: HplOp e x -> Graph HplOp e x
 opGUnit co@CoOp {} = gUnitCO $ BlockCO co BNil
 opGUnit oo@OoOp {} = gUnitOO $ BMiddle oo
+opGUnit oo@HpCodeCopy {} = gUnitOO $ BMiddle oo
 opGUnit oc@OcOp {} = gUnitOC $ BlockOC BNil oc
 
-catPElems :: [Pointed e x t] -> [t]
-catPElems = mapMaybe maybePElem
-  where
-    maybePElem (PElem v) = Just v
-    maybePElem _ = Nothing
+-- catPElems :: [Pointed e x t] -> [t]
+-- catPElems = mapMaybe maybePElem
+--   where
+--     maybePElem (PElem v) = Just v
+--     maybePElem _ = Nothing
 
 cfgAugWithTopNRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackNFact
 cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR

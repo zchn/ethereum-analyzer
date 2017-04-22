@@ -7,11 +7,7 @@ module Ethereum.Analyzer.Web.Server.Handlers
   ( server
   ) where
 
--- XXX: jml doesn't like the name "Handlers" for this, and isn't sure that it
--- should be in a submodule of Project.Server. Perhaps the code in
--- Project.Server (which is command-line processing, setting up logs &
--- monitoring, starting the HTTP server) should be in a different module.
-import Protolude hiding (Handler)
+import Protolude
 
 import Ethereum.Analyzer.Util
 import Ethereum.Analyzer.Web.API
@@ -19,7 +15,6 @@ import Ethereum.Analyzer.Web.API
 import qualified Ethereum.Analyzer.Web.Server.Logging as Log
 import Control.Monad.Except (ExceptT(..))
 import Control.Monad.Log (Severity, logInfo)
-import qualified Data.Text.Lazy as DTL
 import Servant
        (ServantErr, Server, (:<|>)(..), (:>), (:~>)(..), enter, Raw)
 import Servant.Utils.StaticFiles (serveDirectory)
