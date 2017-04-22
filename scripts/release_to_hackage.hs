@@ -24,9 +24,10 @@ systemOrDie cmd = do
   return ()
 
 packages :: [String]
-packages = ["ethereum-analyzer",
-            "ethereum-analyzer-webui",
-            "ethereum-analyzer-cli"]
+packages = [ "ethereum-analyzer"
+           , "ethereum-analyzer-deps"
+           , "ethereum-analyzer-webui"
+           , "ethereum-analyzer-cli"]
 
 main :: IO ()
 main = do _ <- $initHFlags "release_to_hackage.hs"
