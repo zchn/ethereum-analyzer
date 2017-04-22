@@ -68,7 +68,9 @@ stackNLattice depth =
 _sizeBound :: Int
 _sizeBound = 10
 
-mkTopList :: forall b b1 a. [b] -> [Pointed C b1 a]
+mkTopList
+  :: forall b b1 a.
+     [b] -> [Pointed C b1 a]
 mkTopList = DL.map (const Top)
 
 pairCompute :: (Word256 -> Word256 -> Word256) -> StackNFact -> StackNFact
@@ -103,7 +105,6 @@ b2w256 False = 0
 
 -- w256Not :: Word256 -> Word256
 -- w256Not wd = bytesToWord256 $ DL.map complement $ word256ToBytes wd
-
 w256And :: Word256 -> Word256 -> Word256
 w256And wd1 wd2 =
   bytesToWord256 $ DL.zipWith (.&.) (word256ToBytes wd1) (word256ToBytes wd2)
@@ -276,7 +277,6 @@ opGUnit oc@OcOp {} = gUnitOC $ BlockOC BNil oc
 --   where
 --     maybePElem (PElem v) = Just v
 --     maybePElem _ = Nothing
-
 cfgAugWithTopNRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackNFact
 cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
   where
@@ -332,39 +332,57 @@ doCfgAugWithTopNPass hexstring = do
   let entry_ = entryOf $ ctorOf contract
       body = bodyOf $ ctorOf contract
   case entry_ of
-       Nothing -> return contract
-       Just entry -> do
-         newBody <-
-           runWithFuel
-             10000000000
-             (fst <$>
-              analyzeAndRewriteFwdBody
-                cfgAugWithTopNPass
-                entry
-                body
-                (mapSingleton entry $ fact_bot $ fp_lattice cfgAugWithTopNPass))
-         let blocks = DL.map snd $ bodyList newBody
-             ooOps = DL.concatMap ((\(_, b, _) -> blockToList b) . blockSplit) blocks
-             newHexstrings = mapMaybe (
-               \op -> case op of
-                        HpCodeCopy offset ->
-                          let newhs = DB.drop (fromInteger (getBigWordInteger offset) * 2) hexstring
-                          in if DB.null newhs then Nothing else Just newhs
-                        _ -> Nothing) ooOps
-         case newHexstrings of
-           [] -> return contract { ctorOf = HplCode (Just entry) newBody }
-           [newhs] -> do
-             HplCode (Just disEntry) disBody <-
-               evmOps2HplCode $ decompileHexString newhs
-             newDisBody <- runWithFuel
-               10000000000
-               (fst <$>
-                analyzeAndRewriteFwdBody
-                cfgAugWithTopNPass
-                disEntry
-                disBody
-                (mapSingleton disEntry $ fact_bot $ fp_lattice cfgAugWithTopNPass))
-             return HplContract { ctorOf = HplCode (Just entry) newBody
-                                , dispatcherOf = HplCode (Just disEntry) newDisBody }
-           _  -> error $ "doCfgAugWithTopNPass: unexpected newHexstrings length: "
-             ++ (show $ DL.length newHexstrings)
+    Nothing -> return contract
+    Just entry -> do
+      newBody <-
+        runWithFuel
+          10000000000
+          (fst <$>
+           analyzeAndRewriteFwdBody
+             cfgAugWithTopNPass
+             entry
+             body
+             (mapSingleton entry $ fact_bot $ fp_lattice cfgAugWithTopNPass))
+      let blocks = DL.map snd $ bodyList newBody
+          ooOps = DL.concatMap ((\(_, b, _) -> blockToList b) . blockSplit) blocks
+          newHexstrings =
+            mapMaybe
+              (\op ->
+                  case op of
+                    HpCodeCopy offset ->
+                      let newhs =
+                            DB.drop
+                              (fromInteger (getBigWordInteger offset) * 2)
+                              hexstring
+                      in if DB.null newhs
+                           then Nothing
+                           else Just newhs
+                    _ -> Nothing)
+              ooOps
+      case newHexstrings of
+        [] ->
+          return
+            contract
+            { ctorOf = HplCode (Just entry) newBody
+            }
+        [newhs] -> do
+          HplCode (Just disEntry) disBody <-
+            evmOps2HplCode $ decompileHexString newhs
+          newDisBody <-
+            runWithFuel
+              10000000000
+              (fst <$>
+               analyzeAndRewriteFwdBody
+                 cfgAugWithTopNPass
+                 disEntry
+                 disBody
+                 (mapSingleton disEntry $ fact_bot $ fp_lattice cfgAugWithTopNPass))
+          return
+            HplContract
+            { ctorOf = HplCode (Just entry) newBody
+            , dispatcherOf = HplCode (Just disEntry) newDisBody
+            }
+        _ ->
+          error $
+          "doCfgAugWithTopNPass: unexpected newHexstrings length: " ++
+          (show $ DL.length newHexstrings)
