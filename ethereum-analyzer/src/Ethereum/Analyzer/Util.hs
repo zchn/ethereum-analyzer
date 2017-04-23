@@ -13,7 +13,6 @@ import Ethereum.Analyzer.IR
 import Ethereum.Analyzer.CfgAugWithTopNPass
 import Ethereum.Analyzer.CfgAugmentPass
 import Compiler.Hoopl
-import Data.ByteString.Char8 as DBC
 import Data.GraphViz
 import Data.GraphViz.Printing
 import Data.Graph.Inductive.Graph as DGIG
@@ -21,19 +20,18 @@ import Data.Graph.Inductive.PatriciaTree
 import Data.Text as DT
 import qualified Data.Text.Lazy as DTL
 
-decompileToDotText :: Text -> Text
-decompileToDotText hexcode =
-  let decompiled = decompileHexString $ DBC.pack $ DT.unpack hexcode
+decompileToDotText :: EvmHexString -> Text
+decompileToDotText hs =
+  let decompiled = decompile hs
       result =
         unWordLabelMapM $
         do contract <- evmOps2HplContract decompiled
            toDotText <$> (bodyOf . ctorOf <$> doCfgAugmentPass contract)
   in result
 
-decompileToDotText2 :: Text -> (Text, Text)
-decompileToDotText2 hexcode =
-  let hexstring = DBC.pack $ DT.unpack hexcode
-      result =
+decompileToDotText2 :: EvmHexString -> (Text, Text)
+decompileToDotText2 hexstring =
+  let result =
         unWordLabelMapM $
         do contract' <- doCfgAugWithTopNPass hexstring
            return

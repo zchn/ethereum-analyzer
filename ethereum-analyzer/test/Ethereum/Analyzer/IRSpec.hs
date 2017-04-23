@@ -10,21 +10,21 @@ import Test.Hspec
 spec :: Spec
 spec = do
   describe "e2h" $
-    do it "works for hexcode1" $
-         do let decompiled = decompileHexString hexcode1
+    do it "works for hexstring1" $
+         do let decompiled = decompile hexstring1
             unWordLabelMapM
               (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract decompiled)) `shouldBe`
               327
-       it "works for hexcode2" $
-         do let decompiled = decompileHexString hexcode2
+       it "works for hexstring2" $
+         do let decompiled = decompile hexstring2
             unWordLabelMapM
               (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract decompiled)) `shouldBe`
               12
-       -- it "shows voteHexcode" $
-       --   do let decompiled = decompileHexString voteHexcode
+       -- it "shows voteHexstring" $
+       --   do let decompiled = decompile voteHexstring
        --      unWordLabelMapM (show <$> (evmOps2HplBody decompiled)) `shouldBe` ""
        it "shows HplBody" $
-         do let decompiled = decompileHexString hexcode2
+         do let decompiled = decompile hexstring2
             unWordLabelMapM
               (show . bodyOf . ctorOf <$> (evmOps2HplContract decompiled)) `shouldBe`
               "LM (UM (fromList [(1,CO: L1\n" ++

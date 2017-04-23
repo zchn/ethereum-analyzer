@@ -13,14 +13,14 @@ import Test.Hspec
 spec :: Spec
 spec = do
   describe "decompile" $
-    do it "works for hexcode1" $
-         do let decompiled1 = show $ showOps $ decompileHexString hexcode1
+    do it "works for hexstring1" $
+         do let decompiled1 = show $ showOps $ decompile hexstring1
             DL.take 60 decompiled1 `shouldBe`
               "[\"0: PUSH [96]\",\"2: PUSH [64]\",\"4: MSTORE\",\"5: PUSH [2]\",\"7:"
             DLE.takeEnd 60 decompiled1 `shouldBe`
               "]\",\"6989: JUMP\",\"6990: JUMPDEST\",\"6991: SWAP1\",\"6992: JUMP\"]"
-       it "works for hexcode2" $
-         do let decompiled2 = show $ showOps $ decompileHexString hexcode2
+       it "works for hexstring2" $
+         do let decompiled2 = show $ showOps $ decompile hexstring2
             decompiled2 `shouldBe` "[\"0: PUSH [96]\"," ++
               "\"2: PUSH [64]\"," ++
               "\"4: MSTORE\"," ++

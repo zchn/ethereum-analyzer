@@ -75,9 +75,9 @@ mkTopList = DL.map (const Top)
 
 pairCompute :: (Word256 -> Word256 -> Word256) -> StackNFact -> StackNFact
 pairCompute fun flist =
-  if DL.length flist < 2
-    then mkTopList flist
-    else case flist of
+  case flist of
+           [] -> mkTopList flist
+           [_] -> mkTopList flist
            Top:_:tl -> (Top : tl) ++ [Top]
            _:Top:tl -> (Top : tl) ++ [Top]
            PElem st1:PElem st2:tl ->
@@ -89,6 +89,7 @@ pairCompute fun flist =
 popStack :: Int -> StackNFact -> StackNFact
 popStack 0 f = f
 popStack n (_:t) = popStack (n - 1) (t ++ [Top])
+popStack _ [] = []
 
 pushStack' :: StackElemFact -> StackNFact -> StackNFact
 pushStack' e flist = e : (dropEnd 1 flist)
@@ -325,9 +326,9 @@ cfgAugWithTopNPass =
   , fp_rewrite = cfgAugWithTopNRewrite
   }
 
-doCfgAugWithTopNPass :: ByteString -> WordLabelMapM HplContract
-doCfgAugWithTopNPass hexstring = do
-  let decompiled = decompileHexString hexstring
+doCfgAugWithTopNPass :: EvmHexString -> WordLabelMapM HplContract
+doCfgAugWithTopNPass hs = do
+  let decompiled = decompile hs
   contract <- evmOps2HplContract decompiled
   let entry_ = entryOf $ ctorOf contract
       body = bodyOf $ ctorOf contract
@@ -350,11 +351,11 @@ doCfgAugWithTopNPass hexstring = do
               (\op ->
                   case op of
                     HpCodeCopy offset ->
-                      let newhs =
+                      let newhs = EvmHexString $
                             DB.drop
                               (fromInteger (getBigWordInteger offset) * 2)
-                              hexstring
-                      in if DB.null newhs
+                              $ unEvmHexString hs
+                      in if DB.null $ unEvmHexString newhs
                            then Nothing
                            else Just newhs
                     _ -> Nothing)
@@ -367,7 +368,7 @@ doCfgAugWithTopNPass hexstring = do
             }
         [newhs] -> do
           HplCode (Just disEntry) disBody <-
-            evmOps2HplCode $ decompileHexString newhs
+            evmOps2HplCode $ decompile newhs
           newDisBody <-
             runWithFuel
               10000000000

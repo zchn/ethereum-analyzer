@@ -13,7 +13,7 @@ spec :: Spec
 spec = do
   describe "toDotText" $
     do it "shows HplBody's dot graph" $
-         do let decompiled = decompileHexString hexcode2
+         do let decompiled = decompile hexstring2
             unWordLabelMapM
               (unpack . toDotText . bodyOf . ctorOf <$>
                (evmOps2HplContract decompiled)) `shouldBe`
@@ -198,7 +198,7 @@ spec = do
               "    5 -> 6;\n" ++
               "    7 -> 8;\n" ++ "    9 -> 10;\n" ++ "    10 -> 11;\n" ++ "}"
        it "shows HplBody after CfgAugmentPass" $
-         do let decompiled@((_, _):_) = decompileHexString hexcode2
+         do let decompiled@((_, _):_) = decompile hexstring2
                 result =
                   unWordLabelMapM $
                   do contract <- evmOps2HplContract decompiled

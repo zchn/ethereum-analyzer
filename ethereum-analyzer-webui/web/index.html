@@ -3,9 +3,9 @@
       <script src="/web/jquery-3.1.1.min.js"></script>
       <script src="/web/viz-lite.js"></script>
       <script>
-       function callDotCfg(prefix, hexcodeDiv, ctorDiv, dispDiv) {
-           var hexcode = $(hexcodeDiv).val();
-           $.getJSON(prefix + hexcode, function(data, status, xhr){
+       function callDotCfg(prefix, hexstringDiv, ctorDiv, dispDiv) {
+           var hexstring = $(hexstringDiv).val();
+           $.getJSON(prefix + hexstring, function(data, status, xhr){
                if(status !== "success") {
                    $(ctorDiv).text(status);
                    dotcfg = status;

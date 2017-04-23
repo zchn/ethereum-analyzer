@@ -1,6 +1,8 @@
 module Ethereum.Analyzer.Decompile
-  ( decompile
-  , decompileHexString
+  ( EvmBytecode (..)
+  , EvmHexString (..)
+  , HasEvmBytecode
+  , decompile
   ) where
 
 import Blockchain.Data.Code
@@ -11,16 +13,27 @@ import Blockchain.VM.Opcodes
 import Data.ByteString
 import Data.HexString
 
-decompileHexString :: ByteString -> [(Word256, Operation)]
-decompileHexString = decompileBS . toBytes . hexString
+class HasEvmBytecode a where
+  evmBytecodeOf :: a -> EvmBytecode
 
-decompile :: Code -> [(Word256, Operation)]
-decompile (Code bs) = decompileBS bs
-decompile _ = []
+newtype EvmBytecode = EvmBytecode { unEvmBytecode :: ByteString } deriving (Show, Eq)
 
-decompileBS :: ByteString -> [(Word256, Operation)]
-decompileBS bs =
-  let hardlimit = 10000
+newtype EvmHexString = EvmHexString { unEvmHexString :: ByteString } deriving (Show, Eq)
+
+instance HasEvmBytecode EvmBytecode where
+  evmBytecodeOf = id
+
+instance HasEvmBytecode EvmHexString where
+  evmBytecodeOf = EvmBytecode . toBytes . hexString . unEvmHexString
+
+instance HasEvmBytecode Code where
+  evmBytecodeOf (Code bs) = EvmBytecode bs
+  evmBytecodeOf _ = EvmBytecode ""
+
+decompile :: HasEvmBytecode a => a -> [(Word256, Operation)]
+decompile a =
+  let bs = (unEvmBytecode . evmBytecodeOf) a
+      hardlimit = 10000
   in decompileBSAt bs 0 hardlimit
 
 decompileBSAt :: ByteString -> Word256 -> Int -> [(Word256, Operation)]

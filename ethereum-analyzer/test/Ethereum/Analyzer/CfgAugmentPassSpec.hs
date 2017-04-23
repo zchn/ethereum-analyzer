@@ -12,15 +12,15 @@ import Test.Hspec
 spec :: Spec
 spec = do
   describe "doCfgAugmentPass" $
-    do it "works for hexcode1" $
-         do let decompiled = decompileHexString hexcode1
+    do it "works for hexstring1" $
+         do let decompiled = decompile hexstring1
                 result =
                   unWordLabelMapM $
                   do contract <- evmOps2HplContract decompiled
                      show <$> doCfgAugmentPass contract
             length result `shouldBe` 4769
-       it "works for hexcode2" $
-         do let decompiled@((_, _):_) = decompileHexString hexcode2
+       it "works for hexstring2" $
+         do let decompiled@((_, _):_) = decompile hexstring2
                 result =
                   unWordLabelMapM $
                   do contract <- evmOps2HplContract decompiled
