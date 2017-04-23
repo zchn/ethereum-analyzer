@@ -14,9 +14,10 @@ import Compiler.Hoopl
 import Data.Bits as Db
 import Data.ByteString as DB
 import Data.List as DL
-import Data.List.Extra
+import Data.List.Extra as DLE
 import Data.Maybe as DM
 import Data.Set as DS
+import Data.Text as DT
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 type StackElemFact = WithTop (Set Word256)
@@ -91,14 +92,13 @@ popStack n (_:t) = popStack (n - 1) (t ++ [Top])
 popStack _ [] = []
 
 pushStack' :: StackElemFact -> StackNFact -> StackNFact
-pushStack' e flist = e : (dropEnd 1 flist)
+pushStack' e flist = e : (DLE.dropEnd 1 flist)
 
 pushStack :: Word256 -> StackNFact -> StackNFact
 pushStack wd = pushStack' (PElem $ DS.singleton wd)
 
 pushTop :: StackNFact -> StackNFact
-pushTop flist = Top : dropEnd 1 flist
-
+pushTop flist = Top : DLE.dropEnd 1 flist
 b2w256 :: Bool -> Word256
 b2w256 True = 1
 b2w256 False = 0
@@ -352,9 +352,9 @@ doCfgAugWithTopNPass hs = do
                     HpCodeCopy offset ->
                       let newhs =
                             EvmHexString $
-                            DB.drop (fromInteger (getBigWordInteger offset) * 2) $
+                            DT.drop (fromInteger (getBigWordInteger offset) * 2) $
                             unEvmHexString hs
-                      in if DB.null $ unEvmHexString newhs
+                      in if DT.null $ unEvmHexString newhs
                            then Nothing
                            else Just newhs
                     _ -> Nothing)

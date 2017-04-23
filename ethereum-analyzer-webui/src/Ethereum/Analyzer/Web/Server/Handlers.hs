@@ -9,8 +9,6 @@ module Ethereum.Analyzer.Web.Server.Handlers
 
 import Protolude
 
-import Data.ByteString.Char8 as DBC
-import Data.Text as DT
 import Ethereum.Analyzer.Disasm
 import Ethereum.Analyzer.Util
 import Ethereum.Analyzer.Web.API
@@ -54,12 +52,12 @@ users = do
 
 dotcfg :: Maybe Text -> Handler Doc DotCfgResp
 dotcfg (Just t) =
-  pure (DotCfgResp (disasmToDotText $ EvmHexString $ DBC.pack $ DT.unpack t) "")
+  pure (DotCfgResp (disasmToDotText $ EvmHexString t) "")
 dotcfg _ = pure (DotCfgResp "" "")
 
 dotcfg2 :: Maybe Text -> Handler Doc DotCfgResp
 dotcfg2 (Just t) =
   pure
     (uncurry DotCfgResp $
-     disasmToDotText2 $ EvmHexString $ DBC.pack $ DT.unpack t)
+     disasmToDotText2 $ EvmHexString t)
 dotcfg2 _ = pure (DotCfgResp "" "")
