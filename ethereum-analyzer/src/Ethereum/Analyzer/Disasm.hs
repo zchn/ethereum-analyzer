@@ -1,6 +1,6 @@
 module Ethereum.Analyzer.Disasm
-  ( EvmBytecode (..)
-  , EvmHexString (..)
+  ( EvmBytecode(..)
+  , EvmHexString(..)
   , HasEvmBytecode
   , disasm
   ) where
@@ -15,12 +15,16 @@ import Data.HexString
 import Data.Text
 import Data.Text.Encoding
 
-class HasEvmBytecode a where
+class HasEvmBytecode a  where
   evmBytecodeOf :: a -> EvmBytecode
 
-newtype EvmBytecode = EvmBytecode { unEvmBytecode :: ByteString } deriving (Show, Eq)
+newtype EvmBytecode = EvmBytecode
+  { unEvmBytecode :: ByteString
+  } deriving (Show, Eq)
 
-newtype EvmHexString = EvmHexString { unEvmHexString :: Text } deriving (Show, Eq)
+newtype EvmHexString = EvmHexString
+  { unEvmHexString :: Text
+  } deriving (Show, Eq)
 
 instance HasEvmBytecode EvmBytecode where
   evmBytecodeOf = id
@@ -32,7 +36,9 @@ instance HasEvmBytecode Code where
   evmBytecodeOf (Code bs) = EvmBytecode bs
   evmBytecodeOf _ = EvmBytecode ""
 
-disasm :: HasEvmBytecode a => a -> [(Word256, Operation)]
+disasm
+  :: HasEvmBytecode a
+  => a -> [(Word256, Operation)]
 disasm a =
   let bs = (unEvmBytecode . evmBytecodeOf) a
       hardlimit = 10000

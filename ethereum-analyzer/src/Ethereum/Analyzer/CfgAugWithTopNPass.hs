@@ -99,6 +99,7 @@ pushStack wd = pushStack' (PElem $ DS.singleton wd)
 
 pushTop :: StackNFact -> StackNFact
 pushTop flist = Top : DLE.dropEnd 1 flist
+
 b2w256 :: Bool -> Word256
 b2w256 True = 1
 b2w256 False = 0
