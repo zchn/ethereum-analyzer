@@ -17,7 +17,6 @@ import Data.List as DL
 import Data.List.Extra as DLE
 import Data.Maybe as DM
 import Data.Set as DS
-import Data.Text as DT
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 type StackElemFact = WithTop (Set Word256)
@@ -326,9 +325,9 @@ cfgAugWithTopNPass =
   , fp_rewrite = cfgAugWithTopNRewrite
   }
 
-doCfgAugWithTopNPass :: EvmHexString -> WordLabelMapM HplContract
-doCfgAugWithTopNPass hs = do
-  let disasmd = disasm hs
+doCfgAugWithTopNPass :: HasEvmBytecode a => a -> WordLabelMapM HplContract
+doCfgAugWithTopNPass a = do
+  let disasmd = disasm a
   contract <- evmOps2HplContract disasmd
   let entry_ = entryOf $ ctorOf contract
       body = bodyOf $ ctorOf contract
@@ -352,10 +351,10 @@ doCfgAugWithTopNPass hs = do
                   case op of
                     HpCodeCopy offset ->
                       let newhs =
-                            EvmHexString $
-                            DT.drop (fromInteger (getBigWordInteger offset) * 2) $
-                            unEvmHexString hs
-                      in if DT.null $ unEvmHexString newhs
+                            EvmBytecode $
+                            DB.drop (fromInteger (getBigWordInteger offset)) $
+                            unEvmBytecode (evmBytecodeOf a)
+                      in if DB.null $ unEvmBytecode newhs
                            then Nothing
                            else Just newhs
                     _ -> Nothing)

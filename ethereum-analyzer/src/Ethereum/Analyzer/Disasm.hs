@@ -1,7 +1,7 @@
 module Ethereum.Analyzer.Disasm
   ( EvmBytecode(..)
   , EvmHexString(..)
-  , HasEvmBytecode
+  , HasEvmBytecode (..)
   , disasm
   ) where
 

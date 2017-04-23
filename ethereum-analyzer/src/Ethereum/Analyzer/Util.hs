@@ -20,20 +20,20 @@ import Data.Graph.Inductive.PatriciaTree
 import Data.Text as DT
 import qualified Data.Text.Lazy as DTL
 
-disasmToDotText :: EvmHexString -> Text
-disasmToDotText hs =
-  let disasmd = disasm hs
+disasmToDotText :: HasEvmBytecode a => a -> Text
+disasmToDotText a =
+  let disasmd = disasm a
       result =
         unWordLabelMapM $
         do contract <- evmOps2HplContract disasmd
            toDotText <$> (bodyOf . ctorOf <$> doCfgAugmentPass contract)
   in result
 
-disasmToDotText2 :: EvmHexString -> (Text, Text)
-disasmToDotText2 hexstring =
+disasmToDotText2 :: HasEvmBytecode a => a -> (Text, Text)
+disasmToDotText2 a =
   let result =
         unWordLabelMapM $
-        do contract' <- doCfgAugWithTopNPass hexstring
+        do contract' <- doCfgAugWithTopNPass a
            return
              ( toDotText $ bodyOf (ctorOf contract')
              , toDotText $ bodyOf (dispatcherOf contract'))

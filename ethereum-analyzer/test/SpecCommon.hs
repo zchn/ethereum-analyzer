@@ -6,7 +6,6 @@ module SpecCommon
   , voteHexstring
   ) where
 
-import Data.ByteString
 import Ethereum.Analyzer.Disasm
 
 hexstring1 :: EvmHexString
