@@ -22,7 +22,8 @@ import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 type StackElemFact = WithTop (Set Word256)
 
 joinStackElemBase
-  :: Label  -> OldFact (Set Word256)
+  :: Label
+  -> OldFact (Set Word256)
   -> NewFact (Set Word256)
   -> (ChangeFlag, (Set Word256))
 joinStackElemBase _ (OldFact oldF) (NewFact newF) =

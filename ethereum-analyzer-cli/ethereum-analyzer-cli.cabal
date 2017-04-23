@@ -29,16 +29,22 @@ library
                      , aeson
                      , bytestring
                      , conduit-combinators
+                     , directory
                      , ethereum-analyzer-deps
                      , exceptions
                      , hexstring
                      , http-conduit
                      , json-rpc
+                     , monad-logger
+                     , mtl
+                     , protolude
                      , text
                      , unordered-containers
                      , vector
                        
-  exposed-modules:     Ethereum.Jsonrpc.Client
+  exposed-modules:     Ethereum.Executable.BytecodeVisMain
+                       Ethereum.Executable.DumpCodeMain
+  other-modules:       Ethereum.Jsonrpc.Client                       
   ghc-options:         -Wall
   hs-source-dirs:      src
   buildable:           True
@@ -48,14 +54,23 @@ library
 executable ea-dump-contract
   main-is:             DumpCodeMain.hs
   build-depends:       base >= 4 && < 5
-                     , directory
-                     , ethereum-analyzer
                      , ethereum-analyzer-cli
                      , ethereum-analyzer-deps
                      , hflags
                      , monad-logger
-                     , mtl
-                     , text
+                     , protolude
+  ghc-options:         -Wall
+  hs-source-dirs:      exec_src
+  buildable:           True
+  default-language:    Haskell98
+
+executable ea-bytecode-vis
+  main-is:             BytecodeVisMain.hs
+  build-depends:       base >= 4 && < 5
+                     , ethereum-analyzer-cli
+                     , hflags
+                     , monad-logger
+                     , protolude
   ghc-options:         -Wall
   hs-source-dirs:      exec_src
   buildable:           True
