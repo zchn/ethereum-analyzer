@@ -7,7 +7,7 @@ module SpecCommon
   ) where
 
 import Data.ByteString
-import Ethereum.Analyzer.Decompile
+import Ethereum.Analyzer.Disasm
 
 hexstring1 :: EvmHexString
 hexstring1 = EvmHexString

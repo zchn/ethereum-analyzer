@@ -4,11 +4,11 @@
 
 module Ethereum.Analyzer.Util
   ( toDotText
-  , decompileToDotText
-  , decompileToDotText2
+  , disasmToDotText
+  , disasmToDotText2
   ) where
 
-import Ethereum.Analyzer.Decompile
+import Ethereum.Analyzer.Disasm
 import Ethereum.Analyzer.IR
 import Ethereum.Analyzer.CfgAugWithTopNPass
 import Ethereum.Analyzer.CfgAugmentPass
@@ -20,17 +20,17 @@ import Data.Graph.Inductive.PatriciaTree
 import Data.Text as DT
 import qualified Data.Text.Lazy as DTL
 
-decompileToDotText :: EvmHexString -> Text
-decompileToDotText hs =
-  let decompiled = decompile hs
+disasmToDotText :: EvmHexString -> Text
+disasmToDotText hs =
+  let disasmd = disasm hs
       result =
         unWordLabelMapM $
-        do contract <- evmOps2HplContract decompiled
+        do contract <- evmOps2HplContract disasmd
            toDotText <$> (bodyOf . ctorOf <$> doCfgAugmentPass contract)
   in result
 
-decompileToDotText2 :: EvmHexString -> (Text, Text)
-decompileToDotText2 hexstring =
+disasmToDotText2 :: EvmHexString -> (Text, Text)
+disasmToDotText2 hexstring =
   let result =
         unWordLabelMapM $
         do contract' <- doCfgAugWithTopNPass hexstring

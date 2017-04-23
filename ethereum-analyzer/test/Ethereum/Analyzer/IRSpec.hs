@@ -11,22 +11,22 @@ spec :: Spec
 spec = do
   describe "e2h" $
     do it "works for hexstring1" $
-         do let decompiled = decompile hexstring1
+         do let disasmd = disasm hexstring1
             unWordLabelMapM
-              (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract decompiled)) `shouldBe`
+              (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract disasmd)) `shouldBe`
               327
        it "works for hexstring2" $
-         do let decompiled = decompile hexstring2
+         do let disasmd = disasm hexstring2
             unWordLabelMapM
-              (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract decompiled)) `shouldBe`
+              (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract disasmd)) `shouldBe`
               12
        -- it "shows voteHexstring" $
-       --   do let decompiled = decompile voteHexstring
-       --      unWordLabelMapM (show <$> (evmOps2HplBody decompiled)) `shouldBe` ""
+       --   do let disasmd = disasm voteHexstring
+       --      unWordLabelMapM (show <$> (evmOps2HplBody disasmd)) `shouldBe` ""
        it "shows HplBody" $
-         do let decompiled = decompile hexstring2
+         do let disasmd = disasm hexstring2
             unWordLabelMapM
-              (show . bodyOf . ctorOf <$> (evmOps2HplContract decompiled)) `shouldBe`
+              (show . bodyOf . ctorOf <$> (evmOps2HplContract disasmd)) `shouldBe`
               "LM (UM (fromList [(1,CO: L1\n" ++
               "OO: 0: PUSH [96]\n" ++
               "OO: 2: PUSH [64]\n" ++

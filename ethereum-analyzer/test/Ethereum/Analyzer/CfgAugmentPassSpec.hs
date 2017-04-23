@@ -13,17 +13,17 @@ spec :: Spec
 spec = do
   describe "doCfgAugmentPass" $
     do it "works for hexstring1" $
-         do let decompiled = decompile hexstring1
+         do let disasmd = disasm hexstring1
                 result =
                   unWordLabelMapM $
-                  do contract <- evmOps2HplContract decompiled
+                  do contract <- evmOps2HplContract disasmd
                      show <$> doCfgAugmentPass contract
             length result `shouldBe` 4769
        it "works for hexstring2" $
-         do let decompiled@((_, _):_) = decompile hexstring2
+         do let disasmd@((_, _):_) = disasm hexstring2
                 result =
                   unWordLabelMapM $
-                  do contract <- evmOps2HplContract decompiled
+                  do contract <- evmOps2HplContract disasmd
                      show . bodyOf . ctorOf <$> doCfgAugmentPass contract
             result `shouldBe` "LM (UM (fromList [(1,CO: L1\n" ++
               "OO: 0: PUSH [96]\n" ++

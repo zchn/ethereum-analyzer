@@ -68,5 +68,5 @@ enumerateContractAt s p bn = do
      )
     addresses
   -- code <- getCode server port "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe"
-  -- $logInfo $ T.pack $ "decompiled code is " ++ formatCode code
+  -- $logInfo $ T.pack $ "disasmd code is " ++ formatCode code
   enumerateContractAt s p (bn - 1)

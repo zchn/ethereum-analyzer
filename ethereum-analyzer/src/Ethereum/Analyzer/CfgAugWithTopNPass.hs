@@ -328,8 +328,8 @@ cfgAugWithTopNPass =
 
 doCfgAugWithTopNPass :: EvmHexString -> WordLabelMapM HplContract
 doCfgAugWithTopNPass hs = do
-  let decompiled = decompile hs
-  contract <- evmOps2HplContract decompiled
+  let disasmd = disasm hs
+  contract <- evmOps2HplContract disasmd
   let entry_ = entryOf $ ctorOf contract
       body = bodyOf $ ctorOf contract
   case entry_ of
@@ -368,7 +368,7 @@ doCfgAugWithTopNPass hs = do
             }
         [newhs] -> do
           HplCode (Just disEntry) disBody <-
-            evmOps2HplCode $ decompile newhs
+            evmOps2HplCode $ disasm newhs
           newDisBody <-
             runWithFuel
               10000000000

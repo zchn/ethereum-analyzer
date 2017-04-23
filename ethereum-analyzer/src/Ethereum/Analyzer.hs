@@ -1,9 +1,9 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
 module Ethereum.Analyzer
-  ( module Ethereum.Analyzer.Decompile
+  ( module Ethereum.Analyzer.Disasm
   , module Ethereum.Analyzer.IR
   ) where
 
-import Ethereum.Analyzer.Decompile
+import Ethereum.Analyzer.Disasm
 import Ethereum.Analyzer.IR

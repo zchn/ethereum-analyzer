@@ -13,10 +13,10 @@ spec :: Spec
 spec = do
   describe "toDotText" $
     do it "shows HplBody's dot graph" $
-         do let decompiled = decompile hexstring2
+         do let disasmd = disasm hexstring2
             unWordLabelMapM
               (unpack . toDotText . bodyOf . ctorOf <$>
-               (evmOps2HplContract decompiled)) `shouldBe`
+               (evmOps2HplContract disasmd)) `shouldBe`
               "digraph {\n" ++
               "    1 [label=\"CO: L1\\n" ++
               "OO: 0: PUSH [96]\\n" ++
@@ -198,10 +198,10 @@ spec = do
               "    5 -> 6;\n" ++
               "    7 -> 8;\n" ++ "    9 -> 10;\n" ++ "    10 -> 11;\n" ++ "}"
        it "shows HplBody after CfgAugmentPass" $
-         do let decompiled@((_, _):_) = decompile hexstring2
+         do let disasmd@((_, _):_) = disasm hexstring2
                 result =
                   unWordLabelMapM $
-                  do contract <- evmOps2HplContract decompiled
+                  do contract <- evmOps2HplContract disasmd
                      unpack . toDotText . bodyOf . ctorOf <$> doCfgAugmentPass contract
             result `shouldBe` "digraph {\n" ++
               "    1 [label=\"CO: L1\\n" ++

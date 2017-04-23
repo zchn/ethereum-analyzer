@@ -11,7 +11,7 @@ import Protolude
 
 import Data.ByteString.Char8 as DBC
 import Data.Text as DT
-import Ethereum.Analyzer.Decompile
+import Ethereum.Analyzer.Disasm
 import Ethereum.Analyzer.Util
 import Ethereum.Analyzer.Web.API
        (API, RootPage(..), User(..), Users(..), DotCfgResp(..))
@@ -53,9 +53,9 @@ users = do
   pure (Users [User 1 "Isaac" "Newton", User 2 "Albert" "Einstein"])
 
 dotcfg :: Maybe Text -> Handler Doc DotCfgResp
-dotcfg (Just t) = pure (DotCfgResp (decompileToDotText $ EvmHexString $ DBC.pack $ DT.unpack t) "")
+dotcfg (Just t) = pure (DotCfgResp (disasmToDotText $ EvmHexString $ DBC.pack $ DT.unpack t) "")
 dotcfg _ = pure (DotCfgResp "" "")
 
 dotcfg2 :: Maybe Text -> Handler Doc DotCfgResp
-dotcfg2 (Just t) = pure (uncurry DotCfgResp $ decompileToDotText2 $ EvmHexString $ DBC.pack $ DT.unpack t)
+dotcfg2 (Just t) = pure (uncurry DotCfgResp $ disasmToDotText2 $ EvmHexString $ DBC.pack $ DT.unpack t)
 dotcfg2 _ = pure (DotCfgResp "" "")

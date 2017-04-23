@@ -12,16 +12,16 @@ import Test.Hspec
 
 spec :: Spec
 spec = do
-  describe "decompile" $
+  describe "disasm" $
     do it "works for hexstring1" $
-         do let decompiled1 = show $ showOps $ decompile hexstring1
-            DL.take 60 decompiled1 `shouldBe`
+         do let disasmd1 = show $ showOps $ disasm hexstring1
+            DL.take 60 disasmd1 `shouldBe`
               "[\"0: PUSH [96]\",\"2: PUSH [64]\",\"4: MSTORE\",\"5: PUSH [2]\",\"7:"
-            DLE.takeEnd 60 decompiled1 `shouldBe`
+            DLE.takeEnd 60 disasmd1 `shouldBe`
               "]\",\"6989: JUMP\",\"6990: JUMPDEST\",\"6991: SWAP1\",\"6992: JUMP\"]"
        it "works for hexstring2" $
-         do let decompiled2 = show $ showOps $ decompile hexstring2
-            decompiled2 `shouldBe` "[\"0: PUSH [96]\"," ++
+         do let disasmd2 = show $ showOps $ disasm hexstring2
+            disasmd2 `shouldBe` "[\"0: PUSH [96]\"," ++
               "\"2: PUSH [64]\"," ++
               "\"4: MSTORE\"," ++
               "\"5: CALLDATASIZE\"," ++
