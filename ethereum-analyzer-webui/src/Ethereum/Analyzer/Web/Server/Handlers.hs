@@ -53,9 +53,13 @@ users = do
   pure (Users [User 1 "Isaac" "Newton", User 2 "Albert" "Einstein"])
 
 dotcfg :: Maybe Text -> Handler Doc DotCfgResp
-dotcfg (Just t) = pure (DotCfgResp (disasmToDotText $ EvmHexString $ DBC.pack $ DT.unpack t) "")
+dotcfg (Just t) =
+  pure (DotCfgResp (disasmToDotText $ EvmHexString $ DBC.pack $ DT.unpack t) "")
 dotcfg _ = pure (DotCfgResp "" "")
 
 dotcfg2 :: Maybe Text -> Handler Doc DotCfgResp
-dotcfg2 (Just t) = pure (uncurry DotCfgResp $ disasmToDotText2 $ EvmHexString $ DBC.pack $ DT.unpack t)
+dotcfg2 (Just t) =
+  pure
+    (uncurry DotCfgResp $
+     disasmToDotText2 $ EvmHexString $ DBC.pack $ DT.unpack t)
 dotcfg2 _ = pure (DotCfgResp "" "")

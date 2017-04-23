@@ -76,15 +76,14 @@ mkTopList = DL.map (const Top)
 pairCompute :: (Word256 -> Word256 -> Word256) -> StackNFact -> StackNFact
 pairCompute fun flist =
   case flist of
-           [] -> mkTopList flist
-           [_] -> mkTopList flist
-           Top:_:tl -> (Top : tl) ++ [Top]
-           _:Top:tl -> (Top : tl) ++ [Top]
-           PElem st1:PElem st2:tl ->
-             let l1 = toList st1
-             in ((PElem $ DS.unions $ DL.map (\e1 -> DS.map (fun e1) st2) l1) :
-                 tl) ++
-                [Top]
+    [] -> mkTopList flist
+    [_] -> mkTopList flist
+    Top:_:tl -> (Top : tl) ++ [Top]
+    _:Top:tl -> (Top : tl) ++ [Top]
+    PElem st1:PElem st2:tl ->
+      let l1 = toList st1
+      in ((PElem $ DS.unions $ DL.map (\e1 -> DS.map (fun e1) st2) l1) : tl) ++
+         [Top]
 
 popStack :: Int -> StackNFact -> StackNFact
 popStack 0 f = f
@@ -351,10 +350,10 @@ doCfgAugWithTopNPass hs = do
               (\op ->
                   case op of
                     HpCodeCopy offset ->
-                      let newhs = EvmHexString $
-                            DB.drop
-                              (fromInteger (getBigWordInteger offset) * 2)
-                              $ unEvmHexString hs
+                      let newhs =
+                            EvmHexString $
+                            DB.drop (fromInteger (getBigWordInteger offset) * 2) $
+                            unEvmHexString hs
                       in if DB.null $ unEvmHexString newhs
                            then Nothing
                            else Just newhs
@@ -367,8 +366,7 @@ doCfgAugWithTopNPass hs = do
             { ctorOf = HplCode (Just entry) newBody
             }
         [newhs] -> do
-          HplCode (Just disEntry) disBody <-
-            evmOps2HplCode $ disasm newhs
+          HplCode (Just disEntry) disBody <- evmOps2HplCode $ disasm newhs
           newDisBody <-
             runWithFuel
               10000000000

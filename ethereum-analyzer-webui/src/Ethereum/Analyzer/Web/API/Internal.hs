@@ -1,5 +1,6 @@
 -- | Definition of HTML content type.
 {-# LANGUAGE EmptyDataDecls #-}
+
 module Ethereum.Analyzer.Web.API.Internal
   ( HTML
   ) where
