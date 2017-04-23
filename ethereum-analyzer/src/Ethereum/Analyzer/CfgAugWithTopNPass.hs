@@ -325,7 +325,9 @@ cfgAugWithTopNPass =
   , fp_rewrite = cfgAugWithTopNRewrite
   }
 
-doCfgAugWithTopNPass :: HasEvmBytecode a => a -> WordLabelMapM HplContract
+doCfgAugWithTopNPass
+  :: HasEvmBytecode a
+  => a -> WordLabelMapM HplContract
 doCfgAugWithTopNPass a = do
   let disasmd = disasm a
   contract <- evmOps2HplContract disasmd

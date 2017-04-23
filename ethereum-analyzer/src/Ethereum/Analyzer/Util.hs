@@ -20,7 +20,9 @@ import Data.Graph.Inductive.PatriciaTree
 import Data.Text as DT
 import qualified Data.Text.Lazy as DTL
 
-disasmToDotText :: HasEvmBytecode a => a -> Text
+disasmToDotText
+  :: HasEvmBytecode a
+  => a -> Text
 disasmToDotText a =
   let disasmd = disasm a
       result =
@@ -29,7 +31,9 @@ disasmToDotText a =
            toDotText <$> (bodyOf . ctorOf <$> doCfgAugmentPass contract)
   in result
 
-disasmToDotText2 :: HasEvmBytecode a => a -> (Text, Text)
+disasmToDotText2
+  :: HasEvmBytecode a
+  => a -> (Text, Text)
 disasmToDotText2 a =
   let result =
         unWordLabelMapM $
