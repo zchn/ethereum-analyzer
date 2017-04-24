@@ -20,11 +20,16 @@ defineFlag "jrpcPort" (8545 :: Int) "Ethereum json-rpc server port."
 
 defineFlag "contractDir" ("contracts" :: String) "Directory for contact files."
 
-defineFlag "dummy" False "dummy flag for https://github.com/nilcons/hflags/issues/14"
+defineFlag
+  "dummy"
+  False
+  "dummy flag for https://github.com/nilcons/hflags/issues/14"
 
 main :: IO ()
 main = do
   s <- $initHFlags "ea-dump-contract"
   putStrLn $ "Flags: " ++ show s
-  flip runLoggingT printLogMsg (
-    dumpContracts flags_jrpcServer flags_jrpcPort flags_contractDir)
+  flip
+    runLoggingT
+    printLogMsg
+    (dumpContracts flags_jrpcServer flags_jrpcPort flags_contractDir)
