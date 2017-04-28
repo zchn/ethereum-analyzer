@@ -25,6 +25,7 @@ module Legacy.Haskoin.V0102.Network.Haskoin.Util
   ) where
 
 import Control.Monad (guard)
+
 --   -- * ByteString helpers
 -- * Data.Binary helpers
 --   -- * Maybe and Either monad helpers
@@ -52,6 +53,7 @@ import Data.Binary.Put (Put, runPut)
 import Data.Bits ((.|.), shiftL, shiftR)
 import Data.List (unfoldr)
 import Data.List.Split (chunksOf)
+
 -- -- import Control.Monad.Trans.Either (EitherT, hoistEither)
 import Data.Word (Word8)
 

@@ -31,6 +31,7 @@ import Data.Binary.Get
        (getWord64be, getWord32be, getWord8, getByteString, Get)
 import Data.Binary.Put
        (putWord64be, putWord32be, putWord8, putByteString)
+
 -- Useful type aliases
 -- Data types
 -- Functions

@@ -25,6 +25,7 @@ import Control.Monad as CM
 import Data.Bimap as DB
 
 import Data.List as DL
+
 -- import Data.Graph.Inductive.Graph as DGIG
 import Data.Text as DT
 import qualified Data.Text.Lazy as DTL
