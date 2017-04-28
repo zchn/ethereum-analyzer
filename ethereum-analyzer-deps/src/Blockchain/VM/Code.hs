@@ -6,9 +6,9 @@ import qualified Data.ByteString as B
 import Numeric
 import Text.PrettyPrint.ANSI.Leijen
 
-import Blockchain.ExtWord
 import qualified Blockchain.Colors as CL
 import Blockchain.Data.Code
+import Blockchain.ExtWord
 import Blockchain.Format
 import Blockchain.Util
 import Blockchain.VM.Opcodes

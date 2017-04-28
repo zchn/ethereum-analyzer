@@ -7,8 +7,8 @@ module Main
   ) where
 
 import Blockchain.Output
-import Ethereum.Executable.DumpCodeMain
 import Control.Monad.Logger
+import Ethereum.Executable.DumpCodeMain
 import HFlags
 
 defineFlag

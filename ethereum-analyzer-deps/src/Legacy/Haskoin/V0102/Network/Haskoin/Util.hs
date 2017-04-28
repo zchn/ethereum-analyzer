@@ -24,6 +24,7 @@ module Legacy.Haskoin.V0102.Network.Haskoin.Util
   , isolate
   ) where
 
+import Control.Monad (guard)
 --   -- * ByteString helpers
 -- * Data.Binary helpers
 --   -- * Maybe and Either monad helpers
@@ -43,25 +44,24 @@ module Legacy.Haskoin.V0102.Network.Haskoin.Util
 -- , snd3
 -- , lst3
 import Numeric (readHex)
-import Control.Monad (guard)
 
--- -- import Control.Monad.Trans.Either (EitherT, hoistEither)
-import Data.Word (Word8)
-import Data.Bits ((.|.), shiftL, shiftR)
-import Data.List (unfoldr)
-import Data.List.Split (chunksOf)
-import Data.Binary.Put (Put, runPut)
 import Data.Binary (Binary, encode, decode, decodeOrFail)
 import Data.Binary.Get
        (Get, runGetOrFail, getByteString, ByteOffset, runGet)
+import Data.Binary.Put (Put, runPut)
+import Data.Bits ((.|.), shiftL, shiftR)
+import Data.List (unfoldr)
+import Data.List.Split (chunksOf)
+-- -- import Control.Monad.Trans.Either (EitherT, hoistEither)
+import Data.Word (Word8)
 
-import qualified Data.ByteString.Lazy as BL
-       (ByteString, toChunks, fromChunks)
 import qualified Data.ByteString as BS
        (ByteString, concat, pack, unpack, null)
 import qualified Data.ByteString.Builder as BSB
        (toLazyByteString, byteStringHex)
 import qualified Data.ByteString.Char8 as C (pack, unpack)
+import qualified Data.ByteString.Lazy as BL
+       (ByteString, toChunks, fromChunks)
 
 -- ByteString helpers
 -- | Transforms a lazy bytestring into a strict bytestring

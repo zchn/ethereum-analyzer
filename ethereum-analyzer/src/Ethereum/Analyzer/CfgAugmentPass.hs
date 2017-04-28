@@ -6,14 +6,14 @@ module Ethereum.Analyzer.CfgAugmentPass
   ( doCfgAugmentPass
   ) where
 
-import Ethereum.Analyzer
-import Ethereum.Analyzer.Common
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes
 import Compiler.Hoopl
 import Data.Bits
 import Data.List as DL
 import Data.Set as DS
+import Ethereum.Analyzer
+import Ethereum.Analyzer.Common
 
 type StackTopFact = WithTop (Set Word256)
 
@@ -58,9 +58,9 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
       PElem $
       DS.map
         (\wd ->
-            if wd == 0
-              then 1
-              else 0)
+           if wd == 0
+             then 1
+             else 0)
         st
     opT JUMPDEST f = f
     opT NEG (PElem st) = PElem $ DS.map (\wd -> -wd) st
@@ -136,7 +136,4 @@ doCfgAugmentPass contract =
                 entry
                 body
                 (mapSingleton entry Top))
-         return
-           contract
-           { ctorOf = HplCode (Just entry) newBody
-           }
+         return contract {ctorOf = HplCode (Just entry) newBody}

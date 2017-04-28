@@ -8,17 +8,17 @@ module Ethereum.Analyzer.Util
   , disasmToDotText2
   ) where
 
-import Ethereum.Analyzer.Disasm
-import Ethereum.Analyzer.IR
-import Ethereum.Analyzer.CfgAugWithTopNPass
-import Ethereum.Analyzer.CfgAugmentPass
 import Compiler.Hoopl
-import Data.GraphViz
-import Data.GraphViz.Printing
 import Data.Graph.Inductive.Graph as DGIG
 import Data.Graph.Inductive.PatriciaTree
+import Data.GraphViz
+import Data.GraphViz.Printing
 import Data.Text as DT
 import qualified Data.Text.Lazy as DTL
+import Ethereum.Analyzer.CfgAugWithTopNPass
+import Ethereum.Analyzer.CfgAugmentPass
+import Ethereum.Analyzer.Disasm
+import Ethereum.Analyzer.IR
 
 disasmToDotText
   :: HasEvmBytecode a
@@ -26,9 +26,9 @@ disasmToDotText
 disasmToDotText a =
   let disasmd = disasm a
       result =
-        unWordLabelMapM $
-        do contract <- evmOps2HplContract disasmd
-           toDotText <$> (bodyOf . ctorOf <$> doCfgAugmentPass contract)
+        unWordLabelMapM $ do
+          contract <- evmOps2HplContract disasmd
+          toDotText <$> (bodyOf . ctorOf <$> doCfgAugmentPass contract)
   in result
 
 disasmToDotText2
@@ -36,11 +36,11 @@ disasmToDotText2
   => a -> (Text, Text)
 disasmToDotText2 a =
   let result =
-        unWordLabelMapM $
-        do contract' <- doCfgAugWithTopNPass a
-           return
-             ( toDotText $ bodyOf (ctorOf contract')
-             , toDotText $ bodyOf (dispatcherOf contract'))
+        unWordLabelMapM $ do
+          contract' <- doCfgAugWithTopNPass a
+          return
+            ( toDotText $ bodyOf (ctorOf contract')
+            , toDotText $ bodyOf (dispatcherOf contract'))
   in result
 
 toDotText :: HplBody -> Text
@@ -56,10 +56,10 @@ toGr bd =
       (nList, eList) =
         mapFoldWithKey
           (\lbl blk (nList', eList') ->
-              let node = lblToNode lbl
-                  edgs =
-                    Prelude.map (\l -> (node, lblToNode l, ())) (successors blk)
-              in (nList' ++ [(node, blk)], eList' ++ edgs))
+             let node = lblToNode lbl
+                 edgs =
+                   Prelude.map (\l -> (node, lblToNode l, ())) (successors blk)
+             in (nList' ++ [(node, blk)], eList' ++ edgs))
           ([], [])
           bd
   in mkGraph nList eList
@@ -68,9 +68,7 @@ visParams
   :: forall n el.
      GraphvizParams n (Block HplOp C C) el () (Block HplOp C C)
 visParams =
-  nonClusteredParams
-  { fmtNode = \(_, nl) -> [toLabel $ show nl, shape BoxShape]
-  }
+  nonClusteredParams {fmtNode = \(_, nl) -> [toLabel $ show nl, shape BoxShape]}
 
 toDotGraph :: Gr (Block HplOp C C) () -> DotGraph Node
 toDotGraph gr = graphToDot visParams gr

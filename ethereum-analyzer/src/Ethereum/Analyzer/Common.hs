@@ -2,9 +2,9 @@ module Ethereum.Analyzer.Common
   ( varBytesToWord256
   ) where
 
+import Blockchain.ExtWord
 import Data.ByteString as DB
 import Data.Word
-import Blockchain.ExtWord
 
 zero256 :: ByteString
 zero256 = DB.replicate 32 0

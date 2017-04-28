@@ -29,11 +29,10 @@ withLogging
   :: (MonadMask m, MonadIO m, Pretty msg)
   => Severity -> LogM msg m a -> m a
 withLogging severityThreshold body =
-  withFDHandler defaultBatchingOptions stdout 0.4 80 $
-  \stdoutHandler ->
-     runLoggingT
-       (withTimestamps body)
-       (printLogs severityThreshold stdoutHandler)
+  withFDHandler defaultBatchingOptions stdout 0.4 80 $ \stdoutHandler ->
+    runLoggingT
+      (withTimestamps body)
+      (printLogs severityThreshold stdoutHandler)
 
 withTimestamps
   :: (MonadIO m, MonadLog (WithTimestamp msg) m)
@@ -72,7 +71,8 @@ printLogs
   => Severity -> Handler m Doc -> WithTimestamp (WithSeverity a) -> m ()
 printLogs severityThreshold handler message =
   when (severityThreshold >= msgSeverity (discardTimestamp message)) $
-  handler . renderWithTimestamp timeFormatter (renderWithSeverity pretty) $ message
+  handler . renderWithTimestamp timeFormatter (renderWithSeverity pretty) $
+  message
   where
     timeFormatter = formatTime defaultTimeLocale timeFormat
     timeFormat = iso8601DateFormat (Just "%H:%M:%S.%q")

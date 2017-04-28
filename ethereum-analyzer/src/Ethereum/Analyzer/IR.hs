@@ -24,10 +24,10 @@ import Compiler.Hoopl as CH
 import Control.Monad as CM
 import Data.Bimap as DB
 
+import Data.List as DL
 -- import Data.Graph.Inductive.Graph as DGIG
 import Data.Text as DT
 import qualified Data.Text.Lazy as DTL
-import Data.List as DL
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 data HplOp e x where
@@ -89,22 +89,14 @@ emptyCode = HplCode Nothing emptyBody
 evmOps2HplContract :: [(Word256, Operation)] -> WordLabelMapM HplContract
 evmOps2HplContract l = do
   ctorBody <- evmOps2HplCode l
-  return
-    HplContract
-    { ctorOf = ctorBody
-    , dispatcherOf = emptyCode
-    }
+  return HplContract {ctorOf = ctorBody, dispatcherOf = emptyCode}
 
 evmOps2HplCode :: [(Word256, Operation)] -> WordLabelMapM HplCode
 evmOps2HplCode [] = return emptyCode
 evmOps2HplCode l@((loc, _):_) = do
   entry <- labelFor loc
   body <- _evmOps2HplBody l
-  return
-    HplCode
-    { entryOf = Just entry
-    , bodyOf = body
-    }
+  return HplCode {entryOf = Just entry, bodyOf = body}
 
 _evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM HplBody
 _evmOps2HplBody [] = return emptyBody
@@ -112,10 +104,11 @@ _evmOps2HplBody el@((loc, _):_) = do
   l <- labelFor loc
   doEvmOps2HplBody emptyBody (blockJoinHead (CoOp l) emptyBlock) el
   where
-    doEvmOps2HplBody :: HplBody
-                     -> (Block HplOp C O)
-                     -> [(Word256, Operation)]
-                     -> WordLabelMapM HplBody
+    doEvmOps2HplBody
+      :: HplBody
+      -> (Block HplOp C O)
+      -> [(Word256, Operation)]
+      -> WordLabelMapM HplBody
     doEvmOps2HplBody body _ [] = return body -- sliently discarding bad hds
     doEvmOps2HplBody body hd [h'] =
       if isTerminator (snd h')
@@ -216,8 +209,7 @@ labelsFor = mapM labelFor
 instance Monad WordLabelMapM where
   return = pure
   WordLabelMapM f1 >>= k =
-    WordLabelMapM $
-    \m -> do
+    WordLabelMapM $ \m -> do
       (m', x) <- f1 m
       let (WordLabelMapM f2) = k x
       f2 m'
@@ -229,7 +221,7 @@ instance Applicative WordLabelMapM where
   pure x = WordLabelMapM (\m -> return (m, x))
   (<*>) = ap
 
-class UnWordLabelMapM a  where
+class UnWordLabelMapM a where
   unWordLabelMapM :: WordLabelMapM a -> a
 
 instance UnWordLabelMapM Int where

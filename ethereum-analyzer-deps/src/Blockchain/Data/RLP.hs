@@ -19,8 +19,8 @@ import qualified Data.ByteString.Base16 as B16
 import qualified Data.ByteString.Char8 as BC
 import Data.ByteString.Internal
 import Data.Word
-import Text.PrettyPrint.ANSI.Leijen hiding ((<$>))
 import Numeric
+import Text.PrettyPrint.ANSI.Leijen hiding ((<$>))
 
 import Blockchain.Data.Util
 
@@ -36,7 +36,7 @@ data RLPObject
   deriving (Show, Eq, Ord)
 
 -- | Converts objects to and from 'RLPObject's.
-class RLPSerializable a  where
+class RLPSerializable a where
   rlpDecode :: RLPObject -> a
   rlpEncode :: a -> RLPObject
 
@@ -56,7 +56,8 @@ splitAtWithError i s = B.splitAt i s
 
 getLength :: Int -> B.ByteString -> (Integer, B.ByteString)
 getLength sizeOfLength bytes =
-  (bytes2Integer $ B.unpack $ B.take sizeOfLength bytes, B.drop sizeOfLength bytes)
+  ( bytes2Integer $ B.unpack $ B.take sizeOfLength bytes
+  , B.drop sizeOfLength bytes)
 
 rlpSplit :: B.ByteString -> (RLPObject, B.ByteString)
 rlpSplit input =
@@ -70,7 +71,8 @@ rlpSplit input =
       | x >= 0xF8 && x <= 0xFF ->
         let (arrLength, restAfterLen) =
               getLength (fromIntegral x - 0xF7) $ B.tail input
-            (arrayData, nextRest) = splitAtWithError (fromIntegral arrLength) restAfterLen
+            (arrayData, nextRest) =
+              splitAtWithError (fromIntegral arrLength) restAfterLen
         in (RLPArray $ getRLPObjects arrayData, nextRest)
     x
       | x >= 128 && x <= 128 + 55 ->
@@ -81,7 +83,8 @@ rlpSplit input =
       | x >= 0xB8 && x <= 0xBF ->
         let (strLength, restAfterLen) =
               getLength (fromIntegral x - 0xB7) $ B.tail input
-            (strList, nextRest) = splitAtWithError (fromIntegral strLength) restAfterLen
+            (strList, nextRest) =
+              splitAtWithError (fromIntegral strLength) restAfterLen
         in (RLPString strList, nextRest)
     x
       | x < 128 -> (RLPScalar x, B.tail input)

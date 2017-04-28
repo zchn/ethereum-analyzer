@@ -26,7 +26,7 @@ import Servant.API
 import Ethereum.Analyzer.Web.API.Internal (HTML)
 
 -- | ethereum-analyzer API definition.
-type API = Get '[HTML] RootPage :<|> "users" :> Get '[JSON] Users :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp :<|> "ea" :> "dotcfg2" :> QueryParam "code" Text :> Get '[JSON] DotCfgResp
+type API = Get '[ HTML] RootPage :<|> "users" :> Get '[ JSON] Users :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[ JSON] DotCfgResp :<|> "ea" :> "dotcfg2" :> QueryParam "code" Text :> Get '[ JSON] DotCfgResp
 
 -- | Value-level representation of API.
 apiraw :: Proxy (API :<|> "web" :> Raw)

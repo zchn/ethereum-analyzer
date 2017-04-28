@@ -63,7 +63,8 @@ options = info (helper <*> parser) description
            [long "access-logs", help "How to log HTTP access", value Disabled]) <*>
       option
         (eitherReader
-           (maybe (throwError (toS invalidLogLevel)) pure . Log.fromKeyword . toS))
+           (maybe (throwError (toS invalidLogLevel)) pure .
+            Log.fromKeyword . toS))
         (fold
            [ long "log-level"
            , help "Minimum severity for log messages"
@@ -87,15 +88,15 @@ options = info (helper <*> parser) description
 runApp :: Config -> IO ()
 runApp config@Config {..} = do
   requests <- Prom.registerIO requestDuration
-  when enableGhcMetrics $
-    do statsEnabled <- getGCStatsEnabled
-       unless statsEnabled $
-         Log.withLogging logLevel $
-         Log.log
-           Warning
-           (text
-              "Exporting GHC metrics but GC stats not enabled. Re-run with +RTS -T.")
-       void $ Prom.register Prom.ghcMetrics
+  when enableGhcMetrics $ do
+    statsEnabled <- getGCStatsEnabled
+    unless statsEnabled $
+      Log.withLogging logLevel $
+      Log.log
+        Warning
+        (text
+           "Exporting GHC metrics but GC stats not enabled. Re-run with +RTS -T.")
+    void $ Prom.register Prom.ghcMetrics
   runSettings settings (middleware requests)
   where
     settings = warpSettings config

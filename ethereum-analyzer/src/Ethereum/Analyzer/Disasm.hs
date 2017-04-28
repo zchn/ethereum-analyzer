@@ -15,7 +15,7 @@ import Data.HexString
 import Data.Text
 import Data.Text.Encoding
 
-class HasEvmBytecode a  where
+class HasEvmBytecode a where
   evmBytecodeOf :: a -> EvmBytecode
 
 newtype EvmBytecode = EvmBytecode
@@ -30,7 +30,8 @@ instance HasEvmBytecode EvmBytecode where
   evmBytecodeOf = id
 
 instance HasEvmBytecode EvmHexString where
-  evmBytecodeOf = EvmBytecode . toBytes . hexString . encodeUtf8 . unEvmHexString
+  evmBytecodeOf =
+    EvmBytecode . toBytes . hexString . encodeUtf8 . unEvmHexString
 
 instance HasEvmBytecode Code where
   evmBytecodeOf (Code bs) = EvmBytecode bs

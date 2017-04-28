@@ -6,11 +6,11 @@ module Ethereum.Executable.DumpCodeMain
   ( dumpContracts
   ) where
 
-import Ethereum.Jsonrpc.Client
 import Control.Monad.Logger
 import Control.Monad.Trans
 import Data.Maybe
 import Data.Text as T hiding (map)
+import Ethereum.Jsonrpc.Client
 import Numeric
 import System.Directory as SD
 

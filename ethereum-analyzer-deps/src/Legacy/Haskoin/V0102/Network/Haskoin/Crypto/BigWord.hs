@@ -22,23 +22,23 @@ module Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
   , decodeBlockHashLE
   ) where
 
+import Control.DeepSeq (NFData, rnf)
+import Control.Monad (unless, guard)
+import Data.Aeson
+       (Value(String), FromJSON, ToJSON, parseJSON, toJSON, withText)
+import Data.Binary (Binary, get, put)
+import Data.Binary.Get
+       (getWord64be, getWord32be, getWord8, getByteString, Get)
+import Data.Binary.Put
+       (putWord64be, putWord32be, putWord8, putByteString)
 -- Useful type aliases
 -- Data types
 -- Functions
 import Data.Bits
        (Bits, (.&.), (.|.), xor, complement, shift, shiftL, shiftR, bit,
         testBit, bitSize, popCount, isSigned)
-import Data.Binary (Binary, get, put)
-import Data.Binary.Get
-       (getWord64be, getWord32be, getWord8, getByteString, Get)
-import Data.Binary.Put
-       (putWord64be, putWord32be, putWord8, putByteString)
-import Data.Aeson
-       (Value(String), FromJSON, ToJSON, parseJSON, toJSON, withText)
-import Control.DeepSeq (NFData, rnf)
-import Control.Monad (unless, guard)
-import Data.Ratio (numerator, denominator)
 import qualified Data.ByteString as BS (head, length, reverse)
+import Data.Ratio (numerator, denominator)
 import qualified Data.Text as T (pack, unpack)
 
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.Curve
@@ -102,7 +102,7 @@ inverseP (BigWord i) = fromInteger $ mulInverse i curveP
 inverseN :: FieldN -> FieldN
 inverseN (BigWord i) = fromInteger $ mulInverse i curveN
 
-class BigWordMod a  where
+class BigWordMod a where
   rFromInteger :: Integer -> BigWord a
   rBitSize :: BigWord a -> Int
 
@@ -325,8 +325,7 @@ instance ToJSON (BigWord Mod256Tx) where
 
 instance FromJSON (BigWord Mod256Tx) where
   parseJSON =
-    withText "TxHash not a string: " $
-    \a -> do
+    withText "TxHash not a string: " $ \a -> do
       let s = T.unpack a
       maybe (fail $ "Not a TxHash: " ++ s) return $ decodeTxHashLE s
 
@@ -335,8 +334,7 @@ instance ToJSON (BigWord Mod256) where
 
 instance FromJSON (BigWord Mod256) where
   parseJSON =
-    withText "Word256 not a string: " $
-    \a -> do
+    withText "Word256 not a string: " $ \a -> do
       let s = T.unpack a
       maybe (fail $ "Not a Word256: " ++ s) return $ hexToBS s >>= decodeToMaybe
 

@@ -6,8 +6,6 @@ module Ethereum.Analyzer.CfgAugWithTopNPass
   ( doCfgAugWithTopNPass
   ) where
 
-import Ethereum.Analyzer
-import Ethereum.Analyzer.Common
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl
@@ -17,6 +15,8 @@ import Data.List as DL
 import Data.List.Extra as DLE
 import Data.Maybe as DM
 import Data.Set as DS
+import Ethereum.Analyzer
+import Ethereum.Analyzer.Common
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 type StackElemFact = WithTop (Set Word256)
@@ -46,14 +46,17 @@ joinStackNFact :: Label
                -> (ChangeFlag, StackNFact)
 joinStackNFact l (OldFact oldF) (NewFact newF) =
   let zipped =
-        DL.zipWith (\a b -> joinStackElemFact l (OldFact a) (NewFact b)) oldF newF
+        DL.zipWith
+          (\a b -> joinStackElemFact l (OldFact a) (NewFact b))
+          oldF
+          newF
       (changedL, joinedF) = DL.unzip zipped
   in ( changeIf $
        DL.any
          (\c ->
-             case c of
-               SomeChange -> True
-               NoChange -> False)
+            case c of
+              SomeChange -> True
+              NoChange -> False)
          changedL
      , joinedF)
 
@@ -136,12 +139,12 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
     coT _ =
       DL.map
         (\f ->
-            case f of
-              Top -> Top
-              PElem st ->
-                if DS.size st > _sizeBound
-                  then Top
-                  else PElem st)
+           case f of
+             Top -> Top
+             PElem st ->
+               if DS.size st > _sizeBound
+                 then Top
+                 else PElem st)
     ooT :: HplOp O O -> StackNFact -> StackNFact
     ooT (OoOp (_, op)) f = opT op f
     ooT (HpCodeCopy _) f = f
@@ -346,27 +349,24 @@ doCfgAugWithTopNPass a = do
              body
              (mapSingleton entry $ fact_bot $ fp_lattice cfgAugWithTopNPass))
       let blocks = DL.map snd $ bodyList newBody
-          ooOps = DL.concatMap ((\(_, b, _) -> blockToList b) . blockSplit) blocks
+          ooOps =
+            DL.concatMap ((\(_, b, _) -> blockToList b) . blockSplit) blocks
           newHexstrings =
             mapMaybe
               (\op ->
-                  case op of
-                    HpCodeCopy offset ->
-                      let newhs =
-                            EvmBytecode $
-                            DB.drop (fromInteger (getBigWordInteger offset)) $
-                            unEvmBytecode (evmBytecodeOf a)
-                      in if DB.null $ unEvmBytecode newhs
-                           then Nothing
-                           else Just newhs
-                    _ -> Nothing)
+                 case op of
+                   HpCodeCopy offset ->
+                     let newhs =
+                           EvmBytecode $
+                           DB.drop (fromInteger (getBigWordInteger offset)) $
+                           unEvmBytecode (evmBytecodeOf a)
+                     in if DB.null $ unEvmBytecode newhs
+                          then Nothing
+                          else Just newhs
+                   _ -> Nothing)
               ooOps
       case newHexstrings of
-        [] ->
-          return
-            contract
-            { ctorOf = HplCode (Just entry) newBody
-            }
+        [] -> return contract {ctorOf = HplCode (Just entry) newBody}
         [newhs] -> do
           HplCode (Just disEntry) disBody <- evmOps2HplCode $ disasm newhs
           newDisBody <-
@@ -377,7 +377,8 @@ doCfgAugWithTopNPass a = do
                  cfgAugWithTopNPass
                  disEntry
                  disBody
-                 (mapSingleton disEntry $ fact_bot $ fp_lattice cfgAugWithTopNPass))
+                 (mapSingleton disEntry $
+                  fact_bot $ fp_lattice cfgAugWithTopNPass))
           return
             HplContract
             { ctorOf = HplCode (Just entry) newBody

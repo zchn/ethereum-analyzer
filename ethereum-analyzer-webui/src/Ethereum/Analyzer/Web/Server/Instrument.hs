@@ -46,7 +46,8 @@ type RequestDuration = Prom.Metric (Prom.Vector Prom.Label3 Prom.Summary)
 
 requestDuration :: IO RequestDuration
 requestDuration =
-  Prom.vector ("handler", "method", "status_code") $ Prom.summary info Prom.defaultQuantiles
+  Prom.vector ("handler", "method", "status_code") $
+  Prom.summary info Prom.defaultQuantiles
   where
     info =
       Prom.Info
@@ -84,7 +85,8 @@ prometheus
   -> Text -- ^ The label used to identify the app
   -> Wai.Middleware
 prometheus PrometheusSettings {..} duration appName app req respond =
-  if Wai.requestMethod req == HTTP.methodGet && Wai.pathInfo req == prometheusEndPoint
+  if Wai.requestMethod req == HTTP.methodGet &&
+     Wai.pathInfo req == prometheusEndPoint
     then case prometheusHandlerName of
            Nothing -> respondWithMetrics respond
            Just name ->
@@ -96,7 +98,8 @@ prometheus PrometheusSettings {..} duration appName app req respond =
 metrics :: Wai.Application
 metrics = const respondWithMetrics
 
-respondWithMetrics :: (Wai.Response -> IO Wai.ResponseReceived) -> IO Wai.ResponseReceived
+respondWithMetrics :: (Wai.Response -> IO Wai.ResponseReceived)
+                   -> IO Wai.ResponseReceived
 respondWithMetrics respond = do
   content <- Prom.exportMetricsAsText
   respond $ Wai.responseBuilder HTTP.status200 headers $ byteString content

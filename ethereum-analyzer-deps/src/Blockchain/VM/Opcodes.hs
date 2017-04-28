@@ -287,7 +287,8 @@ op2CodeMap :: M.Map Operation Word8
 op2CodeMap = M.fromList $ (\(OPData code op _ _ _) -> (op, code)) <$> opDatas
 
 code2OpMap :: M.Map Word8 Operation
-code2OpMap = M.fromList $ (\(OPData opcode op _ _ _) -> (opcode, op)) <$> opDatas
+code2OpMap =
+  M.fromList $ (\(OPData opcode op _ _ _) -> (opcode, op)) <$> opDatas
 
 op2OpCode :: Operation -> [Word8]
 op2OpCode (PUSH theList)
@@ -316,5 +317,7 @@ opCode2Op rom =
               B.unpack $ safeTake (fromIntegral $ opcode - 0x5F) $ B.tail rom
             , fromIntegral $ opcode - 0x5E)
             --    let op = fromMaybe (error $ "code is missing in code2OpMap: 0x" ++ showHex (B.head rom) "")
-       else let op = fromMaybe (MalformedOpcode opcode) $ M.lookup opcode code2OpMap
+       else let op =
+                  fromMaybe (MalformedOpcode opcode) $
+                  M.lookup opcode code2OpMap
             in (op, 1)

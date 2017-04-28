@@ -15,14 +15,14 @@ import Conduit
 import Control.Monad.Catch
 import Data.Aeson
 import Data.Aeson.Types hiding (Error)
+import qualified Data.ByteString.Char8 as DBC
 import Data.Foldable as DF
 import Data.HashMap.Strict as DHS
 import Data.HexString
 import Data.Text as T
+import qualified Data.Vector as V
 import Network.HTTP.Conduit as NHC hiding (port)
 import Network.JsonRpc as NJ
-import qualified Data.ByteString.Char8 as DBC
-import qualified Data.Vector as V
 
 data Req
   = Web3_clientVersionReq
@@ -47,42 +47,39 @@ instance FromRequest Req where
   parseParams "eth_blockNumber" = Just $ const $ return Eth_blockNumberReq
   parseParams "eth_getBlockByNumber" =
     Just $
-    withArray "(blockNumber, returnFullTransation)" $
-    \ab ->
-       let n = V.length ab
-       in if n == 2
-            then do
-              bn <- parseJSONElemAtIndex 0 ab
-              full <- parseJSONElemAtIndex 1 ab
-              return $ Eth_getBlockByNumberReq bn full
-            else fail $
-                 "cannot unpack array of length " ++
-                 show n ++ " into a Eth_getBlockByNumberReq"
+    withArray "(blockNumber, returnFullTransation)" $ \ab ->
+      let n = V.length ab
+      in if n == 2
+           then do
+             bn <- parseJSONElemAtIndex 0 ab
+             full <- parseJSONElemAtIndex 1 ab
+             return $ Eth_getBlockByNumberReq bn full
+           else fail $
+                "cannot unpack array of length " ++
+                show n ++ " into a Eth_getBlockByNumberReq"
   parseParams "eth_getTransactionReceipt" =
     Just $
-    withArray "(txHash)" $
-    \ab ->
-       let n = V.length ab
-       in if n == 1
-            then do
-              txhash <- parseJSONElemAtIndex 0 ab
-              return $ Eth_getTransactionReceiptReq txhash
-            else fail $
-                 "cannot unpack array of length " ++
-                 show n ++ " into a Eth_getTransactionReceiptReq"
+    withArray "(txHash)" $ \ab ->
+      let n = V.length ab
+      in if n == 1
+           then do
+             txhash <- parseJSONElemAtIndex 0 ab
+             return $ Eth_getTransactionReceiptReq txhash
+           else fail $
+                "cannot unpack array of length " ++
+                show n ++ " into a Eth_getTransactionReceiptReq"
   parseParams "eth_getCode" =
     Just $
-    withArray "(address, blockNum)" $
-    \ab ->
-       let n = V.length ab
-       in if n == 2
-            then do
-              addr <- parseJSONElemAtIndex 0 ab
-              blk <- parseJSONElemAtIndex 1 ab
-              return $ Eth_getCodeReq addr blk
-            else fail $
-                 "cannot unpack array of length " ++
-                 show n ++ " into a Eth_getCodeReq"
+    withArray "(address, blockNum)" $ \ab ->
+      let n = V.length ab
+      in if n == 2
+           then do
+             addr <- parseJSONElemAtIndex 0 ab
+             blk <- parseJSONElemAtIndex 1 ab
+             return $ Eth_getCodeReq addr blk
+           else fail $
+                "cannot unpack array of length " ++
+                show n ++ " into a Eth_getCodeReq"
   parseParams _ = Nothing
 
 instance ToRequest Req where
@@ -136,9 +133,9 @@ callJsonRpc server port req = do
         initReq
         { NHC.method = "POST"
         , NHC.requestHeaders =
-          ("Content-Type", "application/json") : NHC.requestHeaders initReq
+            ("Content-Type", "application/json") : NHC.requestHeaders initReq
         , NHC.requestBody =
-          RequestBodyLBS $ encode $ toJSON (NJ.buildRequest V2 req (IdInt 1))
+            RequestBodyLBS $ encode $ toJSON (NJ.buildRequest V2 req (IdInt 1))
         }
   manager <- liftIO $ newManager tlsManagerSettings
   resp <- NHC.httpLbs requ manager
@@ -152,12 +149,14 @@ callJsonRpc server port req = do
 web3ClientVersion
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> m Text
-web3ClientVersion server port = clientVersion <$> callJsonRpc server port Web3_clientVersionReq
+web3ClientVersion server port =
+  clientVersion <$> callJsonRpc server port Web3_clientVersionReq
 
 ethBlockNumber
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> m Text
-ethBlockNumber server port = blockNumber <$> callJsonRpc server port Eth_blockNumberReq
+ethBlockNumber server port =
+  blockNumber <$> callJsonRpc server port Eth_blockNumberReq
 
 ethGetTransactionsByBlockNumber
   :: (MonadIO m, MonadCatch m)
@@ -173,13 +172,13 @@ ethGetContractAddrByTxHash
   => String -> Int -> Text -> m (Maybe Text)
 ethGetContractAddrByTxHash server port txhash =
   (\ares ->
-      case ares of
-        (String a) ->
-          if toLower a == "null"
-            then Nothing
-            else Just a
-        Null -> Nothing
-        other -> error $ show other) <$>
+     case ares of
+       (String a) ->
+         if toLower a == "null"
+           then Nothing
+           else Just a
+       Null -> Nothing
+       other -> error $ show other) <$>
   (lookupDefault (String "error") "contractAddress") <$>
   txReceipt <$>
   callJsonRpc server port (Eth_getTransactionReceiptReq txhash)
