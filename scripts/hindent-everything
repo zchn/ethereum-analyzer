@@ -20,7 +20,11 @@ function list_haskell_files {
 
 function indent_everything {
     for filename in $(list_haskell_files); do
-        hindent_file "${filename}"
+        if [ $filename = "ethereum-analyzer-web/Settings.hs" ]; then
+            echo "skipping " $filename
+        else
+            hindent_file "${filename}"
+        fi
     done
 }
 
