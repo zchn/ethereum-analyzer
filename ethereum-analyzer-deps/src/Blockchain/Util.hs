@@ -4,7 +4,6 @@ import Data.Bits
 import qualified Data.ByteString as B
 import Data.ByteString.Internal
 import Data.Char
-import Data.List
 import Data.Word
 import Numeric
 
