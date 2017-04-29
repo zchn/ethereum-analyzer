@@ -27,8 +27,8 @@ import Blockchain.Data.Util
 -- | An internal representation of generic data, with no type information.
 --
 -- End users will not need to directly create objects of this type (an 'RLPObject' can be created using 'rlpEncode'),
--- however the designer of a new type will need to create conversion code by making their type an instance 
--- of the RLPSerializable class. 
+-- however the designer of a new type will need to create conversion code by making their type an instance
+-- of the RLPSerializable class.
 data RLPObject
   = RLPScalar Word8
   | RLPString B.ByteString

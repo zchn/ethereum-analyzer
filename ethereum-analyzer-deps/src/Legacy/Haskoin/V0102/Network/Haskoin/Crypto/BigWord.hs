@@ -163,7 +163,7 @@ instance BigWordMod n =>
 
 instance BigWordMod n =>
          Bounded (BigWord n) where
-  minBound = fromInteger 0
+  minBound = 0
   maxBound = fromInteger (-1)
 
 instance BigWordMod n =>
@@ -224,8 +224,8 @@ instance Binary (BigWord Mod512) where
     b <- fromIntegral <$> (get :: Get Word256)
     return $ (a `shiftL` 256) + b
   put (BigWord i) = do
-    put $ (fromIntegral (i `shiftR` 256) :: Word256)
-    put $ (fromIntegral i :: Word256)
+    put (fromIntegral (i `shiftR` 256) :: Word256)
+    put (fromIntegral i :: Word256)
 
 instance Binary (BigWord Mod256) where
   get = do
@@ -293,10 +293,10 @@ instance Binary (BigWord ModN) where
     t <- getWord8
     unless
       (t == 0x02)
-      (fail $ "Bad DER identifier byte " ++ (show t) ++ ". Expecting 0x02")
+      (fail $ "Bad DER identifier byte " ++ show t ++ ". Expecting 0x02")
     l <- getWord8
     i <- bsToInteger <$> getByteString (fromIntegral l)
-    unless (isIntegerValidKey i) $ fail $ "Invalid fieldN element: " ++ (show i)
+    unless (isIntegerValidKey i) $ fail $ "Invalid fieldN element: " ++ show i
     return $ fromInteger i
   put (BigWord 0) = error "0 is an invalid FieldN element to serialize"
   put (BigWord i) = do
@@ -307,7 +307,7 @@ instance Binary (BigWord ModN) where
       then do
         putWord8 (l + 1)
         putWord8 0x00
-      else do
+      else
         putWord8 l
     putByteString b
 
@@ -316,7 +316,7 @@ instance Binary (BigWord ModP)
                                                                            where
   get = do
     (BigWord i) <- get :: Get Word256
-    unless (i < curveP) (fail $ "Get: Integer not in FieldP: " ++ (show i))
+    unless (i < curveP) (fail $ "Get: Integer not in FieldP: " ++ show i)
     return $ fromInteger i
   -- Section 2.3.7 http://www.secg.org/download/aid-780/sec1-v2.pdf
   put r = put (fromIntegral r :: Word256)
@@ -342,7 +342,7 @@ instance FromJSON (BigWord Mod256) where
 -- curveP = 3 (mod 4), thus Lagrange solutions apply
 -- http://en.wikipedia.org/wiki/Quadratic_residue
 quadraticResidue :: FieldP -> [FieldP]
-quadraticResidue x = guard (y ^ (2 :: Int) == x) >> [y, (-y)]
+quadraticResidue x = guard (y ^ (2 :: Int) == x) >> [y, -y]
   where
     q = (curveP + 1) `div` 4
     y = x ^ q

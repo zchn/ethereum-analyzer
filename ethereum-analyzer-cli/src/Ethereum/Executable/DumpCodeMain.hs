@@ -22,7 +22,7 @@ dumpContracts server port contractDir = do
   latest_bNum <- ethBlockNumber server port
   let parsed_bns = readHex $ Prelude.drop 2 $ T.unpack latest_bNum
   $logInfo $ T.pack $ "parsing block number: " ++ show parsed_bns
-  let latest_bn = fst $ Prelude.head $ parsed_bns
+  let latest_bn = fst $ Prelude.head parsed_bns
   $logInfo $ T.pack $ "block number is " ++ show latest_bn
   enumerateContractAt server port contractDir latest_bn
   return ()

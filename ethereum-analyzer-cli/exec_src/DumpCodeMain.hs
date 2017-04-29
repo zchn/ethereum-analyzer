@@ -29,7 +29,6 @@ main :: IO ()
 main = do
   s <- $initHFlags "ea-dump-contract"
   putStrLn $ "Flags: " ++ show s
-  flip
-    runLoggingT
-    printLogMsg
+  runLoggingT
     (dumpContracts flags_jrpcServer flags_jrpcPort flags_contractDir)
+    printLogMsg

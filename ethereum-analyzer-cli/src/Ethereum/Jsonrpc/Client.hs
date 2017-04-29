@@ -1,5 +1,5 @@
 {-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE OverloadedStrings, TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Ethereum.Jsonrpc.Client
   ( web3ClientVersion
@@ -12,6 +12,7 @@ module Ethereum.Jsonrpc.Client
 
 import Blockchain.Data.Code as BDC
 import Conduit
+import Control.Applicative
 import Control.Monad.Catch
 import Data.Aeson
 import Data.Aeson.Types hiding (Error)
@@ -128,7 +129,7 @@ callJsonRpc
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> Req -> m Res
 callJsonRpc server port req = do
-  initReq <- NHC.parseUrl ("http://" ++ server ++ ":" ++ (show port))
+  initReq <- NHC.parseUrl ("http://" ++ server ++ ":" ++ show port)
   let requ =
         initReq
         { NHC.method = "POST"
@@ -143,8 +144,8 @@ callJsonRpc server port req = do
     Just body ->
       case fromResponse (requestMethod req) body of
         Just res -> return res
-        Nothing -> error $ "couldn't parse json-rpc response: " ++ (show resp)
-    Nothing -> error $ "couldn't parse json: " ++ (show resp)
+        Nothing -> error $ "couldn't parse json-rpc response: " ++ show resp
+    Nothing -> error $ "couldn't parse json: " ++ show resp
 
 web3ClientVersion
   :: (MonadIO m, MonadCatch m)
@@ -162,8 +163,8 @@ ethGetTransactionsByBlockNumber
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> Text -> m [Text]
 ethGetTransactionsByBlockNumber server port blk =
-  (Prelude.map $ \(String s) -> s) <$> (\(Array a) -> DF.toList $ a) <$>
-  (lookupDefault (Array $ V.singleton (String "error")) "transactions") <$>
+  ((Prelude.map $ \(String s) -> s) . (\(Array a) -> DF.toList $ a) <$>
+  (lookupDefault (Array $ V.singleton (String "error")) "transactions")) .
   blockInfo <$>
   callJsonRpc server port (Eth_getBlockByNumberReq blk False)
 
@@ -171,7 +172,7 @@ ethGetContractAddrByTxHash
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> Text -> m (Maybe Text)
 ethGetContractAddrByTxHash server port txhash =
-  (\ares ->
+  ((\ares ->
      case ares of
        (String a) ->
          if toLower a == "null"
@@ -179,7 +180,7 @@ ethGetContractAddrByTxHash server port txhash =
            else Just a
        Null -> Nothing
        other -> error $ show other) <$>
-  (lookupDefault (String "error") "contractAddress") <$>
+  lookupDefault (String "error") "contractAddress") .
   txReceipt <$>
   callJsonRpc server port (Eth_getTransactionReceiptReq txhash)
 
@@ -187,7 +188,7 @@ ethGetCode
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> Text -> m Text
 ethGetCode server port address =
-  fmap code $ callJsonRpc server port (Eth_getCodeReq address "latest")
+  code <$> callJsonRpc server port (Eth_getCodeReq address "latest")
 
 getCode
   :: (MonadIO m, MonadCatch m)

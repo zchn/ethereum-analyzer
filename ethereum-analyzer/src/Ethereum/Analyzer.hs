@@ -1,4 +1,4 @@
-{-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
+{-# LANGUAGE FlexibleContexts #-}
 
 module Ethereum.Analyzer
   ( module Ethereum.Analyzer.Disasm

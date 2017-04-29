@@ -15,7 +15,7 @@ showHex4 i = replicate (4 - length rawOutput) '0' ++ rawOutput
   where
     rawOutput = showHex i ""
 
-showHexU :: Integer -> [Char]
+showHexU :: Integer -> String
 showHexU = map toUpper . flip showHex ""
 
 --I hate this, it is an ugly way to create an Integer from its component bytes.
@@ -85,7 +85,7 @@ showMem p x =
   padZeros 4 (showHex p "") ++
   " " ++
   (showWord8 <$> x) ++
-  " " ++ intercalate " " (padZeros 2 <$> flip showHex "" <$> x)
+  " " ++ unwords (padZeros 2 . flip showHex "" <$> x)
 
 safeTake :: Word256 -> B.ByteString -> B.ByteString
 safeTake i _

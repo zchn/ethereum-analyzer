@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts,
-  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies,
+  FlexibleInstances, GADTs, Rank2Types, TypeFamilies,
   UndecidableInstances #-}
 
 module Ethereum.Analyzer.CfgAugWithTopNPass
@@ -25,7 +25,7 @@ joinStackElemBase
   :: Label
   -> OldFact (Set Word256)
   -> NewFact (Set Word256)
-  -> (ChangeFlag, (Set Word256))
+  -> (ChangeFlag, Set Word256)
 joinStackElemBase _ (OldFact oldF) (NewFact newF) =
   if newF `isSubsetOf` oldF
     then (NoChange, oldF)
@@ -94,7 +94,7 @@ popStack n (_:t) = popStack (n - 1) (t ++ [Top])
 popStack _ [] = []
 
 pushStack' :: StackElemFact -> StackNFact -> StackNFact
-pushStack' e flist = e : (DLE.dropEnd 1 flist)
+pushStack' e flist = e : DLE.dropEnd 1 flist
 
 pushStack :: Word256 -> StackNFact -> StackNFact
 pushStack wd = pushStack' (PElem $ DS.singleton wd)
@@ -387,4 +387,4 @@ doCfgAugWithTopNPass a = do
         _ ->
           error $
           "doCfgAugWithTopNPass: unexpected newHexstrings length: " ++
-          (show $ DL.length newHexstrings)
+          show (DL.length newHexstrings)

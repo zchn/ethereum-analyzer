@@ -51,5 +51,5 @@ white string = "\ESC[37m" ++ string ++ "\ESC[0m"
 white2 string = "\ESC[38m" ++ string ++ "\ESC[0m"
 
 setTitle :: String -> IO ()
-setTitle value = do
+setTitle value =
   putStr $ "\ESC]0;" ++ value ++ "\007"

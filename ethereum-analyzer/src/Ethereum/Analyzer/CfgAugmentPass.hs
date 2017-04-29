@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts,
-  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies,
+  FlexibleInstances, GADTs, Rank2Types, TypeFamilies,
   UndecidableInstances #-}
 
 module Ethereum.Analyzer.CfgAugmentPass
@@ -21,7 +21,7 @@ joinJumpTargets
   :: Label
   -> OldFact (Set Word256)
   -> NewFact (Set Word256)
-  -> (ChangeFlag, (Set Word256))
+  -> (ChangeFlag, Set Word256)
 joinJumpTargets _ (OldFact oldF) (NewFact newF) =
   if newF `isSubsetOf` oldF
     then (NoChange, oldF)
@@ -66,7 +66,7 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
     opT NEG (PElem st) = PElem $ DS.map (\wd -> -wd) st
     opT NOT (PElem st) =
       PElem $
-      DS.map (\wd -> bytesToWord256 $ DL.map complement $ word256ToBytes wd) st
+      DS.map (bytesToWord256 . DL.map complement . word256ToBytes) st
     opT (PUSH w8l) _ = PElem $ DS.singleton $ varBytesToWord256 w8l
     opT op@LABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
     opT op@PUSHLABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op

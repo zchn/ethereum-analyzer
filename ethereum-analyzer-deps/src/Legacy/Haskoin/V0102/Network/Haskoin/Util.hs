@@ -84,9 +84,9 @@ bsToString = C.unpack
 
 -- | Decode a big endian Integer from a bytestring
 bsToInteger :: BS.ByteString -> Integer
-bsToInteger = (foldr f 0) . reverse . BS.unpack
+bsToInteger = foldr f 0 . reverse . BS.unpack
   where
-    f w n = (toInteger w) .|. shiftL n 8
+    f w n = toInteger w .|. shiftL n 8
 
 -- | Encode an Integer to a bytestring as big endian
 integerToBS :: Integer -> BS.ByteString
@@ -96,7 +96,7 @@ integerToBS i
   | otherwise = error "integerToBS not defined for negative values"
   where
     f 0 = Nothing
-    f x = Just $ (fromInteger x :: Word8, x `shiftR` 8)
+    f x = Just (fromInteger x :: Word8, x `shiftR` 8)
 
 -- | Encode a bytestring to a base16 (HEX) representation
 bsToHex :: BS.ByteString -> String
@@ -132,7 +132,7 @@ decode' = decode . toLazyBS
 runGet'
   :: Binary a
   => Get a -> BS.ByteString -> a
-runGet' m = (runGet m) . toLazyBS
+runGet' m = runGet m . toLazyBS
 
 -- | Strict version of @Data.Binary.runPut@
 runPut' :: Put -> BS.ByteString

@@ -1,5 +1,5 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts,
-  FlexibleInstances, GADTs, Rank2Types, DeriveGeneric, TypeFamilies,
+  FlexibleInstances, GADTs, Rank2Types, TypeFamilies,
   UndecidableInstances #-}
 
 module Ethereum.Analyzer.IR
@@ -107,7 +107,7 @@ _evmOps2HplBody el@((loc, _):_) = do
   where
     doEvmOps2HplBody
       :: HplBody
-      -> (Block HplOp C O)
+      -> Block HplOp C O
       -> [(Word256, Operation)]
       -> WordLabelMapM HplBody
     doEvmOps2HplBody body _ [] = return body -- sliently discarding bad hds
@@ -124,9 +124,7 @@ _evmOps2HplBody el@((loc, _):_) = do
                 hd
                 (OcOp
                    h'
-                   (if canPassThrough (snd h')
-                      then [l']
-                      else [])))
+                   [l' | canPassThrough (snd h')]))
              body)
           (blockJoinHead (CoOp l') emptyBlock)
           t'
@@ -139,9 +137,7 @@ _evmOps2HplBody el@((loc, _):_) = do
                 hd
                 (OcOp
                    h'
-                   (if canPassThrough (snd h')
-                      then [l']
-                      else [])))
+                   [l' | canPassThrough (snd h')]))
              body)
           (blockJoinHead (CoOp l') emptyBlock)
           t'
