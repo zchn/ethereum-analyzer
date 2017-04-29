@@ -70,4 +70,4 @@ visParams =
   nonClusteredParams {fmtNode = \(_, nl) -> [toLabel $ show nl, shape BoxShape]}
 
 toDotGraph :: Gr (Block HplOp C C) () -> DotGraph Node
-toDotGraph gr = graphToDot visParams gr
+toDotGraph = graphToDot visParams
