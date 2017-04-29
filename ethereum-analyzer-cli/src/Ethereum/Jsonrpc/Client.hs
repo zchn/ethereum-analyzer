@@ -12,7 +12,6 @@ module Ethereum.Jsonrpc.Client
 
 import Blockchain.Data.Code as BDC
 import Conduit
-import Control.Applicative
 import Control.Monad.Catch
 import Data.Aeson
 import Data.Aeson.Types hiding (Error)
@@ -163,8 +162,8 @@ ethGetTransactionsByBlockNumber
   :: (MonadIO m, MonadCatch m)
   => String -> Int -> Text -> m [Text]
 ethGetTransactionsByBlockNumber server port blk =
-  ((Prelude.map $ \(String s) -> s) . (\(Array a) -> DF.toList $ a) <$>
-  (lookupDefault (Array $ V.singleton (String "error")) "transactions")) .
+  (Prelude.map (\(String s) -> s) . (\(Array a) -> DF.toList a) <$>
+  lookupDefault (Array $ V.singleton (String "error")) "transactions") .
   blockInfo <$>
   callJsonRpc server port (Eth_getBlockByNumberReq blk False)
 

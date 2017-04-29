@@ -15,7 +15,7 @@ spec =
   it "shows HplBody's dot graph" $ do
     let disasmd = disasm hexstring2
     unWordLabelMapM
-      (unpack . toDotText . bodyOf . ctorOf <$> (evmOps2HplContract disasmd)) `shouldBe`
+      (unpack . toDotText . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
       "digraph {\n" ++
       "    1 [label=\"CO: L1\\n" ++
       "OO: 0: PUSH [96]\\n" ++

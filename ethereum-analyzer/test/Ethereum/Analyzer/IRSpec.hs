@@ -13,19 +13,19 @@ spec =
   it "works for hexstring1" $ do
     let disasmd = disasm hexstring1
     unWordLabelMapM
-      (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract disasmd)) `shouldBe`
+      (mapSize . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
       327
   it "works for hexstring2" $ do
     let disasmd = disasm hexstring2
     unWordLabelMapM
-      (mapSize . bodyOf . ctorOf <$> (evmOps2HplContract disasmd)) `shouldBe`
+      (mapSize . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
       12
      -- it "shows voteHexstring" $
      --   do let disasmd = disasm voteHexstring
      --      unWordLabelMapM (show <$> (evmOps2HplBody disasmd)) `shouldBe` ""
   it "shows HplBody" $ do
     let disasmd = disasm hexstring2
-    unWordLabelMapM (show . bodyOf . ctorOf <$> (evmOps2HplContract disasmd)) `shouldBe`
+    unWordLabelMapM (show . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
       "LM (UM (fromList [(1,CO: L1\n" ++
       "OO: 0: PUSH [96]\n" ++
       "OO: 2: PUSH [64]\n" ++
