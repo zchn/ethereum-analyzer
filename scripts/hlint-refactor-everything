@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+
+set -e
+
+HLINT=hlint-2.0.5
+GIT=git
+
+function hlint_file {
+    filename="$1"
+    ${HLINT} "${filename}" --refactor --refactor-options="--inplace"
+}
+
+function list_haskell_files {
+    # TODO: Figure out if it's a Haskell file in a more reliable way, e.g.
+    # using `file`, or just running hlint on everything.
+    ${GIT} ls-files '*.hs'
+}
+
+function lint_everything {
+    for filename in $(list_haskell_files); do
+        if [ $filename = "ethereum-analyzer-web/Settings.hs" ]; then
+            echo "skipping " $filename
+        else
+            hlint_file "${filename}"
+        fi
+    done
+}
+
+lint_everything
+
