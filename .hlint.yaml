@@ -8,11 +8,8 @@
 
 # Warnings currently triggered by your code
 - ignore: {name: "Use camelCase"}
-- ignore: {name: "Move brackets to avoid $"}
-- ignore: {name: "Redundant $"}
 - ignore: {name: "Use module export list"}
 - ignore: {name: "Reduce duplication"}
-
 
 # Specify additional command line arguments
 #
