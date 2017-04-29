@@ -32,9 +32,7 @@ enumerateContractAt _ _ _ 0 = return ()
 enumerateContractAt s p contractDir bn = do
   $logInfo $ T.pack $ "processing block " ++ show bn
   transactions <- ethGetTransactionsByBlockNumber s p (T.pack $ show bn)
-  -- $logInfo $ T.pack $ "transactions: " ++ show transactions
   addresses <- catMaybes <$> mapM (ethGetContractAddrByTxHash s p) transactions
-  -- $logInfo $ T.pack $ "addresses: " ++ show addresses
   mapM_
     (\addr -> do
        let fpath = contractDir ++ "/" ++ T.unpack addr ++ ".contract"
@@ -44,9 +42,6 @@ enumerateContractAt s p contractDir bn = do
          else do
            textCode <- ethGetCode s p addr
            lift $ writeFile fpath $ T.unpack $ T.drop 2 textCode
-     -- $logInfo $ T.append "textCode is " textCode
      )
     addresses
-  -- code <- getCode server port "0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe"
-  -- $logInfo $ T.pack $ "disasmd code is " ++ formatCode code
   enumerateContractAt s p contractDir (bn - 1)
