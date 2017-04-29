@@ -81,4 +81,4 @@ printLogs severityThreshold handler message =
 log
   :: MonadLog (WithSeverity a) m
   => Severity -> a -> m ()
-log severity msg = logMessage (WithSeverity severity msg)
+log severity msg' = logMessage (WithSeverity severity msg')

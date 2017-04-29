@@ -9,7 +9,6 @@ packages:
 - ethereum-analyzer-deps/
 - ethereum-analyzer-webui/
 extra-deps:
-- directory-1.2.3.1
 - global-lock-0.1
 - hoopl-3.10.2.1
 - json-rpc-0.7.1.1
