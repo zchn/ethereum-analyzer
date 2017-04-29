@@ -1,1 +1,1 @@
-[![Circle CI](https://circleci.com/gh/zchn/ethereum-analyzer/tree/master.svg?style=shield)](https://circleci.com/gh/zchn/ethereum-analyzer/tree/master)
+[![Build Status](https://travis-ci.org/zchn/ethereum-analyzer.svg?branch=master)](https://travis-ci.org/zchn/ethereum-analyzer)
