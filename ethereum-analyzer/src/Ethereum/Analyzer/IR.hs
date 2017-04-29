@@ -167,7 +167,7 @@ canPassThrough _ = True
 --------------------------------------------------------------------------------
 type WordLabelMap = Bimap Word256 Label
 
-data WordLabelMapM a =
+newtype WordLabelMapM a =
   WordLabelMapM (WordLabelMap -> SimpleUniqueMonad (WordLabelMap, a))
 
 instance CheckpointMonad WordLabelMapM where

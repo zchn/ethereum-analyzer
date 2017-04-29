@@ -7,7 +7,6 @@
 
 
 # Warnings currently triggered by your code
-- ignore: {name: "Use newtype instead of data"}
 - ignore: {name: "Unused LANGUAGE pragma"}
 - ignore: {name: "Eta reduce"}
 - ignore: {name: "Redundant bracket"}
