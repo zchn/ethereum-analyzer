@@ -2,7 +2,42 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Flux • Shell</title>
+    <title>ethereum-analyzer-webui</title>
+    <style>
+     html, body, #root, #ea-app {
+         height: 100%;
+         display: flex;
+         flex-direction: column;
+         margin: 0;
+     }
+     #ea-app {
+         display: flex;
+         flex-flow: column nowrap;
+     }
+     #ea-menu-bar {
+         flex: none
+         height: 2em;
+     }
+     #ea-line-nav-bar {
+         flex: none
+         height: 2em;
+     }
+     #ea-main-body {
+         flex: auto;
+         overflow: scroll;
+     }
+     #ea-side-nav {
+         width: 20em;
+         float: left;
+     }
+     #ea-main-window {
+         margin-left: 20em;
+     }
+     #ea-cmd-window {
+         flex: none
+         height: 10em;
+     }
+    </style>
   </head>
   <body>
     <div id="root"></div>
