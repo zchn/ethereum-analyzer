@@ -41,7 +41,6 @@ enumerateContractAt s p contractDir bn = do
          then $logInfo $ T.pack $ "skipping: " ++ show addr
          else do
            textCode <- ethGetCode s p addr
-           lift $ writeFile fpath $ T.unpack $ T.drop 2 textCode
-     )
+           lift $ writeFile fpath $ T.unpack $ T.drop 2 textCode)
     addresses
   enumerateContractAt s p contractDir (bn - 1)

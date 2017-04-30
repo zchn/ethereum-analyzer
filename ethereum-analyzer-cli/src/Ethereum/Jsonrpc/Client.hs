@@ -163,7 +163,7 @@ ethGetTransactionsByBlockNumber
   => String -> Int -> Text -> m [Text]
 ethGetTransactionsByBlockNumber server port blk =
   (Prelude.map (\(String s) -> s) . (\(Array a) -> DF.toList a) <$>
-  lookupDefault (Array $ V.singleton (String "error")) "transactions") .
+   lookupDefault (Array $ V.singleton (String "error")) "transactions") .
   blockInfo <$>
   callJsonRpc server port (Eth_getBlockByNumberReq blk False)
 
@@ -172,14 +172,14 @@ ethGetContractAddrByTxHash
   => String -> Int -> Text -> m (Maybe Text)
 ethGetContractAddrByTxHash server port txhash =
   ((\ares ->
-     case ares of
-       (String a) ->
-         if toLower a == "null"
-           then Nothing
-           else Just a
-       Null -> Nothing
-       other -> error $ show other) <$>
-  lookupDefault (String "error") "contractAddress") .
+      case ares of
+        (String a) ->
+          if toLower a == "null"
+            then Nothing
+            else Just a
+        Null -> Nothing
+        other -> error $ show other) <$>
+   lookupDefault (String "error") "contractAddress") .
   txReceipt <$>
   callJsonRpc server port (Eth_getTransactionReceiptReq txhash)
 

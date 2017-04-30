@@ -83,8 +83,7 @@ showMem p (v1:v2:v3:v4:v5:v6:v7:v8:rest) =
 showMem p x =
   padZeros 4 (showHex p "") ++
   " " ++
-  (showWord8 <$> x) ++
-  " " ++ unwords (padZeros 2 . flip showHex "" <$> x)
+  (showWord8 <$> x) ++ " " ++ unwords (padZeros 2 . flip showHex "" <$> x)
 
 safeTake :: Word256 -> B.ByteString -> B.ByteString
 safeTake i _

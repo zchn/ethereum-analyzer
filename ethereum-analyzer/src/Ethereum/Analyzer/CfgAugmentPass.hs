@@ -65,8 +65,7 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
     opT JUMPDEST f = f
     opT NEG (PElem st) = PElem $ DS.map (\wd -> -wd) st
     opT NOT (PElem st) =
-      PElem $
-      DS.map (bytesToWord256 . DL.map complement . word256ToBytes) st
+      PElem $ DS.map (bytesToWord256 . DL.map complement . word256ToBytes) st
     opT (PUSH w8l) _ = PElem $ DS.singleton $ varBytesToWord256 w8l
     opT op@LABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
     opT op@PUSHLABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op

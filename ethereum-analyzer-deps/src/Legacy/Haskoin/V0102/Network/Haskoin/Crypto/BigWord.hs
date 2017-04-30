@@ -307,8 +307,7 @@ instance Binary (BigWord ModN) where
       then do
         putWord8 (l + 1)
         putWord8 0x00
-      else
-        putWord8 l
+      else putWord8 l
     putByteString b
 
 instance Binary (BigWord ModP)

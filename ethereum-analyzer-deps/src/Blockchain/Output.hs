@@ -7,8 +7,7 @@ import System.Log.FastLogger
 
 printLogMsg :: Loc -> LogSource -> LogLevel -> LogStr -> IO ()
 --printLogMsg loc logSource level msg = do
-printLogMsg _ _ _ msg =
-  lock $ putStrLn $ BC.unpack $ fromLogStr msg
+printLogMsg _ _ _ msg = lock $ putStrLn $ BC.unpack $ fromLogStr msg
 
 printToFile :: FilePath -> Loc -> LogSource -> LogLevel -> LogStr -> IO ()
 --printLogMsg loc logSource level msg = do

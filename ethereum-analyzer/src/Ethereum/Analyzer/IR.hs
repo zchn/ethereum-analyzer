@@ -120,11 +120,7 @@ _evmOps2HplBody el@((loc, _):_) = do
         l' <- labelFor loc'
         doEvmOps2HplBody
           (addBlock
-             (blockJoinTail
-                hd
-                (OcOp
-                   h'
-                   [l' | canPassThrough (snd h')]))
+             (blockJoinTail hd (OcOp h' [l' | canPassThrough (snd h')]))
              body)
           (blockJoinHead (CoOp l') emptyBlock)
           t'
@@ -133,11 +129,7 @@ _evmOps2HplBody el@((loc, _):_) = do
         l' <- labelFor loc'
         doEvmOps2HplBody
           (addBlock
-             (blockJoinTail
-                hd
-                (OcOp
-                   h'
-                   [l' | canPassThrough (snd h')]))
+             (blockJoinTail hd (OcOp h' [l' | canPassThrough (snd h')]))
              body)
           (blockJoinHead (CoOp l') emptyBlock)
           t'
