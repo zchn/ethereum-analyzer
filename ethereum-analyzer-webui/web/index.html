@@ -6,6 +6,7 @@
     <style>
      html, body, #root, #ea-app {
          height: 100%;
+         width: 100%;
          display: flex;
          flex-direction: column;
          margin: 0;
@@ -34,8 +35,18 @@
          margin-left: 20em;
      }
      #ea-cmd-window {
-         flex: none
+         flex: none;
+     }
+     #ea-cmd-input {
+         height: 2em;
+         margin-bottom: 1em;
+         width: 90%;
+         overflow: scroll;
+         white-space: nowrap;
+     }
+     #ea-cmd-output {
          height: 10em;
+         overflow: scroll;
      }
     </style>
   </head>
