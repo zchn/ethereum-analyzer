@@ -2,20 +2,53 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import EAClient from './ea-client.js';
+// import EAClient from './ea-client.js';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {ea: props.ea};
     }
+    callDotCfg: (hexstring, onSuccess, onError) => {
+        fetch("/ea/dotcfg2?code="+hexstring).then((resp) => {
+            resp.json().then((jsonn) => {
+                onSuccess(jsonn);
+            }, (reason) => {
+                onError(reason);
+            });
+        }, (reason) => {
+            onError(reason);
+        });
+    }
+    handleNewCmd: (cmd) => {
+        if(cmd.startsWith("disasm ")) {
+            var parts = cmd.split(" ");
+            console.log(parts);
+            for(var i = 1; i < parts.length; i++) {
+                if(parts[i].length > 0) {
+                    this.callDotCfg(
+                        parts[i],
+                        (cfgs) => {
+                            console.log(cfgs);
+                            this.setState({ea: { cfgs: cfgs }});
+                        },
+                        (error) => {
+                            console.log(error);
+                        });
+                    break;
+                }
+            }
+        } else {
+            console.log("Unknown command: " + cmd);
+        }
+    }
     render() {
         return (
             <div id="ea-app">
               <MenuBar />
               <LineNavBar />
-              <MainBody />
-              <CmdWindow />
+              <MainBody cfgs={this.state.ea.cfgs} />
+              <CmdWindow onNewCmd={this.handleNewCmd} />
             </div>
         );
     }
@@ -42,7 +75,7 @@ class MainBody extends React.Component {
         return (
             <div id="ea-main-body">
               <SideNav />
-              <MainWindow />
+              <MainWindow cfgs={this.props.cfgs} />
             </div>
         );
     }
@@ -58,6 +91,7 @@ class CmdWindow extends React.Component {
     }
 
     handleNewCmd(cmd) {
+        this.props.onNewCmd(cmd);
         this.setState({ cmdHistory: this.state.cmdHistory.concat([ cmd ])});
     }
 
@@ -131,16 +165,26 @@ class SideNav extends React.Component {
 
 class MainWindow extends React.Component {
     render() {
+        console.log(this.props.cfgs);
+        var ctorDot = this.props.cfgs._ctorDot;
+        var ctorCfg = ctorDot.length > 20 ? Viz(ctorDot) : ctorDot;
+
+        var disDot = this.props.cfgs._dispatcherDot;
+        var disCfg = disDot.length > 20 ? Viz(disCfg) : disDot;
         return (
             <div id="ea-main-window">
-              main window
+              {ctorCfg}
+              {disCfg}
             </div>
         );
     }
 }
 
 var EA_STATE = {
-    name: 'mock state',
+    cfgs: {
+        _ctorDot: "",
+        _dispatcherDot: ""
+    }
 };
 
 ReactDOM.render(
