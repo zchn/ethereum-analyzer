@@ -1,0 +1,71 @@
+***********
+Miscellanea
+***********
+
+The examples below were tested under the Ethereum testnet (Morden). 
+All the contracts were firstly compiled with Solidity version **0.3.1**
+and then retested under version **0.4.2**.
+For all the 0.4.2 examples, the following additions were  needed: 
+(1) a (fake) check of return code of send/call so to not make the compiler warns about it,
+(2) line “pragma solidity ^0.4.2;” ,
+(3) keyword **payable** in all the functions which wants to receive ether.
+
+
+Gasless Send
+============
+
+When using the function send to transfer ether to a contract, 
+it is possible to incur in an out-of-gas exception.
+First, note that a send is compiled in the same way of
+a call with empty signature,
+but the actual number of gas units available to the callee
+is always bound by 2300.
+The actual number of gas units depends on the version of the compiler.
+In versions prior to 0.4.0,  it was 0 if the amount was 0, otherwise it was 2300.
+From version 0.4.0 it is always 2300, not depending on the zeroness of the amount.
+
+Now, since the call has no signature, 
+it will invoke the callee's fallback function.
+However, 2300 units of gas only allow to execute a limited 
+set of bytecode instructions,
+for instance  those which do not alter the state of the contract.
+In any other case, the call will end up in an out-of-gas exception.
+
+We can observe this behaviour through the following example,
+involving a contract C who sends ether through 
+function pay, and two recipients D1, D2.
+There are three possible cases to execute pay:
+
+* n is not zero and the recipient is D1.
+  The send in C fails with an out-of-gas exception,
+  because 2300 units of gas are not enough to execute the state-updating 
+  D1's fallback.
+
+* n is not zero and the recipient id D2.
+  The send in C succeeds,
+  because 2300 units of gas are enough to execute the empty fallback of D2.
+
+* n is zero and d is either D1 or D2.
+  For compiler versions prior to 0.4.0,
+  the send in C fails with an out-of-gas exception,
+  since the gas is not enough to execute any fallback, not even an empty one.
+  From 0.4.0  compiler versions, the behaviour is the same as in one of the
+  previous two cases, according whether d is D1 or D2.
+
+Summing up, sending ether via send succeeds in two cases:
+when the recipient is a contract with a very unexpensive fallback,
+or when the recipient is a user.
+
+
+:download:`SendTest.sol <_static/code/tested/send/SendTest.sol>`
+| :download:`SendTest.sol <_static/code/tested/send/GaslessSend_42.sol>`
+	  
+.. container:: codeset
+
+   .. literalinclude:: _static/code/tested/send/SendTest.sol
+      :language: solidity
+      :linenos:
+
+   .. literalinclude:: _static/code/tested/send/GaslessSend_42.sol
+      :language: solidity
+      :linenos:

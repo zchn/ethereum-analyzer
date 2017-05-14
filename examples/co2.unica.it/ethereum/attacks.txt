@@ -1,0 +1,263 @@
+
+*******
+Attacks
+*******
+
+The examples below were tested under the Ethereum testnet (Morden). 
+All the contracts were firstly compiled with Solidity version **0.3.1**
+and then retested under version **0.4.2**.
+For all the 0.4.2 examples, the following additions were  needed: 
+(1) a (fake) check of return code of send/call so to not make the compiler warns about it,
+(2) line “pragma solidity ^0.4.2;” ,
+(3) keyword **payable** in all the functions which wants to receive ether.
+
+
+
+SimpleDAO
+=========
+This attack has two versions. For the first one: 
+(1) deploy SimpleDAO (2) then deploy Mallory passing DAO's address at creation time
+(3) donate some ether for Mallory on the DAO (the more you donate, the quicker the attack)
+(4) wait for others  to increase the DAO balance 
+(5) invoke Mallory's fallback to empty the DAO. 
+
+For the second one: 
+(1) deploy SimpleDAO (2) then deploy Mallory2 passing DAO's address at creation time
+(3) wait for others  to increase the DAO balance 
+(4) then invoke  Mallory2's attack function providing 1wei, to make Mallory2 DAO balance to underflow
+(6) invoke  getJackpot to empty the DAO.
+
+
+
+:download:`SimpleDAO_0.3.1.sol <_static/code/tested/attack-dao/SimpleDAO_0.3.1.sol>`
+| :download:`SimpleDAO_0.4.2.sol <_static/code/tested/attack-dao/SimpleDAO_0.4.2.sol>`
+
+.. container:: codeset
+
+   .. container:: codeset-oldsol
+
+      .. literalinclude:: _static/code/tested/attack-dao/SimpleDAO_0.3.1.sol
+         :language: solidity
+         :linenos:
+
+   .. container:: codeset-newsol
+
+      .. literalinclude:: _static/code/tested/attack-dao/SimpleDAO_0.4.2.sol
+         :language: solidity
+         :linenos:
+
+---------------------------------------------
+
+
+KotET
+=====
+Contract KotET does not check return code for send function. 
+Hence, since send function is equipped with a few gas, the send at
+line 20 will fail if the king's address is that of a contract
+with an expensive fallback.  In this case, since send does not
+propagate exceptions, the
+compensation is kept by the contract.
+
+
+Contract KotET2 *does* check return code for send function but is vulnerable to get stuck.
+The attack works as follows: (1) deploy KotET2 providing  at least 1ether at creation time; 
+(2) let others play along; 
+(3) deploy Mallory contract; 
+(4) invoke Mallory's unseatKing function to secure the King's throne forever.
+
+:download:`KotET_0.3.1.sol <_static/code/tested/attack-KotET/KotET_0.3.1.sol>`
+| :download:`KotET_0.4.2.sol <_static/code/tested/attack-KotET/KotET_0.4.2.sol>`
+
+.. container:: codeset
+
+   .. container:: codeset-oldsol
+
+      .. literalinclude:: _static/code/tested/attack-KotET/KotET_0.3.1.sol
+         :language: solidity
+         :linenos:
+
+   .. container:: codeset-newsol
+
+      .. literalinclude:: _static/code/tested/attack-KotET/KotET_0.4.2.sol
+         :language: solidity
+         :linenos:
+
+---------------------------------------------
+
+OddsAndEvens
+============
+
+:download:`OddsAndEvens_0.3.1.sol <_static/code/tested/attack-allPub/OddsAndEvens_0.3.1.sol>` 
+| :download:`OddsAndEvens_0.4.2.sol <_static/code/tested/attack-allPub/OddsAndEvens_0.4.2.sol>`
+
+.. container:: codeset
+
+   .. container:: codeset-oldsol
+
+      .. literalinclude:: _static/code/tested/attack-allPub/OddsAndEvens_0.3.1.sol
+         :language: solidity
+         :linenos:
+
+   .. container:: codeset-newsol
+
+      .. literalinclude:: _static/code/tested/attack-allPub/OddsAndEvens_0.4.2.sol
+         :language: solidity
+         :linenos:
+
+---------------------------------------------
+
+
+Governmental
+============
+
+This attack works as follows: (1) deploy Governmental providing  at least 1ether at creation time; 
+(2) let others play along so that the jackpot increase; 
+(3) deploy Attacker contract; 
+(4) invoke Attacker's attack function to prevent the jackpot to be delivered to the legit winner.
+
+From Solidity 0.4.2, the cost of external function calling  has been  increased 
+so that it is impossible to fill the stack: any attempt will cause an  out-of-gas 
+exception. This makes the attack no longer possible.
+
+
+:download:`Governmental_0.3.1.sol <_static/code/tested/attack-gm/Governmental_0.3.1.sol>`
+
+.. container:: codeset
+
+   .. container:: codeset-oldsol
+   
+      .. literalinclude:: _static/code/tested/attack-gm/Governmental_0.3.1.sol
+         :language: solidity
+         :linenos:
+
+---------------------------------------------
+
+
+Dynamic Libraries
+=================
+
+We now consider a contract which can dynamically update one of its
+components, which is a library of operation on sets. 
+Therefore, if a more efficient implementation of these operations is developed,
+or if a bug is fixed, the contract can use the new version of the 
+library.
+
+:download:`SetProvider_0.3.1.sol <_static/code/tested/attack-dynLib/SetProvider_0.3.1.sol>`
+| :download:`SetProvider_0.4.2.sol <_static/code/tested/attack-dynLib/SetProvider_0.4.2.sol>`
+
+.. container:: codeset
+
+   .. container:: codeset-oldsol
+
+      .. literalinclude:: _static/code/tested/attack-dynLib/SetProvider_0.3.1.sol
+         :language: solidity
+         :linenos:
+
+   .. container:: codeset-newsol
+
+      .. literalinclude:: _static/code/tested/attack-dynLib/SetProvider_0.4.2.sol
+         :language: solidity
+         :linenos:
+
+
+:download:`Set_0.3.1.sol <_static/code/tested/attack-dynLib/Set_0.3.1.sol>`
+| :download:`Set_0.4.2.sol <_static/code/tested/attack-dynLib/Set_0.4.2.sol>`
+
+.. container:: codeset
+
+   .. container:: codeset-oldsol
+
+      .. literalinclude:: _static/code/tested/attack-dynLib/Set_0.3.1.sol
+         :language: solidity
+         :linenos:
+
+   .. container:: codeset-newsol
+
+      .. literalinclude:: _static/code/tested/attack-dynLib/Set_0.4.2.sol
+         :language: solidity
+         :linenos:
+
+The owner of contract ``SetProvider`` can use function 
+``updateLibrary`` to replace the library address with a new one.
+Any user can obtain the address of the library via ``getSet``.
+The library ``Set`` implements some basic set operations.
+Libraries are special contracts, which e.g. cannot have mutable fields.
+When a user declares that an interface is a ``library``,
+direct calls to any of its functions are done via ``delegatecall``.
+Arguments tagged as ``storage`` are passed by reference.
+
+Assume that ``Bob`` is the contract of an honest user of
+``SetProvider``.  In particular, ``Bob`` queries for the library
+version via ``getSetVersion``
+(from Solidity v0.4.2., it is no longer possible to instantiate a
+library via ``Set(addr)``: instead, the library address must be
+set via command line(see  `Solidity libraries documentation <http://solidity.readthedocs.io/en/develop/contracts.html#libraries>`_).
+However, a similar attack is still possible by using ``delegatecall``)
+
+:download:`Bob_0.3.1.sol <_static/code/tested/attack-dynLib/Bob_0.3.1.sol>`
+| :download:`Bob_0.4.2.sol <_static/code/tested/attack-dynLib/Bob_0.4.2.sol>`
+
+.. container:: codeset
+
+   .. container:: codeset-oldsol
+
+      .. literalinclude:: _static/code/tested/attack-dynLib/Bob_0.3.1.sol
+         :language: solidity
+         :linenos:
+
+   .. container:: codeset-newsol
+
+      .. literalinclude:: _static/code/tested/attack-dynLib/Bob_0.4.2.sol
+         :language: solidity
+         :linenos:
+
+Now, assume that the owner of ``setProvider`` is also an adversary.
+She can attack ``Bob`` as follows, 
+with the goal of stealing all his ether.
+In the first step of the attack,
+the adversary publishes a new library ``MaliciousSet``,
+and then it invokes the function ``updateLibrary``
+of ``SetProvider`` to make it point to ``MaliciousSet``.
+
+:download:`MaliciousSet_0.3.1.sol <_static/code/tested/attack-dynLib/MaliciousSet_0.3.1.sol>`
+| :download:`MaliciousSet_0.4.2.sol <_static/code/tested/attack-dynLib/MaliciousSet_0.4.2.sol>`
+
+.. container:: codeset
+
+   .. container:: codeset-oldsol
+
+      .. literalinclude:: _static/code/tested/attack-dynLib/MaliciousSet_0.3.1.sol
+         :language: solidity
+         :linenos:
+
+   .. container:: codeset-newsol
+
+      .. literalinclude:: _static/code/tested/attack-dynLib/MaliciousSet_0.4.2.sol
+         :language: solidity
+         :linenos:
+
+Note that ``MaliciousSet`` performs a *send* at line 4, 
+to transfer ether to the adversary.
+Since ``Bob`` has declared the interface ``Set`` as a ``library``,
+any direct call to ``version`` is implemented as a ``delegatecall``,
+and thus executed in ``Bob``'s environment.
+Hence, ``this.balance`` in the *send* at line 4
+actually refers to ``Bob``'s balance,
+causing the *send* to transfer all his ether to the adversary.
+After that, the function correctly returns the version number.
+
+Another way to craft a malicious library is to use
+the function ``selfdestruct``. 
+This is a special function, which disables the contract which executes it and send all its balance to a target address.
+More specifically, the adversary can replace line 4 of ``MaliciousSet`` with ``selfdestruct(attackerAddr)``.
+
+This will disable ``Bob``'s contract forever,
+and send his balance to the adversary.
+
+
+The attack outlined above exploits the *unpredictable state*
+vulnerability, because ``Bob`` cannot know which version of 
+the library will be executed when it used ``SetProvider``. 
+More in general, the main issue of libraries is the presence of parts which are
+updated after the contract has been published. 
+This allows an adversary to change these parts with malicious ones.
