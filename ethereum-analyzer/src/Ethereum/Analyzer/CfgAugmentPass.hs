@@ -72,15 +72,15 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
       PElem $ DS.map (bytesToWord256 . DL.map complement . word256ToBytes) st
     opT (PUSH w8l) _ = PElem $ DS.singleton $ varBytesToWord256 w8l
     opT op@LABEL {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
     opT op@PUSHLABEL {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
     opT op@PUSHDIFF {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
     opT op@DATA {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
     opT op@MalformedOpcode {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
     opT _ _ = Top
 
 opGUnit :: HplOp e x -> Graph HplOp e x

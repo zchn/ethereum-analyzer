@@ -6,8 +6,6 @@ module Ethereum.Analyzer.TestData.Basic
   , voteHexstring
   ) where
 
-import Protolude hiding (show)
-
 import Ethereum.Analyzer.Disasm
 
 hexstring1 :: EvmHexString

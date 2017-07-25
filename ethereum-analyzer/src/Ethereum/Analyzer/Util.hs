@@ -1,6 +1,6 @@
 {-# LANGUAGE FlexibleContexts, FlexibleInstances, GADTs,
-  NoImplicitPrelude, OverloadedStrings, Rank2Types, TypeFamilies,
-  UndecidableInstances #-}
+  NoImplicitPrelude, Rank2Types, TypeFamilies, UndecidableInstances
+  #-}
 
 module Ethereum.Analyzer.Util
   ( toDotText

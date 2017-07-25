@@ -12,10 +12,7 @@ import Blockchain.ExtWord
 import Blockchain.Util
 import Blockchain.VM.Code
 import Blockchain.VM.Opcodes
-import Data.ByteString
 import Data.HexString
-import Data.Text
-import Data.Text.Encoding
 
 class HasEvmBytecode a where
   evmBytecodeOf :: a -> EvmBytecode

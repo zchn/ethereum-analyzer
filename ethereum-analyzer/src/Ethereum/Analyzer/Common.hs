@@ -6,7 +6,6 @@ import Protolude hiding (show)
 
 import Blockchain.ExtWord
 import Data.ByteString as DB
-import Data.Word
 
 zero256 :: ByteString
 zero256 = DB.replicate 32 0
