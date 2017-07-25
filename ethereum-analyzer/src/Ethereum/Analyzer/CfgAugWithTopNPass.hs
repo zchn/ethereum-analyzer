@@ -1,6 +1,6 @@
-{-# LANGUAGE OverloadedStrings, FlexibleContexts, NoImplicitPrelude,
-  FlexibleInstances, GADTs, Rank2Types, TypeFamilies,
-  UndecidableInstances #-}
+{-# LANGUAGE OverloadedStrings, FlexibleContexts,
+  NoImplicitPrelude, FlexibleInstances, GADTs, Rank2Types,
+  TypeFamilies, UndecidableInstances #-}
 
 module Ethereum.Analyzer.CfgAugWithTopNPass
   ( doCfgAugWithTopNPass
@@ -262,10 +262,14 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
     -- opT PUSHDIFF String String flist = flist
     -- opT DATA ByteString flist = flist
     -- opT MalformedOpcode Word8 flist = flist
-    opT op@LABEL {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
-    opT op@PUSHLABEL {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
-    opT op@PUSHDIFF {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
-    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@LABEL {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@PUSHLABEL {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@PUSHDIFF {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@DATA {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
     opT op@MalformedOpcode {} _ =
       panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
     -- TODO(zchn): Implement interp

@@ -1,6 +1,6 @@
-{-# LANGUAGE FlexibleContexts, OverloadedStrings, NoImplicitPrelude,
-  FlexibleInstances, GADTs, Rank2Types, TypeFamilies, ScopedTypeVariables,
-  UndecidableInstances #-}
+{-# LANGUAGE FlexibleContexts, OverloadedStrings,
+  NoImplicitPrelude, FlexibleInstances, GADTs, Rank2Types,
+  TypeFamilies, ScopedTypeVariables, UndecidableInstances #-}
 
 module Ethereum.Analyzer.IR
   ( HplBody
@@ -23,6 +23,7 @@ import Protolude hiding (show)
 import Blockchain.ExtWord as BE
 import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl as CH
+
 -- import Control.Monad as CM
 import Data.Bimap as DB
 import Data.List as DL
@@ -49,16 +50,15 @@ showOps :: [(Word256, Operation)] -> [String]
 showOps = fmap showOp
 
 instance Show (HplOp e x) where
-  show (CoOp l) = "CO: "  <> show l
+  show (CoOp l) = "CO: " <> show l
   show (OoOp op) = "OO: " <> showOp op
   show (OcOp op ll) = "OC: " <> showOp op <> " -> " <> show ll
-  show (HpCodeCopy offset) = "HpCodeCopy "  <> show offset
+  show (HpCodeCopy offset) = "HpCodeCopy " <> show offset
 
 instance Show (Block HplOp C C) where
   show (a :: Block HplOp C C) =
     let (h, m, t) = blockSplit a
-    in DL.unlines $ [show h] <>
-       DL.map show (blockToList m) <> [show t]
+    in DL.unlines $ [show h] <> DL.map show (blockToList m) <> [show t]
 
 instance Eq (HplOp C O) where
   (==) (CoOp a) (CoOp b) = a == b

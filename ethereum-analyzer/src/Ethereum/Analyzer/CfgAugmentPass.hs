@@ -11,6 +11,7 @@ import Protolude hiding (show)
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes
 import Compiler.Hoopl
+
 -- import Data.Bits
 import Data.List as DL
 import Data.Set as DS hiding (toList)
@@ -70,10 +71,14 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
     opT NOT (PElem st) =
       PElem $ DS.map (bytesToWord256 . DL.map complement . word256ToBytes) st
     opT (PUSH w8l) _ = PElem $ DS.singleton $ varBytesToWord256 w8l
-    opT op@LABEL {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
-    opT op@PUSHLABEL {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
-    opT op@PUSHDIFF {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
-    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@LABEL {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@PUSHLABEL {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@PUSHDIFF {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@DATA {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
     opT op@MalformedOpcode {} _ =
       panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
     opT _ _ = Top

@@ -1,5 +1,6 @@
-{-# LANGUAGE FlexibleContexts, FlexibleInstances, GADTs, NoImplicitPrelude,
-  OverloadedStrings, Rank2Types, TypeFamilies, UndecidableInstances #-}
+{-# LANGUAGE FlexibleContexts, FlexibleInstances, GADTs,
+  NoImplicitPrelude, OverloadedStrings, Rank2Types, TypeFamilies,
+  UndecidableInstances #-}
 
 module Ethereum.Analyzer.Util
   ( toDotText
@@ -59,8 +60,7 @@ toGr bd =
         mapFoldWithKey
           (\lbl blk (nList', eList') ->
              let node = lblToNode lbl
-                 edgs =
-                   map (\l -> (node, lblToNode l, ())) (successors blk)
+                 edgs = map (\l -> (node, lblToNode l, ())) (successors blk)
              in (nList' <> [(node, blk)], eList' <> edgs))
           ([], [])
           bd
@@ -70,8 +70,8 @@ visParams
   :: forall n el.
      GraphvizParams n (Block HplOp C C) el () (Block HplOp C C)
 visParams =
-  nonClusteredParams {fmtNode = \(_, nl) -> [textLabel (toS $ show nl),
-                                             shape BoxShape]}
+  nonClusteredParams
+  {fmtNode = \(_, nl) -> [textLabel (toS $ show nl), shape BoxShape]}
 
 toDotGraph :: Gr (Block HplOp C C) () -> DotGraph Node
 toDotGraph = graphToDot visParams
