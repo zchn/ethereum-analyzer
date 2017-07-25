@@ -5,4 +5,4 @@ module Ethereum.Analyzer.InstCounter
 import Ethereum.Analyzer
 
 doInstCounter :: WordLabelMapM HplBody -> Int
-doInstCounter body = error "Unimplemented(doInstCounter):"
+doInstCounter body = panic "Unimplemented(doInstCounter):"

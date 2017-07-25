@@ -35,6 +35,7 @@ library
                      , graphviz
                      , hexstring
                      , hoopl >= 3.10.2.1
+                     , protolude
                      , text
                        
   exposed-modules:     Ethereum.Analyzer
@@ -48,7 +49,8 @@ library
   hs-source-dirs:      src
   buildable:           True
   default-language:    Haskell98
-  default-extensions:  OverloadedStrings
+  default-extensions:  NoImplicitPrelude
+                     , OverloadedStrings
 
 test-suite spec
   type:                exitcode-stdio-1.0
@@ -58,9 +60,9 @@ test-suite spec
   other-modules:       Ethereum.Analyzer.CfgAugmentPassSpec
                      , Ethereum.Analyzer.CfgAugWithTopNPassSpec
                      , Ethereum.Analyzer.IRSpec
+                     , Ethereum.Analyzer.TestData.Basic
                      , Ethereum.Analyzer.UtilSpec
                      , Ethereum.AnalyzerSpec
-                     , SpecCommon
   build-depends:       base
                      , bytestring
                      , ethereum-analyzer
@@ -68,5 +70,8 @@ test-suite spec
                      , extra
                      , hoopl
                      , hspec
+                     , protolude
                      , text
   default-language:    Haskell98
+  default-extensions:  NoImplicitPrelude
+                     , OverloadedStrings

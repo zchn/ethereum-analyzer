@@ -1,20 +1,24 @@
-{-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings, NoImplicitPrelude, FlexibleContexts #-}
 
 module Ethereum.Analyzer.CfgAugWithTopNPassSpec
   ( spec
   ) where
 
+import Protolude hiding (show)
+
+import Data.Text as DT
 import Ethereum.Analyzer
 import Ethereum.Analyzer.CfgAugWithTopNPass
-import SpecCommon
+import Ethereum.Analyzer.TestData.Basic
+import GHC.Show
 import Test.Hspec
 
 spec :: Spec
 spec =
   describe "doCfgAugWithTopNPass" $ do
     it "works for hexstring1" $ do
-      let result = unWordLabelMapM $ show <$> doCfgAugWithTopNPass hexstring1
-      length result `shouldBe` 4815
+      let result = unWordLabelMapM $ toS . show <$> doCfgAugWithTopNPass hexstring1
+      DT.length result `shouldBe` 4815
     it "works for hexstring2" $ do
-      let result = unWordLabelMapM $ show <$> doCfgAugWithTopNPass hexstring2
-      result `shouldContain` "OC: 9: JUMPI -> [L2,L4]"
+      let result = (toS $ unWordLabelMapM $ ((toS . show <$> doCfgAugWithTopNPass hexstring2) :: WordLabelMapM Text)) :: [Char]
+      result `shouldContain` ("OC: 9: JUMPI -> [L2,L4]" :: [Char])

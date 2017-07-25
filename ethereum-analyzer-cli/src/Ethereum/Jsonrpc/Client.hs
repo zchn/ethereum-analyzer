@@ -178,7 +178,7 @@ ethGetContractAddrByTxHash server port txhash =
             then Nothing
             else Just a
         Null -> Nothing
-        other -> error $ show other) <$>
+        other -> error $  show other) <$>
    lookupDefault (String "error") "contractAddress") .
   txReceipt <$>
   callJsonRpc server port (Eth_getTransactionReceiptReq txhash)

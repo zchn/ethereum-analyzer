@@ -9,7 +9,7 @@ module Ethereum.Analyzer.Web.Server
   , startApp
   ) where
 
-import Protolude
+import Protolude hiding (show)
 
 import Control.Monad.Log (Severity(..))
 import qualified Data.List as List

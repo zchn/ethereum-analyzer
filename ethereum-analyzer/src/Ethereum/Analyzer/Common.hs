@@ -2,6 +2,8 @@ module Ethereum.Analyzer.Common
   ( varBytesToWord256
   ) where
 
+import Protolude hiding (show)
+
 import Blockchain.ExtWord
 import Data.ByteString as DB
 import Data.Word

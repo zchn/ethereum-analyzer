@@ -6,14 +6,17 @@ module Ethereum.Analyzer.CfgAugmentPass
   ( doCfgAugmentPass
   ) where
 
+import Protolude hiding (show)
+
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes
 import Compiler.Hoopl
-import Data.Bits
+-- import Data.Bits
 import Data.List as DL
-import Data.Set as DS
+import Data.Set as DS hiding (toList)
 import Ethereum.Analyzer
 import Ethereum.Analyzer.Common
+import GHC.Show
 
 type StackTopFact = WithTop (Set Word256)
 
@@ -67,12 +70,12 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
     opT NOT (PElem st) =
       PElem $ DS.map (bytesToWord256 . DL.map complement . word256ToBytes) st
     opT (PUSH w8l) _ = PElem $ DS.singleton $ varBytesToWord256 w8l
-    opT op@LABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@PUSHLABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@PUSHDIFF {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@DATA {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@LABEL {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@PUSHLABEL {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@PUSHDIFF {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
     opT op@MalformedOpcode {} _ =
-      error $ "Unexpected(stackTopTransfer): " ++ show op
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
     opT _ _ = Top
 
 opGUnit :: HplOp e x -> Graph HplOp e x
@@ -109,7 +112,7 @@ cfgAugmentRewrite = mkFRewrite3 coR ooR ocR
               newll <- liftFuel $ labelsFor $ toList st
               return $
                 Just $
-                opGUnit $ OcOp (loc, ope) $ toList $ fromList (ll ++ newll)
+                opGUnit $ OcOp (loc, ope) $ toList $ fromList (ll <> newll)
 
 cfgAugmentPass :: FwdPass WordLabelMapFuelM HplOp StackTopFact
 cfgAugmentPass =

@@ -1,5 +1,5 @@
-{-# LANGUAGE FlexibleContexts, FlexibleInstances, GADTs,
-  Rank2Types, TypeFamilies, UndecidableInstances #-}
+{-# LANGUAGE FlexibleContexts, FlexibleInstances, GADTs, NoImplicitPrelude,
+  OverloadedStrings, Rank2Types, TypeFamilies, UndecidableInstances #-}
 
 module Ethereum.Analyzer.Util
   ( toDotText
@@ -7,17 +7,20 @@ module Ethereum.Analyzer.Util
   , disasmToDotText2
   ) where
 
+import Protolude hiding (show)
+
 import Compiler.Hoopl
 import Data.Graph.Inductive.Graph as DGIG
 import Data.Graph.Inductive.PatriciaTree
 import Data.GraphViz
-import Data.GraphViz.Printing
-import Data.Text as DT
+import Data.GraphViz.Printing hiding ((<>))
 import qualified Data.Text.Lazy as DTL
 import Ethereum.Analyzer.CfgAugWithTopNPass
 import Ethereum.Analyzer.CfgAugmentPass
 import Ethereum.Analyzer.Disasm
 import Ethereum.Analyzer.IR
+import GHC.Show
+import Text.Read (read)
 
 disasmToDotText
   :: HasEvmBytecode a
@@ -51,14 +54,14 @@ toDotText bd =
 
 toGr :: HplBody -> Gr (Block HplOp C C) ()
 toGr bd =
-  let lblToNode l = read (Prelude.drop 1 $ show l)
+  let lblToNode l = read (drop 1 $ toS $ show l)
       (nList, eList) =
         mapFoldWithKey
           (\lbl blk (nList', eList') ->
              let node = lblToNode lbl
                  edgs =
-                   Prelude.map (\l -> (node, lblToNode l, ())) (successors blk)
-             in (nList' ++ [(node, blk)], eList' ++ edgs))
+                   map (\l -> (node, lblToNode l, ())) (successors blk)
+             in (nList' <> [(node, blk)], eList' <> edgs))
           ([], [])
           bd
   in mkGraph nList eList
@@ -67,7 +70,8 @@ visParams
   :: forall n el.
      GraphvizParams n (Block HplOp C C) el () (Block HplOp C C)
 visParams =
-  nonClusteredParams {fmtNode = \(_, nl) -> [toLabel $ show nl, shape BoxShape]}
+  nonClusteredParams {fmtNode = \(_, nl) -> [textLabel (toS $ show nl),
+                                             shape BoxShape]}
 
 toDotGraph :: Gr (Block HplOp C C) () -> DotGraph Node
 toDotGraph = graphToDot visParams

@@ -1,10 +1,12 @@
 {-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
 
-module SpecCommon
+module Ethereum.Analyzer.TestData.Basic
   ( hexstring1
   , hexstring2
   , voteHexstring
   ) where
+
+import Protolude hiding (show)
 
 import Ethereum.Analyzer.Disasm
 

@@ -1,10 +1,12 @@
-{-# LANGUAGE OverloadedStrings, FlexibleContexts,
+{-# LANGUAGE OverloadedStrings, FlexibleContexts, NoImplicitPrelude,
   FlexibleInstances, GADTs, Rank2Types, TypeFamilies,
   UndecidableInstances #-}
 
 module Ethereum.Analyzer.CfgAugWithTopNPass
   ( doCfgAugWithTopNPass
   ) where
+
+import Protolude hiding (show)
 
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes as BVO
@@ -13,10 +15,10 @@ import Data.Bits as Db
 import Data.ByteString as DB
 import Data.List as DL
 import Data.List.Extra as DLE
-import Data.Maybe as DM
-import Data.Set as DS
+import Data.Set as DS hiding (toList)
 import Ethereum.Analyzer
 import Ethereum.Analyzer.Common
+import GHC.Show
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 type StackElemFact = WithTop (Set Word256)
@@ -81,16 +83,16 @@ pairCompute fun flist =
   case flist of
     [] -> mkTopList flist
     [_] -> mkTopList flist
-    Top:_:tl -> (Top : tl) ++ [Top]
-    _:Top:tl -> (Top : tl) ++ [Top]
+    Top:_:tl -> (Top : tl) <> [Top]
+    _:Top:tl -> (Top : tl) <> [Top]
     PElem st1:PElem st2:tl ->
       let l1 = toList st1
-      in ((PElem $ DS.unions $ DL.map (\e1 -> DS.map (fun e1) st2) l1) : tl) ++
+      in ((PElem $ DS.unions $ DL.map (\e1 -> DS.map (fun e1) st2) l1) : tl) <>
          [Top]
 
 popStack :: Int -> StackNFact -> StackNFact
 popStack 0 f = f
-popStack n (_:t) = popStack (n - 1) (t ++ [Top])
+popStack n (_:t) = popStack (n - 1) (t <> [Top])
 popStack _ [] = []
 
 pushStack' :: StackElemFact -> StackNFact -> StackNFact
@@ -130,7 +132,7 @@ swapStack n stk =
   if n + 1 > DL.length stk
     then pushTop $ popStack 1 stk
     else let (h1:t1, h2:t2) = DL.splitAt n stk
-         in (h2 : t1) ++ (h1 : t2)
+         in (h2 : t1) <> (h1 : t2)
 
 stackNTransfer :: FwdTransfer HplOp StackNFact
 stackNTransfer = mkFTransfer3 coT ooT ocT
@@ -260,12 +262,12 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
     -- opT PUSHDIFF String String flist = flist
     -- opT DATA ByteString flist = flist
     -- opT MalformedOpcode Word8 flist = flist
-    opT op@LABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@PUSHLABEL {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@PUSHDIFF {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
-    opT op@DATA {} _ = error $ "Unexpected(stackTopTransfer): " ++ show op
+    opT op@LABEL {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@PUSHLABEL {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@PUSHDIFF {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
+    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
     opT op@MalformedOpcode {} _ =
-      error $ "Unexpected(stackTopTransfer): " ++ show op
+      panic $ "Unexpected(stackTopTransfer): " <> (toS $ show op)
     -- TODO(zchn): Implement interp
     opT _ flist = DL.map (const Top) flist
 
@@ -315,7 +317,7 @@ cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
               newll <- liftFuel $ labelsFor $ toList st
               return $
                 Just $
-                opGUnit $ OcOp (loc, ope) $ toList $ fromList (ll ++ newll)
+                opGUnit $ OcOp (loc, ope) $ toList $ fromList (ll <> newll)
 
 _depthBound :: Int
 _depthBound = 16
@@ -385,6 +387,6 @@ doCfgAugWithTopNPass a = do
             , dispatcherOf = HplCode (Just disEntry) newDisBody
             }
         _ ->
-          error $
-          "doCfgAugWithTopNPass: unexpected newHexstrings length: " ++
-          show (DL.length newHexstrings)
+          panic $
+          "doCfgAugWithTopNPass: unexpected newHexstrings length: " <>
+          (toS $ show (DL.length newHexstrings))

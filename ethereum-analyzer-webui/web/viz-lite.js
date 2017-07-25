@@ -1051,30 +1051,30 @@ function v(a){void 0!==a?(e.print(a),e.X(a),a=JSON.stringify(a)):a="";w=!0;var b
     var engine = options.engine === undefined ? "dot" : options.engine;
     var scale = options.scale;
     var totalMemory = options.totalMemory;
-  
+
     if (format == "png-image-element") {
       return Viz.svgXmlToPngImageElement(render(src, "svg", engine, totalMemory), scale);
     } else {
       return render(src, format, engine, totalMemory);
     }
   }
-  
+
   function render(src, format, engine, totalMemory) {
     var graphviz = Module({ TOTAL_MEMORY: totalMemory });
-    
+
     var resultPointer = graphviz["ccall"]("vizRenderFromString", "number", ["string", "string", "string"], [src, format, engine]);
     var resultString = graphviz["Pointer_stringify"](resultPointer);
 
     var errorMessagePointer = graphviz["ccall"]("vizLastErrorMessage", "number", [], []);
     var errorMessageString = graphviz["Pointer_stringify"](errorMessagePointer);
-    
+
     if (errorMessageString != "") {
       throw new Error(errorMessageString);
     }
-    
+
     return resultString;
   }
-  
+
   Viz.svgXmlToPngImageElement = function(svgXml, scale, callback) {
     if (scale === undefined) {
       if ("devicePixelRatio" in window && window.devicePixelRatio > 1) {
@@ -1083,9 +1083,9 @@ function v(a){void 0!==a?(e.print(a),e.X(a),a=JSON.stringify(a)):a="";w=!0;var b
         scale = 1;
       }
     }
-    
+
     var pngImage = new Image();
-    
+
     if (typeof fabric === "object" && fabric.loadSVGFromString) {
       try {
         fabric.loadSVGFromString(svgXml, function(objects, options) {
@@ -1098,19 +1098,19 @@ function v(a){void 0!==a?(e.print(a),e.X(a),a=JSON.stringify(a)):a="";w=!0;var b
               throw new Error("Error loading SVG with Fabric");
             }
           }
-        
+
           var element = document.createElement("canvas");
           element.width = options.width;
           element.height = options.height;
-      
+
           var canvas = new fabric.Canvas(element, { enableRetinaScaling: false });
           var obj = fabric.util.groupSVGElements(objects, options);
           canvas.add(obj).renderAll();
-      
+
           pngImage.src = canvas.toDataURL({ multiplier: scale });
           pngImage.width = options.width;
           pngImage.height = options.height;
-        
+
           if (callback !== undefined) {
             callback(null, pngImage);
           }
@@ -1136,26 +1136,26 @@ function v(a){void 0!==a?(e.print(a),e.X(a),a=JSON.stringify(a)):a="";w=!0;var b
         pngImage.src = canvas.toDataURL("image/png");
         pngImage.width = svgImage.width;
         pngImage.height = svgImage.height;
-        
+
         if (callback !== undefined) {
           callback(null, pngImage);
         }
       }
-      
+
       svgImage.onerror = function(e) {
         if (callback !== undefined) {
           callback(e);
         }
       }
-      
+
       svgImage.src = "data:image/svg+xml;base64," + btoa(svgXml);
     }
-    
+
     if (callback === undefined) {
       return pngImage;
     }
   }
-  
+
   Viz.svgXmlToPngBase64 = function(svgXml, scale, callback) {
     Viz.svgXmlToPngImageElement(svgXml, scale, function(err, image) {
       if (err) {
@@ -1165,11 +1165,11 @@ function v(a){void 0!==a?(e.print(a),e.X(a),a=JSON.stringify(a)):a="";w=!0;var b
       }
     });
   }
-  
+
   if (typeof module === "object" && module.exports) {
     module.exports = Viz;
   } else {
     global.Viz = Viz;
   }
-  
+
 })(this);

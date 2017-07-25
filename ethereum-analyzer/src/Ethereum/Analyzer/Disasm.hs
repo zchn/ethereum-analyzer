@@ -5,6 +5,8 @@ module Ethereum.Analyzer.Disasm
   , disasm
   ) where
 
+import Protolude hiding (show)
+
 import Blockchain.Data.Code
 import Blockchain.ExtWord
 import Blockchain.Util
@@ -27,7 +29,7 @@ newtype EvmHexString = EvmHexString
   } deriving (Show, Eq)
 
 instance HasEvmBytecode EvmBytecode where
-  evmBytecodeOf = id
+  evmBytecodeOf = identity
 
 instance HasEvmBytecode EvmHexString where
   evmBytecodeOf =
