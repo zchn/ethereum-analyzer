@@ -1,10 +1,8 @@
-{-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
-
 module Ethereum.Analyzer.TestData.DaoJson
   ( simpleDaoJson
   ) where
 
-import Ethereum.Analyzer.Disasm
+import Protolude hiding (show)
 
 simpleDaoJson :: Text
 simpleDaoJson = "" <>
