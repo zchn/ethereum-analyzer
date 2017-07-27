@@ -30,7 +30,6 @@ library
                      , bimap
                      , bytestring
                      , containers
-                     , data-default
                      , ethereum-analyzer-deps
                      , extra
                      , fgl
@@ -71,7 +70,6 @@ test-suite spec
   build-depends:       base
                      , aeson
                      , bytestring
-                     , data-default
                      , ethereum-analyzer
                      , ethereum-analyzer-deps
                      , extra
