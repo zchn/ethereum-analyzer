@@ -268,8 +268,7 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
       panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
     opT op@PUSHDIFF {} _ =
       panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
-    opT op@DATA {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
     opT op@MalformedOpcode {} _ =
       panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
     -- TODO(zchn): Implement interp

@@ -25,5 +25,5 @@ spec =
       let result =
             (toS $
              unWordLabelMapM
-             ((toS . show <$> doCfgAugWithTopNPass hexstring2) :: WordLabelMapM Text)) :: [Char]
+               ((toS . show <$> doCfgAugWithTopNPass hexstring2) :: WordLabelMapM Text)) :: [Char]
       result `shouldContain` ("OC: 9: JUMPI -> [L2,L4]" :: [Char])

@@ -5,11 +5,8 @@ module Ethereum.Analyzer.TestData.DaoJson
 import Protolude hiding (show)
 
 simpleDaoJson :: Text
-simpleDaoJson = "" <>
-  "{" <>
-  "  \"children\" :" <>
-  "  [" <>
-  "    {" <>
+simpleDaoJson =
+  "" <> "{" <> "  \"children\" :" <> "  [" <> "    {" <>
   "      \"attributes\" :" <>
   "      {" <>
   "        \"literals\" :" <>
