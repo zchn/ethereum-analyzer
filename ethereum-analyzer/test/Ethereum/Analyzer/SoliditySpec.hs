@@ -22,7 +22,7 @@ spec =
            { attributes =
                Just $
                defSolNode {literals = Just ["solidity", "^", "0.4", ".2"]}
-           , id = Just 1
+           , _id = Just 1
            , name = Just "PragmaDirective"
            , src = Just "0:23:-1"
            })
@@ -33,7 +33,7 @@ spec =
            { children =
                Just
                  [ defSolNode
-                   { id = Just 1
+                   { _id = Just 1
                    , name = Just "PragmaDirective"
                    , src = Just "0:23:-1"
                    , attributes =
@@ -48,14 +48,14 @@ spec =
                            { children =
                                Just
                                  [ defSolNode
-                                   { id = Just 2
+                                   { _id = Just 2
                                    , name = Just "ElementaryTypeName"
                                    , src = Just "52:4:-1"
                                    , attributes =
                                        Just (defSolNode {name = Just "uint"})
                                    }
                                  ]
-                           , id = Just 3
+                           , _id = Just 3
                            , name = Just "VariableDeclaration"
                            , src = Just "52:15:-1"
                            , attributes =
@@ -71,7 +71,7 @@ spec =
                                            { children =
                                                Just
                                                  [ defSolNode
-                                                   { id = Just 4
+                                                   { _id = Just 4
                                                    , name =
                                                        Just "ElementaryTypeName"
                                                    , src = Just "85:4:-1"
@@ -81,7 +81,7 @@ spec =
                                                           {name = Just "uint"})
                                                    }
                                                  ]
-                                           , id = Just 5
+                                           , _id = Just 5
                                            , name = Just "VariableDeclaration"
                                            , src = Just "85:6:-1"
                                            , attributes =
@@ -89,13 +89,13 @@ spec =
                                                  (defSolNode {name = Just "x"})
                                            }
                                          ]
-                                   , id = Just 6
+                                   , _id = Just 6
                                    , name = Just "ParameterList"
                                    , src = Just "84:8:-1"
                                    }
                                  , defSolNode
                                    { children = Just []
-                                   , id = Just 7
+                                   , _id = Just 7
                                    , name = Just "ParameterList"
                                    , src = Just "93:0:-1"
                                    }
@@ -109,7 +109,7 @@ spec =
                                                    { children =
                                                        Just
                                                          [ defSolNode
-                                                           { id = Just 8
+                                                           { _id = Just 8
                                                            , name =
                                                                Just "Identifier"
                                                            , src =
@@ -118,7 +118,7 @@ spec =
                                                                Just defSolNode
                                                            }
                                                          , defSolNode
-                                                           { id = Just 9
+                                                           { _id = Just 9
                                                            , name =
                                                                Just "Identifier"
                                                            , src =
@@ -127,24 +127,24 @@ spec =
                                                                Just defSolNode
                                                            }
                                                          ]
-                                                   , id = Just 10
+                                                   , _id = Just 10
                                                    , name = Just "Assignment"
                                                    , src = Just "99:14:-1"
                                                    , attributes =
                                                        Just defSolNode
                                                    }
                                                  ]
-                                           , id = Just 11
+                                           , _id = Just 11
                                            , name = Just "ExpressionStatement"
                                            , src = Just "99:14:-1"
                                            }
                                          ]
-                                   , id = Just 12
+                                   , _id = Just 12
                                    , name = Just "Block"
                                    , src = Just "93:25:-1"
                                    }
                                  ]
-                           , id = Just 13
+                           , _id = Just 13
                            , name = Just "FunctionDefinition"
                            , src = Just "72:46:-1"
                            , attributes = Just (defSolNode {name = Just "set"})
@@ -154,7 +154,7 @@ spec =
                                Just
                                  [ defSolNode
                                    { children = Just []
-                                   , id = Just 14
+                                   , _id = Just 14
                                    , name = Just "ParameterList"
                                    , src = Just "134:2:-1"
                                    }
@@ -165,7 +165,7 @@ spec =
                                            { children =
                                                Just
                                                  [ defSolNode
-                                                   { id = Just 15
+                                                   { _id = Just 15
                                                    , name =
                                                        Just "ElementaryTypeName"
                                                    , src = Just "155:4:-1"
@@ -175,7 +175,7 @@ spec =
                                                           {name = Just "uint"})
                                                    }
                                                  ]
-                                           , id = Just 16
+                                           , _id = Just 16
                                            , name = Just "VariableDeclaration"
                                            , src = Just "155:4:-1"
                                            , attributes =
@@ -183,7 +183,7 @@ spec =
                                                  (defSolNode {name = Just ""})
                                            }
                                          ]
-                                   , id = Just 17
+                                   , _id = Just 17
                                    , name = Just "ParameterList"
                                    , src = Just "154:6:-1"
                                    }
@@ -194,30 +194,30 @@ spec =
                                            { children =
                                                Just
                                                  [ defSolNode
-                                                   { id = Just 18
+                                                   { _id = Just 18
                                                    , name = Just "Identifier"
                                                    , src = Just "174:10:-1"
                                                    , attributes =
                                                        Just defSolNode
                                                    }
                                                  ]
-                                           , id = Just 19
+                                           , _id = Just 19
                                            , name = Just "Return"
                                            , src = Just "167:17:-1"
                                            }
                                          ]
-                                   , id = Just 20
+                                   , _id = Just 20
                                    , name = Just "Block"
                                    , src = Just "161:28:-1"
                                    }
                                  ]
-                           , id = Just 21
+                           , _id = Just 21
                            , name = Just "FunctionDefinition"
                            , src = Just "122:67:-1"
                            , attributes = Just (defSolNode {name = Just "get"})
                            }
                          ]
-                   , id = Just 22
+                   , _id = Just 22
                    , name = Just "ContractDefinition"
                    , src = Just "25:166:-1"
                    , attributes =
