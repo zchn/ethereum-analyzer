@@ -22,10 +22,12 @@ data SolNode = SolNode
   } deriving (Eq, Generic, Show, FromJSON, ToJSON)
 
 defSolNode :: SolNode
-defSolNode = SolNode
+defSolNode =
+  SolNode
   { children = Nothing
   , id = Nothing
   , name = Nothing
   , src = Nothing
   , attributes = Nothing
-  , literals = Nothing }
+  , literals = Nothing
+  }

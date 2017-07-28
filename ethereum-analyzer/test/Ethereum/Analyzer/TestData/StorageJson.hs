@@ -6,11 +6,7 @@ import Protolude hiding (show)
 
 storageJson :: Text
 storageJson =
-  "{" <>
-  "  \"children\" :" <>
-  "  [" <>
-  "    {" <>
-  "      \"attributes\" :" <>
+  "{" <> "  \"children\" :" <> "  [" <> "    {" <> "      \"attributes\" :" <>
   "      {" <>
   "        \"literals\" :" <>
   "        [" <>
