@@ -24,8 +24,12 @@ fromRight :: b -> Either a b -> b
 fromRight _ (Right v) = v
 fromRight v (Left _) = v
 
-unexpectedPanic :: Show a => a -> b
+unexpectedPanic
+  :: Show a
+  => a -> b
 unexpectedPanic n = panic . toS $ "unexpected: " ++ show n
 
-unimplementedPanic :: Show a => a -> b
+unimplementedPanic
+  :: Show a
+  => a -> b
 unimplementedPanic n = panic . toS $ "unimplemented: " ++ show n

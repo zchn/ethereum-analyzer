@@ -29,17 +29,18 @@ spec =
            , src = Just "0:23:-1"
            })
     it "pretty-prints storageJson" $ do
-      let prettySol = show <$> (renderPretty 1.0 80) <$>
-                      (pretty :: SolNode -> Doc) <$>
-                      eitherDecode (toS storageJson)
+      let prettySol =
+            show <$> (renderPretty 1.0 80) <$> (pretty :: SolNode -> Doc) <$>
+            eitherDecode (toS storageJson)
       -- putStrLn $ fromRight "" prettySol
-      prettySol `shouldBe` Right (
-        "//--SourceUnit--\n" <>
-          "contract SimpleStorage {uint256/uint storedData\n" <>
-          "                       ;fun set (uint256/uint x)\n" <>
-          "                            ()\n" <>
-          "                            {(storedData:uint256=x:uint256 @uint256)}\n" <>
-          "                       ;fun get ()(uint256/uint){return(storedData:uint256)}}")
+      prettySol `shouldBe`
+        Right
+          ("//--SourceUnit--\n" <>
+           "contract SimpleStorage {uint256/uint storedData\n" <>
+           "                       ;fun set (uint256/uint x)\n" <>
+           "                            ()\n" <>
+           "                            {(storedData:uint256=x:uint256 @uint256)}\n" <>
+           "                       ;fun get ()(uint256/uint){return(storedData:uint256)}}")
     it "works for storageJson" $ do
       eitherDecode (toS storageJson) `shouldBe`
         Right
