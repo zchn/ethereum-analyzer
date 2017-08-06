@@ -5,13 +5,13 @@ module Ethereum.Analyzer.SoliditySpec
 import Protolude hiding (show)
 
 import Data.Aeson
-import Data.Either (fromRight)
+import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.DaoJson (simpleDaoJson)
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
 import GHC.Show (Show(..))
 import Test.Hspec
-import Text.PrettyPrint.Leijen.Text (Doc, pretty)
+import Text.PrettyPrint.Leijen.Text (Doc, pretty, renderPretty)
 
 spec :: Spec
 spec =
@@ -30,10 +30,17 @@ spec =
            , src = Just "0:23:-1"
            })
     it "pretty-prints storageJson" $ do
-      let prettySol = show <$> (pretty :: SolNode -> Doc) <$>
+      let prettySol = show <$> (renderPretty 1.0 80) <$>
+                      (pretty :: SolNode -> Doc) <$>
                       eitherDecode (toS storageJson)
-      putStr $ fromRight "" prettySol
-      prettySol `shouldBe` Right ""
+      -- putStrLn $ fromRight "" prettySol
+      prettySol `shouldBe` Right (
+        "//--SourceUnit--\n" <>
+          "contract SimpleStorage {uint256/uint storedData\n" <>
+          "                       ;fun set (uint256/uint x)\n" <>
+          "                            ()\n" <>
+          "                            {(storedData:uint256=x:uint256 @uint256)}\n" <>
+          "                       ;fun get ()(uint256/uint){return(storedData:uint256)}}")
     it "works for storageJson" $ do
       eitherDecode (toS storageJson) `shouldBe`
         Right

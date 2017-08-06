@@ -43,8 +43,8 @@ instance FromJSON SolNode where
     fieldLabelModifier = dropWhile (== '_') }
 
 instance Pretty SolNode where
-  pretty n@SolNode { name = name, children = children }
-    | name == Just "SourceUnit" = braces $ pretty children
+  pretty n@SolNode { name = name }
+    | name == Just "SourceUnit" = prettySourceUnit n
     | name == Just "PragmaDirective" = PP.empty
     | name == Just "ContractDefinition" = prettyContractDefinition n
     | name == Just "VariableDeclaration" = prettyVariableDeclaration n
@@ -59,13 +59,20 @@ instance Pretty SolNode where
 
 showWithoutChildren n = show (n { children = Nothing})
 
+prettySourceUnit n@SolNode
+  { name = Just "SourceUnit"
+  , children = Just children } =
+  textStrict "//--SourceUnit--" PP.<$> vsep (map pretty children)
+prettySourceUnit n = unexpectedPanic n
+
 prettyContractDefinition n@SolNode
   { name = Just "ContractDefinition"
   , children = Just children
   , attributes = Just (
       SolNode { children = Nothing
-              , name = Just cName})} = textStrict "contract" </> textStrict cName <> (
-                                       braces $ pretty children)
+              , name = Just cName})} = textStrict "contract" </>
+                                       textStrict cName </>
+                                       semiBraces (map pretty children)
 prettyContractDefinition n = unexpectedPanic n
 
 prettyVariableDeclaration n@SolNode
@@ -79,7 +86,7 @@ prettyVariableDeclaration n@SolNode
   , attributes = Just (
       SolNode { children = Nothing
               , name = Just vName
-              , _type = Just vType })} = textStrict (vType <> "/" <> veType) <>
+              , _type = Just vType })} = textStrict (vType <> "/" <> veType) </>
                                          textStrict vName
 prettyVariableDeclaration n = unexpectedPanic n
 
@@ -88,22 +95,25 @@ prettyFunctionDefinition n@SolNode
   , children = Just fChildren
   , attributes = Just (
       SolNode { children = Nothing
-              , name = Just fName })} = textStrict "fun" </> textStrict fName <> pretty fChildren
+              , name = Just fName })} = textStrict "fun" </> align (
+                                        textStrict fName </>
+                                        cat (map pretty fChildren))
 prettyFunctionDefinition n = unexpectedPanic n
 
 prettyParameterList n@SolNode
   { name = Just "ParameterList"
-  , children = Just pChildren } = parens $ pretty pChildren
+  , children = Just pChildren } =
+  parens (align (cat (punctuate comma $ map pretty pChildren)))
 prettyParameterList n = unexpectedPanic n
 
 prettyBlock n@SolNode
   { name = Just "Block"
-  , children = Just children } = braces $ pretty children
+  , children = Just children } = semiBraces $ map pretty children
 prettyBlock n = unexpectedPanic n
 
 prettyExpressionStatement n@SolNode
   { name = Just "ExpressionStatement"
-  , children = Just children } = parens $ pretty children
+  , children = Just children } = tupled $ map pretty children
 prettyExpressionStatement n = unexpectedPanic n
 
 prettyAssignment n@SolNode
@@ -112,8 +122,8 @@ prettyAssignment n@SolNode
   , attributes = Just (
       SolNode { _type = Just _type
               , operator = Just operator })} =
-  parens (textStrict _type) <> cat (punctuate (textStrict operator) (
-                                       map pretty children))
+  cat (punctuate (textStrict operator) (map pretty children)) </>
+  textStrict ("@" <> _type)
 prettyAssignment n = unexpectedPanic n
 
 prettyIdentifier n@SolNode
@@ -126,7 +136,7 @@ prettyIdentifier n = unexpectedPanic n
 
 prettyReturn n@SolNode
   { name = Just "Return"
-  , children = Just children } = textStrict "return" <> parens (pretty children)
+  , children = Just children } = textStrict "return" <> tupled (map pretty children)
 prettyReturn n = unexpectedPanic n
 
 unexpectedPanic n = panic . toS $ "unexpected: " ++ show n
