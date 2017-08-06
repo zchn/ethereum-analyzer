@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
+
 
 module Ethereum.Analyzer.Solidity
   ( SolNode(..)
@@ -69,9 +69,9 @@ prettySourceUnit n = unexpectedPanic n
 prettyContractDefinition :: SolNode -> Doc
 prettyContractDefinition SolNode { name = Just "ContractDefinition"
                                  , children = Just children
-                                 , attributes = Just (SolNode { children = Nothing
+                                 , attributes = Just SolNode { children = Nothing
                                                               , name = Just cName
-                                                              })
+                                                              }
                                  } =
   textStrict "contract" </> textStrict cName </>
   semiBraces (map pretty children)
@@ -83,10 +83,10 @@ prettyVariableDeclaration SolNode { name = Just "VariableDeclaration"
                                                              , name = Just "ElementaryTypeName"
                                                              , attributes = Just SolNode {name = Just veType}
                                                              }]
-                                  , attributes = Just (SolNode { children = Nothing
+                                  , attributes = Just SolNode { children = Nothing
                                                                , name = Just vName
                                                                , _type = Just vType
-                                                               })
+                                                               }
                                   } =
   textStrict (vType <> "/" <> veType) </> textStrict vName
 prettyVariableDeclaration n = unexpectedPanic n
@@ -94,9 +94,9 @@ prettyVariableDeclaration n = unexpectedPanic n
 prettyFunctionDefinition :: SolNode -> Doc
 prettyFunctionDefinition SolNode { name = Just "FunctionDefinition"
                                  , children = Just fChildren
-                                 , attributes = Just (SolNode { children = Nothing
+                                 , attributes = Just SolNode { children = Nothing
                                                               , name = Just fName
-                                                              })
+                                                              }
                                  } =
   textStrict "fun" </> align (textStrict fName </> cat (map pretty fChildren))
 prettyFunctionDefinition n = unexpectedPanic n
@@ -122,9 +122,9 @@ prettyExpressionStatement n = unexpectedPanic n
 prettyAssignment :: SolNode -> Doc
 prettyAssignment SolNode { name = Just "Assignment"
                          , children = Just children
-                         , attributes = Just (SolNode { _type = Just _type
+                         , attributes = Just SolNode { _type = Just _type
                                                       , operator = Just operator
-                                                      })
+                                                      }
                          } =
   cat (punctuate (textStrict operator) (map pretty children)) </>
   textStrict ("@" <> _type)
@@ -133,9 +133,9 @@ prettyAssignment n = unexpectedPanic n
 prettyIdentifier :: SolNode -> Doc
 prettyIdentifier SolNode { name = Just "Identifier"
                          , children = Nothing
-                         , attributes = Just (SolNode { _type = Just _type
+                         , attributes = Just SolNode { _type = Just _type
                                                       , value = Just idName
-                                                      })
+                                                      }
                          } = textStrict (idName <> ":" <> _type)
 prettyIdentifier n = unexpectedPanic n
 
