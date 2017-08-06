@@ -5,10 +5,13 @@ module Ethereum.Analyzer.SoliditySpec
 import Protolude hiding (show)
 
 import Data.Aeson
+import Data.Either (fromRight)
 import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.DaoJson (simpleDaoJson)
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
+import GHC.Show (Show(..))
 import Test.Hspec
+import Text.PrettyPrint.Leijen.Text (Doc, pretty)
 
 spec :: Spec
 spec =
@@ -26,6 +29,11 @@ spec =
            , name = Just "PragmaDirective"
            , src = Just "0:23:-1"
            })
+    it "pretty-prints storageJson" $ do
+      let prettySol = show <$> (pretty :: SolNode -> Doc) <$>
+                      eitherDecode (toS storageJson)
+      putStr $ fromRight "" prettySol
+      prettySol `shouldBe` Right ""
     it "works for storageJson" $ do
       eitherDecode (toS storageJson) `shouldBe`
         Right

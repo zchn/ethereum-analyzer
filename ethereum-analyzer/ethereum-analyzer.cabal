@@ -38,6 +38,7 @@ library
                      , hoopl >= 3.10.2.1
                      , protolude
                      , text
+                     , wl-pprint-text
                        
   exposed-modules:     Ethereum.Analyzer
                      , Ethereum.Analyzer.Common
@@ -67,7 +68,7 @@ test-suite spec
                      , Ethereum.Analyzer.TestData.DaoJson
                      , Ethereum.Analyzer.UtilSpec
                      , Ethereum.AnalyzerSpec
-  build-depends:       base
+  build-depends:       base >= 4.10 && < 5
                      , aeson
                      , bytestring
                      , ethereum-analyzer
@@ -77,6 +78,7 @@ test-suite spec
                      , hspec
                      , protolude
                      , text
+                     , wl-pprint-text
   default-language:    Haskell98
   default-extensions:  NoImplicitPrelude
                      , OverloadedStrings
