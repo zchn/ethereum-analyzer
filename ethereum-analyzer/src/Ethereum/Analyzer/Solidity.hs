@@ -10,6 +10,7 @@ import Protolude hiding (show)
 
 import Data.Aeson
 import Data.Aeson.Types
+import Ethereum.Analyzer.Common
 import GHC.Show (Show(..))
 import Text.PrettyPrint.Leijen.Text as PP
 
@@ -55,17 +56,20 @@ instance Pretty SolNode where
     | name == Just "Assignment" = prettyAssignment n
     | name == Just "Identifier" = prettyIdentifier n
     | name == Just "Return" = prettyReturn n
-    | otherwise = panic . toS $ "unimplemented: " ++ showWithoutChildren n
+    | otherwise = panic . toS $ "unimplemented: " <> showWithoutChildren n
 
-showWithoutChildren n = show (n { children = Nothing})
+showWithoutChildren :: SolNode -> Text
+showWithoutChildren n = toS $ show (n { children = Nothing})
 
-prettySourceUnit n@SolNode
+prettySourceUnit :: SolNode -> Doc
+prettySourceUnit SolNode
   { name = Just "SourceUnit"
   , children = Just children } =
   textStrict "//--SourceUnit--" PP.<$> vsep (map pretty children)
 prettySourceUnit n = unexpectedPanic n
 
-prettyContractDefinition n@SolNode
+prettyContractDefinition :: SolNode -> Doc
+prettyContractDefinition SolNode
   { name = Just "ContractDefinition"
   , children = Just children
   , attributes = Just (
@@ -75,7 +79,8 @@ prettyContractDefinition n@SolNode
                                        semiBraces (map pretty children)
 prettyContractDefinition n = unexpectedPanic n
 
-prettyVariableDeclaration n@SolNode
+prettyVariableDeclaration :: SolNode -> Doc
+prettyVariableDeclaration SolNode
   { name = Just "VariableDeclaration"
   , children = Just [ SolNode
                       { children = Nothing
@@ -90,7 +95,8 @@ prettyVariableDeclaration n@SolNode
                                          textStrict vName
 prettyVariableDeclaration n = unexpectedPanic n
 
-prettyFunctionDefinition n@SolNode
+prettyFunctionDefinition :: SolNode -> Doc
+prettyFunctionDefinition SolNode
   { name = Just "FunctionDefinition"
   , children = Just fChildren
   , attributes = Just (
@@ -100,23 +106,27 @@ prettyFunctionDefinition n@SolNode
                                         cat (map pretty fChildren))
 prettyFunctionDefinition n = unexpectedPanic n
 
-prettyParameterList n@SolNode
+prettyParameterList :: SolNode -> Doc
+prettyParameterList SolNode
   { name = Just "ParameterList"
   , children = Just pChildren } =
   parens (align (cat (punctuate comma $ map pretty pChildren)))
 prettyParameterList n = unexpectedPanic n
 
-prettyBlock n@SolNode
+prettyBlock :: SolNode -> Doc
+prettyBlock SolNode
   { name = Just "Block"
   , children = Just children } = semiBraces $ map pretty children
 prettyBlock n = unexpectedPanic n
 
-prettyExpressionStatement n@SolNode
+prettyExpressionStatement :: SolNode -> Doc
+prettyExpressionStatement SolNode
   { name = Just "ExpressionStatement"
   , children = Just children } = tupled $ map pretty children
 prettyExpressionStatement n = unexpectedPanic n
 
-prettyAssignment n@SolNode
+prettyAssignment :: SolNode -> Doc
+prettyAssignment SolNode
   { name = Just "Assignment"
   , children = Just children
   , attributes = Just (
@@ -126,7 +136,8 @@ prettyAssignment n@SolNode
   textStrict ("@" <> _type)
 prettyAssignment n = unexpectedPanic n
 
-prettyIdentifier n@SolNode
+prettyIdentifier :: SolNode -> Doc
+prettyIdentifier SolNode
   { name = Just "Identifier"
   , children = Nothing
   , attributes = Just (
@@ -134,12 +145,11 @@ prettyIdentifier n@SolNode
               , value = Just idName })} = textStrict (idName <> ":" <> _type)
 prettyIdentifier n = unexpectedPanic n
 
-prettyReturn n@SolNode
+prettyReturn :: SolNode -> Doc
+prettyReturn SolNode
   { name = Just "Return"
   , children = Just children } = textStrict "return" <> tupled (map pretty children)
 prettyReturn n = unexpectedPanic n
-
-unexpectedPanic n = panic . toS $ "unexpected: " ++ show n
 
 defSolNode :: SolNode
 defSolNode =

@@ -5,7 +5,6 @@ module Ethereum.Analyzer.SoliditySpec
 import Protolude hiding (show)
 
 import Data.Aeson
-import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.DaoJson (simpleDaoJson)
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
