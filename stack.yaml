@@ -13,4 +13,4 @@ extra-deps:
 - hoopl-3.10.2.1
 - json-rpc-0.7.1.1
 - logging-effect-1.1.1
-resolver: lts-8.12
+resolver: lts-8.24
