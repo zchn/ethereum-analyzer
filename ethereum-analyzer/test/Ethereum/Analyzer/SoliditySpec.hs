@@ -5,6 +5,7 @@ module Ethereum.Analyzer.SoliditySpec
 import Protolude hiding (show)
 
 import Data.Aeson
+import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.DaoJson (simpleDaoJson)
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
@@ -15,7 +16,7 @@ import Text.PrettyPrint.Leijen.Text (Doc, pretty, renderPretty)
 spec :: Spec
 spec =
   describe "e2h" $ do
-    it "works for simpleDaoJson" $
+    it "parses simpleDaoJson" $
       ((listToMaybe =<<) <$>) children <$>
       eitherDecode (toS simpleDaoJson) `shouldBe`
       Right
@@ -28,6 +29,12 @@ spec =
          , name = Just "PragmaDirective"
          , src = Just "0:23:-1"
          })
+    it "pretty-prints simpleDaoJson" $ do
+      let prettySol =
+            (show <$> (renderPretty 1.0 80)) . (pretty :: SolNode -> Doc) <$>
+            eitherDecode (toS simpleDaoJson)
+      putStrLn $ fromRight "" prettySol
+      prettySol `shouldBe` Right ""
     it "pretty-prints storageJson" $ do
       let prettySol =
             (show <$> (renderPretty 1.0 80)) . (pretty :: SolNode -> Doc) <$>
@@ -36,11 +43,11 @@ spec =
       prettySol `shouldBe`
         Right
           ("//--SourceUnit--\n" <>
-           "contract SimpleStorage {uint256/uint storedData\n" <>
-           "                       ;fun set (uint256/uint x)\n" <>
+           "contract SimpleStorage {uint256/(uint) storedData\n" <>
+           "                       ;fun set (uint256/(uint) x)\n" <>
            "                            ()\n" <>
            "                            {(storedData:uint256=x:uint256 @uint256)}\n" <>
-           "                       ;fun get ()(uint256/uint){return(storedData:uint256)}}")
+           "                       ;fun get ()(uint256/(uint)){return(storedData:uint256)}}")
     it "works for storageJson" $
       eitherDecode (toS storageJson) `shouldBe`
       Right
