@@ -49,7 +49,6 @@ library
                      , Ethereum.Analyzer.Util
   other-modules:       Ethereum.Analyzer.IR
                      , Ethereum.Analyzer.Solidity.AstJson
-                     , Ethereum.Analyzer.Solidity.Pretty
                      , Ethereum.Analyzer.Solidity.Simple
   ghc-options:         -Wall
   hs-source-dirs:      src
