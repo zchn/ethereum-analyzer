@@ -23,7 +23,7 @@ spec =
       DT.length result `shouldBe` 4815
     it "works for hexstring2" $ do
       let result =
-            (toS $
+            toS $
              unWordLabelMapM
-               ((toS . show <$> doCfgAugWithTopNPass hexstring2) :: WordLabelMapM Text))
+               ((toS . show <$> doCfgAugWithTopNPass hexstring2) :: WordLabelMapM Text)
       result `shouldContain` "OC: 9: JUMPI -> [L2,L4]"

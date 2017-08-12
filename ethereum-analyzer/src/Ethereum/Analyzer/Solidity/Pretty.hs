@@ -137,16 +137,16 @@ prettyMapping n = unexpectedPanic n
 prettyIndexAccess :: SolNode -> Doc
 prettyIndexAccess SolNode { name = Just "IndexAccess"
                           , children = Just (c1:ctail)
-                          , attributes = Just (SolNode {_type = Just _})
+                          , attributes = Just SolNode {_type = Just _}
                           } = pretty c1 <> pretty ctail
 prettyIndexAccess n = unexpectedPanic n
 
 prettyMemberAccess :: SolNode -> Doc
 prettyMemberAccess SolNode { name = Just "MemberAccess"
                            , children = Just [obj]
-                           , attributes = Just (SolNode { _type = Just _
+                           , attributes = Just SolNode { _type = Just _
                                                         , member_name = Just mName
-                                                        })
+                                                        }
                            } = pretty obj <> textStrict "." <> textStrict mName
 prettyMemberAccess n = unexpectedPanic n
 
@@ -158,9 +158,9 @@ prettyIfStatement n = unexpectedPanic n
 prettyBinaryOperation :: SolNode -> Doc
 prettyBinaryOperation SolNode { name = Just "BinaryOperation"
                               , children = Just [op1, op2]
-                              , attributes = Just (SolNode { _type = Just _
+                              , attributes = Just SolNode { _type = Just _
                                                            , operator = Just vOp
-                                                           })
+                                                           }
                               } =
   parens (pretty op1 <> textStrict vOp <> pretty op2)
 prettyBinaryOperation n = unexpectedPanic n
@@ -175,22 +175,22 @@ prettyVariableDeclarationStatement n = unexpectedPanic n
 prettyFunctionCall :: SolNode -> Doc
 prettyFunctionCall SolNode { name = Just "FunctionCall"
                            , children = Just (func:params)
-                           , attributes = Just (SolNode {_type = Just _})
+                           , attributes = Just SolNode {_type = Just _}
                            } = pretty func <> tupled (map pretty params)
 prettyFunctionCall n = unexpectedPanic n
 
 prettyUserDefinedTypeName :: SolNode -> Doc
 prettyUserDefinedTypeName SolNode { name = Just "UserDefinedTypeName"
                                   , children = Nothing
-                                  , attributes = Just (SolNode {name = Just vName})
+                                  , attributes = Just SolNode {name = Just vName}
                                   } = textStrict vName
 prettyUserDefinedTypeName n = unexpectedPanic n
 
 prettyLiteral :: SolNode -> Doc
 prettyLiteral SolNode { name = Just "Literal"
                       , children = Nothing
-                      , attributes = Just (SolNode { _type = Just _
+                      , attributes = Just SolNode { _type = Just _
                                                    , value = Just vValue
-                                                   })
+                                                   }
                       } = textStrict vValue
 prettyLiteral n = unexpectedPanic n

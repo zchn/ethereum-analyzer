@@ -30,7 +30,7 @@ spec =
          })
     it "pretty-prints simpleDaoJson" $ do
       let prettySol =
-            (show <$> (renderPretty 1.0 80)) . (pretty :: SolNode -> Doc) <$>
+            (show <$> renderPretty 1.0 80) . (pretty :: SolNode -> Doc) <$>
             eitherDecode (toS simpleDaoJson)
       putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
@@ -71,7 +71,7 @@ spec =
            "                          ,{(performAttack=false);(dao.withdraw(1))})}}")
     it "pretty-prints storageJson" $ do
       let prettySol =
-            (show <$> (renderPretty 1.0 80)) . (pretty :: SolNode -> Doc) <$>
+            (show <$> renderPretty 1.0 80) . (pretty :: SolNode -> Doc) <$>
             eitherDecode (toS storageJson)
       putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
