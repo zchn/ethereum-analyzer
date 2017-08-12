@@ -5,33 +5,50 @@ module Ethereum.Analyzer.Solidity.Simple
   , VarType(..)
   , FunDefinition(..)
   , Statement(..)
-  , Expression(..)) where
+  , Expression(..)
+  ) where
 
 import Protolude hiding (show)
 
 data Contract = Contract
- { cName :: Text
- , cStateVars :: [VarDecl]
- , cFunctions :: [FunDefinition] }
+  { cName :: Text
+  , cStateVars :: [VarDecl]
+  , cFunctions :: [FunDefinition]
+  }
 
 data VarDecl = VarDecl
   { vName :: Idfr
-  , vType :: VarType }
+  , vType :: VarType
+  }
 
 data Idfr = Idfr
-  { iName :: Text}
+  { iName :: Text
+  }
 
-data VarType = Int256 | Uint256 | Address | Mapping VarType VarType
+data VarType
+  = Int256
+  | Uint256
+  | Address
+  | Mapping VarType
+            VarType
 
 data FunDefinition = FunDefinition
   { fName :: Idfr
   , fParams :: [VarDecl]
   , fReturns :: [VarDecl]
-  , fBody :: [Statement]}
+  , fBody :: [Statement]
+  }
 
-data Statement = StLocalVarDecl VarDecl
-               | StAssign Idfr Expression
-               | StIf Idfr [Statement] [Statement]
+data Statement
+  = StLocalVarDecl VarDecl
+  | StAssign Idfr
+             Expression
+  | StIf Idfr
+         [Statement]
+         [Statement]
 
-data Expression = BinOp Text Idfr Idfr
-                | ExpLiteral Text
+data Expression
+  = BinOp Text
+          Idfr
+          Idfr
+  | ExpLiteral Text

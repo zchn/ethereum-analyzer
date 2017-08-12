@@ -23,8 +23,7 @@ spec =
         (Just $
          defSolNode
          { attributes =
-             Just $
-             defSolNode {literals = Just ["solidity", "^", "0.4", ".2"]}
+             Just $ defSolNode {literals = Just ["solidity", "^", "0.4", ".2"]}
          , _id = Just 1
          , name = Just "PragmaDirective"
          , src = Just "0:23:-1"
@@ -35,40 +34,41 @@ spec =
             eitherDecode (toS simpleDaoJson)
       putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
-        Right ("//--SourceUnit--\n" <>
-        "contract SimpleDAO {mapping(address => uint256) credit\n" <>
-        "                   ;fun donate (address to)(){(credit[to]+=msg.value)}\n" <>
-        "                   ;fun withdraw (uint256 amount)\n" <>
-        "                        ()\n" <>
-        "                        {if((credit[msg.sender]>=amount)\n" <>
-        "                           ,{bool res = msg.sender.call.value(amount)()\n" <>
-        "                            ;(credit[msg.sender]-=amount)})}\n" <>
-        "                   ;fun queryCredit (address to)(uint256){return(credit[to])}}\n" <>
-        "contract Mallory {contract SimpleDAO dao\n" <>
-        "                 ;address owner\n" <>
-        "                 ;fun Mallory (contract SimpleDAO addr)\n" <>
-        "                      ()\n" <>
-        "                      {(owner=msg.sender);(dao=addr)}\n" <>
-        "                 ;fun getJackpot ()(){bool res = owner.send(this.balance)}\n" <>
-        "                 ;fun ()(){(dao.withdraw(dao.queryCredit(this)))}}\n" <>
-        "contract Mallory2 {contract SimpleDAO dao\n" <>
-        "                  ;address owner\n" <>
-        "                  ;bool performAttack\n" <>
-        "                  ;fun Mallory2 (contract SimpleDAO addr)\n" <>
-        "                       ()\n" <>
-        "                       {(owner=msg.sender);(dao=addr)}\n" <>
-        "                  ;fun attack ()\n" <>
-        "                       ()\n" <>
-        "                       {(dao.donate.value(1)(this));(dao.withdraw(1))}\n" <>
-        "                  ;fun getJackpot ()\n" <>
-        "                       ()\n" <>
-        "                       {(dao.withdraw(dao.balance))\n" <>
-        "                       ;bool res = owner.send(this.balance)\n" <>
-        "                       ;(performAttack=true)}\n" <>
-        "                  ;fun ()\n" <>
-        "                       ()\n" <>
-        "                       {if(performAttack\n" <>
-        "                          ,{(performAttack=false);(dao.withdraw(1))})}}")
+        Right
+          ("//--SourceUnit--\n" <>
+           "contract SimpleDAO {mapping(address => uint256) credit\n" <>
+           "                   ;fun donate (address to)(){(credit[to]+=msg.value)}\n" <>
+           "                   ;fun withdraw (uint256 amount)\n" <>
+           "                        ()\n" <>
+           "                        {if((credit[msg.sender]>=amount)\n" <>
+           "                           ,{bool res = msg.sender.call.value(amount)()\n" <>
+           "                            ;(credit[msg.sender]-=amount)})}\n" <>
+           "                   ;fun queryCredit (address to)(uint256){return(credit[to])}}\n" <>
+           "contract Mallory {contract SimpleDAO dao\n" <>
+           "                 ;address owner\n" <>
+           "                 ;fun Mallory (contract SimpleDAO addr)\n" <>
+           "                      ()\n" <>
+           "                      {(owner=msg.sender);(dao=addr)}\n" <>
+           "                 ;fun getJackpot ()(){bool res = owner.send(this.balance)}\n" <>
+           "                 ;fun ()(){(dao.withdraw(dao.queryCredit(this)))}}\n" <>
+           "contract Mallory2 {contract SimpleDAO dao\n" <>
+           "                  ;address owner\n" <>
+           "                  ;bool performAttack\n" <>
+           "                  ;fun Mallory2 (contract SimpleDAO addr)\n" <>
+           "                       ()\n" <>
+           "                       {(owner=msg.sender);(dao=addr)}\n" <>
+           "                  ;fun attack ()\n" <>
+           "                       ()\n" <>
+           "                       {(dao.donate.value(1)(this));(dao.withdraw(1))}\n" <>
+           "                  ;fun getJackpot ()\n" <>
+           "                       ()\n" <>
+           "                       {(dao.withdraw(dao.balance))\n" <>
+           "                       ;bool res = owner.send(this.balance)\n" <>
+           "                       ;(performAttack=true)}\n" <>
+           "                  ;fun ()\n" <>
+           "                       ()\n" <>
+           "                       {if(performAttack\n" <>
+           "                          ,{(performAttack=false);(dao.withdraw(1))})}}")
     it "pretty-prints storageJson" $ do
       let prettySol =
             (show <$> (renderPretty 1.0 80)) . (pretty :: SolNode -> Doc) <$>
@@ -77,9 +77,9 @@ spec =
       prettySol `shouldBe`
         Right
           ("//--SourceUnit--\n" <>
-            "contract SimpleStorage {uint256 storedData\n" <>
-            "                       ;fun set (uint256 x)(){(storedData=x)}\n" <>
-            "                       ;fun get ()(uint256){return(storedData)}}")
+           "contract SimpleStorage {uint256 storedData\n" <>
+           "                       ;fun set (uint256 x)(){(storedData=x)}\n" <>
+           "                       ;fun get ()(uint256){return(storedData)}}")
     it "works for storageJson" $
       eitherDecode (toS storageJson) `shouldBe`
       Right
@@ -180,8 +180,7 @@ spec =
                                                          { _id = Just 8
                                                          , name =
                                                              Just "Identifier"
-                                                         , src =
-                                                             Just "99:10:-1"
+                                                         , src = Just "99:10:-1"
                                                          , attributes =
                                                              Just
                                                                (defSolNode
@@ -197,8 +196,7 @@ spec =
                                                          { _id = Just 9
                                                          , name =
                                                              Just "Identifier"
-                                                         , src =
-                                                             Just "112:1:-1"
+                                                         , src = Just "112:1:-1"
                                                          , attributes =
                                                              Just
                                                                (defSolNode
@@ -216,8 +214,7 @@ spec =
                                                  , attributes =
                                                      Just
                                                        (defSolNode
-                                                        { _type =
-                                                            Just "uint256"
+                                                        { _type = Just "uint256"
                                                         , operator = Just "="
                                                         })
                                                  }
@@ -302,8 +299,7 @@ spec =
                                                  , attributes =
                                                      Just
                                                        (defSolNode
-                                                        { _type =
-                                                            Just "uint256"
+                                                        { _type = Just "uint256"
                                                         , value =
                                                             Just "storedData"
                                                         })
