@@ -33,8 +33,5 @@ data Statement = StLocalVarDecl VarDecl
                | StAssign Idfr Expression
                | StIf Idfr [Statement] [Statement]
 
-data Expression = ExpGt Idfr Idfr
-                | ExpAdd Idfr Idfr
-                | ExpIndex Idfr Idfr
-                | ExpMember Idfr Idfr
+data Expression = BinOp Text Idfr Idfr
                 | ExpLiteral Text
