@@ -170,12 +170,11 @@ prettyExpressionStatement n = unexpectedPanic n
 
 prettyAssignment :: SolNode -> Doc
 prettyAssignment SolNode { name = Just "Assignment"
-                         , children = Just children
+                         , children = Just [lval, rval]
                          , attributes = Just SolNode { _type = Just _
                                                      , operator = Just operator
                                                      }
-                         } =
-  cat (punctuate (textStrict operator) (map pretty children))
+                         } = pretty lval <> textStrict operator <> pretty rval
 prettyAssignment n = unexpectedPanic n
 
 prettyIdentifier :: SolNode -> Doc

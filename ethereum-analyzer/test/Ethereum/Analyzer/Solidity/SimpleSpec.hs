@@ -16,6 +16,6 @@ import Text.PrettyPrint.Leijen.Text (Doc, pretty, renderPretty)
 spec :: Spec
 spec =
   describe "e2h" $ do
-    it "parses simpleDaoJson" $
-      (s2sContracts <$> eitherDecode (toS simpleDaoJson)) `shouldBe`
-        Left "something"
+    it "parses storageJson" $ do
+      let eitherContracts = (s2sContracts <$> eitherDecode (toS storageJson))
+      eitherContracts `shouldBe` Left "something"

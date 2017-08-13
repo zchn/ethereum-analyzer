@@ -4,6 +4,7 @@ module Ethereum.Analyzer.Solidity.Simple
   ( Contract(..)
   , VarDecl(..)
   , Idfr(..)
+  , LValue(..)
   , VarType(..)
   , FunDefinition(..)
   , Statement(..)
@@ -14,6 +15,7 @@ module Ethereum.Analyzer.Solidity.Simple
 import Protolude hiding (show)
 
 import Ethereum.Analyzer.Solidity.AstJson
+import Text.PrettyPrint.Leijen.Text as PP
 
 data Contract = Contract
   { cName :: Text
@@ -26,9 +28,15 @@ data VarDecl = VarDecl
   , vType :: VarType
   } deriving (Eq, Generic, Show)
 
-data Idfr = Idfr
-  { iName :: Text
-  } deriving (Eq, Generic, Show)
+data Idfr = Idfr { iName :: Text }
+  deriving (Eq, Generic, Show)
+
+data LValue = JustId { idfr :: Idfr }
+  | Index { iArray :: LValue
+          , iIndex :: LValue }
+  | Member { mObj :: LValue
+           , mField :: Idfr }
+            deriving (Eq, Generic, Show)
 
 data VarType
   = Int256
@@ -48,19 +56,22 @@ data FunDefinition = FunDefinition
 
 data Statement
   = StLocalVarDecl VarDecl
-  | StAssign Idfr
+  | StAssign LValue
              Expression
-  | StIf Idfr
+  | StIf LValue
          [Statement]
          [Statement]
+  | StReturn [LValue]
+  | StTodo Text
   | Unsupported SolNode
  deriving (Eq, Generic, Show)
 
 data Expression
   = BinOp Text
-          Idfr
-          Idfr
+          LValue
+          LValue
   | ExpLiteral Text
+  | ExpLval LValue
  deriving (Eq, Generic, Show)
 
 s2sContracts :: SolNode -> [Contract]
@@ -98,6 +109,33 @@ s2sStatements :: SolNode -> [Statement]
 s2sStatements SolNode { name = Just "Block"
                       , children = Just sChildren } =
   concat (map s2sStatements sChildren)
-s2sStatements e@SolNode { name = Just "ExpressionStatement"
-                        , children = Just sChildren } = [Unsupported e]
+s2sStatements SolNode { name = Just "ExpressionStatement"
+                        , children = Just sChildren } = concat (map s2sStatements sChildren)
+s2sStatements SolNode { name = Just "Assignment"
+                      , children = Just [lval, rval]
+                      , attributes = Just SolNode { operator = Just op }} =
+  let (prelval, simpleLval) = s2sLval lval
+      (prerval, simpleRval) = s2sRval rval in
+    prerval <> prelval <> [StAssign simpleLval simpleRval]
+s2sStatements e@SolNode { name = Just "Return"
+                        , children = Just sChildren } = [StTodo "Return"]
 s2sStatements s = [Unsupported s]
+
+s2sLval :: SolNode -> ([Statement], LValue)
+s2sLval SolNode { name = Just "Identifier"
+                 , attributes = Just SolNode { value = Just idName }}
+  = ([], JustId (Idfr idName))
+s2sLval n = ([Unsupported n], errorLValue)
+
+s2sRval :: SolNode -> ([Statement], Expression)
+s2sRval SolNode { name = Just "Identifier"
+                 , attributes = Just SolNode { value = Just idName }}
+  = ([], ExpLval $ JustId (Idfr idName))
+s2sRval n = ([Unsupported n], ExpLval $ errorLValue)
+
+lastLvalOf :: [Statement] -> LValue
+lastLvalOf [_, StAssign lval _] = lval
+lastLvalOf (_ : t) = lastLvalOf t
+lastLvalOf _ = errorLValue
+
+errorLValue = JustId (Idfr "ERROR!")
