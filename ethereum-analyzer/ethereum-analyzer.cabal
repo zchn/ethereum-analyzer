@@ -66,6 +66,7 @@ test-suite spec
                      , Ethereum.Analyzer.CfgAugWithTopNPassSpec
                      , Ethereum.Analyzer.IRSpec
                      , Ethereum.Analyzer.SoliditySpec
+                     , Ethereum.Analyzer.Solidity.SimpleSpec
                      , Ethereum.Analyzer.TestData.Basic
                      , Ethereum.Analyzer.TestData.DaoJson
                      , Ethereum.Analyzer.TestData.StorageJson

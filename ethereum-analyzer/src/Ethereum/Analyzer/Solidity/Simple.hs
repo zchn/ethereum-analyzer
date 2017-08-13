@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveGeneric #-}
+
 module Ethereum.Analyzer.Solidity.Simple
   ( Contract(..)
   , VarDecl(..)
@@ -6,6 +8,7 @@ module Ethereum.Analyzer.Solidity.Simple
   , FunDefinition(..)
   , Statement(..)
   , Expression(..)
+  , s2sContracts
   ) where
 
 import Protolude hiding (show)
@@ -16,16 +19,16 @@ data Contract = Contract
   { cName :: Text
   , cStateVars :: [VarDecl]
   , cFunctions :: [FunDefinition]
-  }
+  } deriving (Eq, Generic, Show)
 
 data VarDecl = VarDecl
   { vName :: Idfr
   , vType :: VarType
-  }
+  } deriving (Eq, Generic, Show)
 
 data Idfr = Idfr
   { iName :: Text
-  }
+  } deriving (Eq, Generic, Show)
 
 data VarType
   = Int256
@@ -34,13 +37,14 @@ data VarType
   | Mapping VarType
             VarType
   | Unknown Text
+ deriving (Eq, Generic, Show)
 
 data FunDefinition = FunDefinition
   { fName :: Idfr
   , fParams :: [VarDecl]
   , fReturns :: [VarDecl]
   , fBody :: [Statement]
-  }
+  } deriving (Eq, Generic, Show)
 
 data Statement
   = StLocalVarDecl VarDecl
@@ -50,12 +54,14 @@ data Statement
          [Statement]
          [Statement]
   | Unsupported SolNode
+ deriving (Eq, Generic, Show)
 
 data Expression
   = BinOp Text
           Idfr
           Idfr
   | ExpLiteral Text
+ deriving (Eq, Generic, Show)
 
 s2sContracts :: SolNode -> [Contract]
 s2sContracts SolNode { name = Just "SourceUnit"
