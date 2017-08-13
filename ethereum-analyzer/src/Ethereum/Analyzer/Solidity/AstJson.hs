@@ -1,5 +1,4 @@
 {-# LANGUAGE DeriveGeneric #-}
-
 {-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
 module Ethereum.Analyzer.Solidity.AstJson
@@ -142,12 +141,13 @@ prettyElementTypeName n = unexpectedPanic n
 
 prettyFunctionDefinition :: SolNode -> Doc
 prettyFunctionDefinition SolNode { name = Just "FunctionDefinition"
-                                 , children = Just [params, returns, body ]
+                                 , children = Just [params, returns, body]
                                  , attributes = Just SolNode { children = Nothing
                                                              , name = Just fName
                                                              }
                                  } =
-  textStrict "fun" </> align (textStrict fName </> cat (map pretty [params, returns, body]))
+  textStrict "fun" </>
+  align (textStrict fName </> cat (map pretty [params, returns, body]))
 prettyFunctionDefinition n = unexpectedPanic n
 
 prettyParameterList :: SolNode -> Doc
@@ -208,8 +208,8 @@ prettyMemberAccess :: SolNode -> Doc
 prettyMemberAccess SolNode { name = Just "MemberAccess"
                            , children = Just [obj]
                            , attributes = Just SolNode { _type = Just _
-                                                        , member_name = Just mName
-                                                        }
+                                                       , member_name = Just mName
+                                                       }
                            } = pretty obj <> textStrict "." <> textStrict mName
 prettyMemberAccess n = unexpectedPanic n
 
@@ -222,8 +222,8 @@ prettyBinaryOperation :: SolNode -> Doc
 prettyBinaryOperation SolNode { name = Just "BinaryOperation"
                               , children = Just [op1, op2]
                               , attributes = Just SolNode { _type = Just _
-                                                           , operator = Just vOp
-                                                           }
+                                                          , operator = Just vOp
+                                                          }
                               } =
   parens (pretty op1 <> textStrict vOp <> pretty op2)
 prettyBinaryOperation n = unexpectedPanic n
@@ -253,7 +253,7 @@ prettyLiteral :: SolNode -> Doc
 prettyLiteral SolNode { name = Just "Literal"
                       , children = Nothing
                       , attributes = Just SolNode { _type = Just _
-                                                   , value = Just vValue
-                                                   }
+                                                  , value = Just vValue
+                                                  }
                       } = textStrict vValue
 prettyLiteral n = unexpectedPanic n
