@@ -26,6 +26,7 @@ source-repository this
 
 library
   build-depends:       base >= 4 && < 5
+                     , GenericPretty
                      , aeson
                      , bimap
                      , bytestring
@@ -36,6 +37,7 @@ library
                      , graphviz
                      , hexstring
                      , hoopl >= 3.10.2.1
+                     , pretty
                      , protolude
                      , text
                      , wl-pprint-text
@@ -73,6 +75,7 @@ test-suite spec
                      , Ethereum.Analyzer.UtilSpec
                      , Ethereum.AnalyzerSpec
   build-depends:       base >= 4 && < 5
+                     , GenericPretty
                      , aeson
                      , bytestring
                      , ethereum-analyzer
