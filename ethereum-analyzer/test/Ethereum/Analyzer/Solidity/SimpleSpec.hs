@@ -4,6 +4,7 @@ module Ethereum.Analyzer.Solidity.SimpleSpec
 
 import Protolude hiding (show)
 
+import Compiler.Hoopl
 import Data.Aeson
 
 -- import Ethereum.Analyzer.Common
@@ -19,7 +20,9 @@ spec :: Spec
 spec =
   describe "e2h" $ do
     it "parses storageJson" $ do
-      let eitherContracts = (s2sContracts <$> eitherDecode (toS storageJson))
+      let eitherContracts =
+            (runSimpleUniqueMonad . s2sContracts <$>
+             eitherDecode (toS storageJson))
       GP.pp eitherContracts
       eitherContracts `shouldBe`
         Right
@@ -50,7 +53,9 @@ spec =
             }
           ]
     it "parses simpleDaoJson" $ do
-      let eitherContracts = (s2sContracts <$> eitherDecode (toS simpleDaoJson))
+      let eitherContracts =
+            (runSimpleUniqueMonad . s2sContracts <$>
+             eitherDecode (toS simpleDaoJson))
       GP.pp eitherContracts
       eitherContracts `shouldBe`
         Right
@@ -94,7 +99,7 @@ spec =
                   , fReturns = []
                   , fBody =
                       [ StAssign
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v1"))
                           (ExpBin
                              ">="
                              (Index
@@ -111,9 +116,9 @@ spec =
                               })
                              (JustId (Idfr "amount")))
                       , StIf
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v1"))
                           [ StAssign
-                              (JustId (Idfr "TodoTmp"))
+                              (JustId (Idfr "v2"))
                               (ExpCall
                                  (Member
                                   { mObj =
@@ -129,14 +134,14 @@ spec =
                                   })
                                  [JustId (Idfr "amount")])
                           , StAssign
-                              (JustId (Idfr "TodoTmp"))
-                              (ExpCall (JustId (Idfr "TodoTmp")) [])
+                              (JustId (Idfr "v3"))
+                              (ExpCall (JustId (Idfr "v2")) [])
                           , StLocalVarDecl
                               (VarDecl
                                {vName = Idfr "res", vType = Unknown "bool"})
                           , StAssign
                               (JustId (Idfr "res"))
-                              (ExpLval (JustId (Idfr "TodoTmp")))
+                              (ExpLval (JustId (Idfr "v3")))
                           , StAssign
                               (Index
                                { iArray = JustId (Idfr "credit")
@@ -212,7 +217,7 @@ spec =
                   , fReturns = []
                   , fBody =
                       [ StAssign
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v6"))
                           (ExpCall
                              (Member
                               { mObj = JustId (Idfr "owner")
@@ -227,7 +232,7 @@ spec =
                           (VarDecl {vName = Idfr "res", vType = Unknown "bool"})
                       , StAssign
                           (JustId (Idfr "res"))
-                          (ExpLval (JustId (Idfr "TodoTmp")))
+                          (ExpLval (JustId (Idfr "v6")))
                       ]
                   }
                 , FunDefinition
@@ -236,7 +241,7 @@ spec =
                   , fReturns = []
                   , fBody =
                       [ StAssign
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v4"))
                           (ExpCall
                              (Member
                               { mObj = JustId (Idfr "dao")
@@ -244,16 +249,16 @@ spec =
                               })
                              [JustId (Idfr "this")])
                       , StAssign
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v5"))
                           (ExpCall
                              (Member
                               { mObj = JustId (Idfr "dao")
                               , mField = Idfr "withdraw"
                               })
-                             [JustId (Idfr "TodoTmp")])
+                             [JustId (Idfr "v4")])
                       , StAssign
                           (JustId (Idfr "_"))
-                          (ExpLval (JustId (Idfr "TodoTmp")))
+                          (ExpLval (JustId (Idfr "v5")))
                       ]
                   }
                 ]
@@ -294,9 +299,9 @@ spec =
                   , fParams = []
                   , fReturns = []
                   , fBody =
-                      [ StAssign (JustId (Idfr "TodotTmp")) (ExpLiteral "1")
+                      [ StAssign (JustId (Idfr "v13")) (ExpLiteral "1")
                       , StAssign
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v14"))
                           (ExpCall
                              (Member
                               { mObj =
@@ -306,27 +311,25 @@ spec =
                                   }
                               , mField = Idfr "value"
                               })
-                             [JustId (Idfr "TodoTmp")])
+                             [JustId (Idfr "v13")])
                       , StAssign
-                          (JustId (Idfr "TodoTmp"))
-                          (ExpCall
-                             (JustId (Idfr "TodoTmp"))
-                             [JustId (Idfr "this")])
+                          (JustId (Idfr "v15"))
+                          (ExpCall (JustId (Idfr "v14")) [JustId (Idfr "this")])
                       , StAssign
                           (JustId (Idfr "_"))
-                          (ExpLval (JustId (Idfr "TodoTmp")))
-                      , StAssign (JustId (Idfr "TodotTmp")) (ExpLiteral "1")
+                          (ExpLval (JustId (Idfr "v15")))
+                      , StAssign (JustId (Idfr "v16")) (ExpLiteral "1")
                       , StAssign
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v17"))
                           (ExpCall
                              (Member
                               { mObj = JustId (Idfr "dao")
                               , mField = Idfr "withdraw"
                               })
-                             [JustId (Idfr "TodoTmp")])
+                             [JustId (Idfr "v16")])
                       , StAssign
                           (JustId (Idfr "_"))
-                          (ExpLval (JustId (Idfr "TodoTmp")))
+                          (ExpLval (JustId (Idfr "v17")))
                       ]
                   }
                 , FunDefinition
@@ -335,7 +338,7 @@ spec =
                   , fReturns = []
                   , fBody =
                       [ StAssign
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v10"))
                           (ExpCall
                              (Member
                               { mObj = JustId (Idfr "dao")
@@ -348,9 +351,9 @@ spec =
                              ])
                       , StAssign
                           (JustId (Idfr "_"))
-                          (ExpLval (JustId (Idfr "TodoTmp")))
+                          (ExpLval (JustId (Idfr "v10")))
                       , StAssign
-                          (JustId (Idfr "TodoTmp"))
+                          (JustId (Idfr "v11"))
                           (ExpCall
                              (Member
                               { mObj = JustId (Idfr "owner")
@@ -365,11 +368,11 @@ spec =
                           (VarDecl {vName = Idfr "res", vType = Unknown "bool"})
                       , StAssign
                           (JustId (Idfr "res"))
-                          (ExpLval (JustId (Idfr "TodoTmp")))
-                      , StAssign (JustId (Idfr "TodotTmp")) (ExpLiteral "true")
+                          (ExpLval (JustId (Idfr "v11")))
+                      , StAssign (JustId (Idfr "v12")) (ExpLiteral "true")
                       , StAssign
                           (JustId (Idfr "performAttack"))
-                          (ExpLval (JustId (Idfr "TodoTmp")))
+                          (ExpLval (JustId (Idfr "v12")))
                       ]
                   }
                 , FunDefinition
@@ -379,24 +382,22 @@ spec =
                   , fBody =
                       [ StIf
                           (JustId (Idfr "performAttack"))
-                          [ StAssign
-                              (JustId (Idfr "TodotTmp"))
-                              (ExpLiteral "false")
+                          [ StAssign (JustId (Idfr "v7")) (ExpLiteral "false")
                           , StAssign
                               (JustId (Idfr "performAttack"))
-                              (ExpLval (JustId (Idfr "TodoTmp")))
-                          , StAssign (JustId (Idfr "TodotTmp")) (ExpLiteral "1")
+                              (ExpLval (JustId (Idfr "v7")))
+                          , StAssign (JustId (Idfr "v8")) (ExpLiteral "1")
                           , StAssign
-                              (JustId (Idfr "TodoTmp"))
+                              (JustId (Idfr "v9"))
                               (ExpCall
                                  (Member
                                   { mObj = JustId (Idfr "dao")
                                   , mField = Idfr "withdraw"
                                   })
-                                 [JustId (Idfr "TodoTmp")])
+                                 [JustId (Idfr "v8")])
                           , StAssign
                               (JustId (Idfr "_"))
-                              (ExpLval (JustId (Idfr "TodoTmp")))
+                              (ExpLval (JustId (Idfr "v9")))
                           ]
                           []
                       ]
