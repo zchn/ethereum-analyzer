@@ -1,8 +1,10 @@
+{-# LANGUAGE FlexibleContexts #-}
 module Ethereum.Analyzer.Common
   ( fromRight
-  , varBytesToWord256
+  , s2t4Either
   , unexpectedPanic
   , unimplementedPanic
+  , varBytesToWord256
   ) where
 
 import Protolude hiding (show)
@@ -12,17 +14,13 @@ import Data.ByteString as DB
 import Data.Either (Either(..))
 import GHC.Show (Show(..))
 
-zero256 :: ByteString
-zero256 = DB.replicate 32 0
-
-varBytesToWord256 :: [Word8] -> Word256
-varBytesToWord256 w8l =
-  let extended = (zero256 `append` DB.pack w8l)
-  in bytesToWord256 $ DB.unpack $ DB.drop (DB.length extended - 32) extended
-
 fromRight :: b -> Either a b -> b
 fromRight _ (Right v) = v
 fromRight v (Left _) = v
+
+s2t4Either :: StringConv s Text => Either s a -> Either Text a
+s2t4Either (Left s) = (Left $ toS s)
+s2t4Either (Right r) = (Right r)
 
 unexpectedPanic
   :: Show a
@@ -33,3 +31,11 @@ unimplementedPanic
   :: Show a
   => a -> b
 unimplementedPanic n = panic . toS $ "unimplemented: " ++ show n
+
+varBytesToWord256 :: [Word8] -> Word256
+varBytesToWord256 w8l =
+  let extended = (zero256 `append` DB.pack w8l)
+  in bytesToWord256 $ DB.unpack $ DB.drop (DB.length extended - 32) extended
+
+zero256 :: ByteString
+zero256 = DB.replicate 32 0

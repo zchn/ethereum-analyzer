@@ -4,6 +4,8 @@ module Main
 
 import Protolude
 
+import Ethereum.Analyzer.Debug
+
 import Options.Applicative
 import Options.Applicative.Text
 
@@ -34,5 +36,6 @@ analyze :: AnalyzeFlags -> IO ()
 analyze flags@AnalyzeFlags { astJson = theAstJson } = do
   putText $ show flags
   content <- readFile $ toS theAstJson
-  putText content
+  -- putText content
+  pprintSimpleSol content
   return ()

@@ -57,6 +57,7 @@ library
 executable ea-analyze
   main-is:             AnalyzeMain.hs
   build-depends:       base >= 4 && < 5
+                     , ethereum-analyzer
                      , ethereum-analyzer-cli
                      , ethereum-analyzer-deps
                      , monad-logger

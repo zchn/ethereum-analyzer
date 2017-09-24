@@ -46,6 +46,7 @@ library
                      , Ethereum.Analyzer.Common
                      , Ethereum.Analyzer.CfgAugmentPass
                      , Ethereum.Analyzer.CfgAugWithTopNPass
+                     , Ethereum.Analyzer.Debug
                      , Ethereum.Analyzer.Disasm
                      , Ethereum.Analyzer.Solidity
                      , Ethereum.Analyzer.Util
