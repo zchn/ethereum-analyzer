@@ -6,6 +6,8 @@ module Ethereum.Executable.DumpCodeMain
   ( dumpContracts
   ) where
 
+import Prelude
+
 import Control.Monad.Logger
 import Control.Monad.Trans
 import Data.Maybe

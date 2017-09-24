@@ -10,6 +10,8 @@ module Ethereum.Jsonrpc.Client
   , getCode
   ) where
 
+import Prelude
+
 import Blockchain.Data.Code as BDC
 import Conduit
 import Control.Monad.Catch
