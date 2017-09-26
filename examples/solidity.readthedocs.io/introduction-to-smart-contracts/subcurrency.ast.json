@@ -1,1 +1,791 @@
-{"contracts":{"subcurrency.sol:Coin":{}},"sourceList":["subcurrency.sol"],"sources":{"subcurrency.sol":{"AST":{"children":[{"attributes":{"literals":["solidity","^","0.4",".0"]},"id":1,"name":"PragmaDirective","src":"0:23:0"},{"attributes":{"fullyImplemented":true,"isLibrary":false,"linearizedBaseContracts":[81],"name":"Coin"},"children":[{"attributes":{"constant":false,"name":"minter","storageLocation":"default","type":"address","visibility":"public"},"children":[{"attributes":{"name":"address"},"id":2,"name":"ElementaryTypeName","src":"119:7:0"}],"id":3,"name":"VariableDeclaration","src":"119:21:0"},{"attributes":{"constant":false,"name":"balances","storageLocation":"default","type":"mapping(address => uint256)","visibility":"public"},"children":[{"children":[{"attributes":{"name":"address"},"id":4,"name":"ElementaryTypeName","src":"153:7:0"},{"attributes":{"name":"uint"},"id":5,"name":"ElementaryTypeName","src":"164:4:0"}],"id":6,"name":"Mapping","src":"144:25:0"}],"id":7,"name":"VariableDeclaration","src":"144:41:0"},{"attributes":{"name":"Sent"},"children":[{"children":[{"attributes":{"constant":false,"indexed":false,"name":"from","storageLocation":"default","type":"address","visibility":"internal"},"children":[{"attributes":{"name":"address"},"id":8,"name":"ElementaryTypeName","src":"271:7:0"}],"id":9,"name":"VariableDeclaration","src":"271:12:0"},{"attributes":{"constant":false,"indexed":false,"name":"to","storageLocation":"default","type":"address","visibility":"internal"},"children":[{"attributes":{"name":"address"},"id":10,"name":"ElementaryTypeName","src":"285:7:0"}],"id":11,"name":"VariableDeclaration","src":"285:10:0"},{"attributes":{"constant":false,"indexed":false,"name":"amount","storageLocation":"default","type":"uint256","visibility":"internal"},"children":[{"attributes":{"name":"uint"},"id":12,"name":"ElementaryTypeName","src":"297:4:0"}],"id":13,"name":"VariableDeclaration","src":"297:11:0"}],"id":14,"name":"ParameterList","src":"270:39:0"}],"id":15,"name":"EventDefinition","src":"260:50:0"},{"attributes":{"constant":false,"name":"Coin","payable":false,"visibility":"public"},"children":[{"children":[],"id":16,"name":"ParameterList","src":"414:2:0"},{"children":[],"id":17,"name":"ParameterList","src":"417:0:0"},{"children":[{"children":[{"attributes":{"operator":"=","type":"address"},"children":[{"attributes":{"type":"address","value":"minter"},"id":18,"name":"Identifier","src":"423:6:0"},{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":19,"name":"Identifier","src":"432:3:0"}],"id":20,"name":"MemberAccess","src":"432:10:0"}],"id":21,"name":"Assignment","src":"423:19:0"}],"id":22,"name":"ExpressionStatement","src":"423:19:0"}],"id":23,"name":"Block","src":"417:30:0"}],"id":24,"name":"FunctionDefinition","src":"401:46:0"},{"attributes":{"constant":false,"name":"mint","payable":false,"visibility":"public"},"children":[{"children":[{"attributes":{"constant":false,"name":"receiver","storageLocation":"default","type":"address","visibility":"internal"},"children":[{"attributes":{"name":"address"},"id":25,"name":"ElementaryTypeName","src":"465:7:0"}],"id":26,"name":"VariableDeclaration","src":"465:16:0"},{"attributes":{"constant":false,"name":"amount","storageLocation":"default","type":"uint256","visibility":"internal"},"children":[{"attributes":{"name":"uint"},"id":27,"name":"ElementaryTypeName","src":"483:4:0"}],"id":28,"name":"VariableDeclaration","src":"483:11:0"}],"id":29,"name":"ParameterList","src":"464:31:0"},{"children":[],"id":30,"name":"ParameterList","src":"496:0:0"},{"children":[{"children":[{"attributes":{"operator":"!=","type":"bool"},"children":[{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":31,"name":"Identifier","src":"506:3:0"}],"id":32,"name":"MemberAccess","src":"506:10:0"},{"attributes":{"type":"address","value":"minter"},"id":33,"name":"Identifier","src":"520:6:0"}],"id":34,"name":"BinaryOperation","src":"506:20:0"},{"children":[],"id":35,"name":"Return","src":"528:7:0"}],"id":36,"name":"IfStatement","src":"502:33:0"},{"children":[{"attributes":{"operator":"+=","type":"uint256"},"children":[{"attributes":{"type":"uint256"},"children":[{"attributes":{"type":"mapping(address => uint256)","value":"balances"},"id":37,"name":"Identifier","src":"540:8:0"},{"attributes":{"type":"address","value":"receiver"},"id":38,"name":"Identifier","src":"549:8:0"}],"id":39,"name":"IndexAccess","src":"540:18:0"},{"attributes":{"type":"uint256","value":"amount"},"id":40,"name":"Identifier","src":"562:6:0"}],"id":41,"name":"Assignment","src":"540:28:0"}],"id":42,"name":"ExpressionStatement","src":"540:28:0"}],"id":43,"name":"Block","src":"496:77:0"}],"id":44,"name":"FunctionDefinition","src":"451:122:0"},{"attributes":{"constant":false,"name":"send","payable":false,"visibility":"public"},"children":[{"children":[{"attributes":{"constant":false,"name":"receiver","storageLocation":"default","type":"address","visibility":"internal"},"children":[{"attributes":{"name":"address"},"id":45,"name":"ElementaryTypeName","src":"591:7:0"}],"id":46,"name":"VariableDeclaration","src":"591:16:0"},{"attributes":{"constant":false,"name":"amount","storageLocation":"default","type":"uint256","visibility":"internal"},"children":[{"attributes":{"name":"uint"},"id":47,"name":"ElementaryTypeName","src":"609:4:0"}],"id":48,"name":"VariableDeclaration","src":"609:11:0"}],"id":49,"name":"ParameterList","src":"590:31:0"},{"children":[],"id":50,"name":"ParameterList","src":"622:0:0"},{"children":[{"children":[{"attributes":{"operator":"<","type":"bool"},"children":[{"attributes":{"type":"uint256"},"children":[{"attributes":{"type":"mapping(address => uint256)","value":"balances"},"id":51,"name":"Identifier","src":"632:8:0"},{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":52,"name":"Identifier","src":"641:3:0"}],"id":53,"name":"MemberAccess","src":"641:10:0"}],"id":54,"name":"IndexAccess","src":"632:20:0"},{"attributes":{"type":"uint256","value":"amount"},"id":55,"name":"Identifier","src":"655:6:0"}],"id":56,"name":"BinaryOperation","src":"632:29:0"},{"children":[],"id":57,"name":"Return","src":"663:7:0"}],"id":58,"name":"IfStatement","src":"628:42:0"},{"children":[{"attributes":{"operator":"-=","type":"uint256"},"children":[{"attributes":{"type":"uint256"},"children":[{"attributes":{"type":"mapping(address => uint256)","value":"balances"},"id":59,"name":"Identifier","src":"675:8:0"},{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":60,"name":"Identifier","src":"684:3:0"}],"id":61,"name":"MemberAccess","src":"684:10:0"}],"id":62,"name":"IndexAccess","src":"675:20:0"},{"attributes":{"type":"uint256","value":"amount"},"id":63,"name":"Identifier","src":"699:6:0"}],"id":64,"name":"Assignment","src":"675:30:0"}],"id":65,"name":"ExpressionStatement","src":"675:30:0"},{"children":[{"attributes":{"operator":"+=","type":"uint256"},"children":[{"attributes":{"type":"uint256"},"children":[{"attributes":{"type":"mapping(address => uint256)","value":"balances"},"id":66,"name":"Identifier","src":"711:8:0"},{"attributes":{"type":"address","value":"receiver"},"id":67,"name":"Identifier","src":"720:8:0"}],"id":68,"name":"IndexAccess","src":"711:18:0"},{"attributes":{"type":"uint256","value":"amount"},"id":69,"name":"Identifier","src":"733:6:0"}],"id":70,"name":"Assignment","src":"711:28:0"}],"id":71,"name":"ExpressionStatement","src":"711:28:0"},{"children":[{"attributes":{"type":"tuple()","type_conversion":false},"children":[{"attributes":{"type":"function (address,address,uint256) constant","value":"Sent"},"id":72,"name":"Identifier","src":"745:4:0"},{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":73,"name":"Identifier","src":"750:3:0"}],"id":74,"name":"MemberAccess","src":"750:10:0"},{"attributes":{"type":"address","value":"receiver"},"id":75,"name":"Identifier","src":"762:8:0"},{"attributes":{"type":"uint256","value":"amount"},"id":76,"name":"Identifier","src":"772:6:0"}],"id":77,"name":"FunctionCall","src":"745:34:0"}],"id":78,"name":"ExpressionStatement","src":"745:34:0"}],"id":79,"name":"Block","src":"622:162:0"}],"id":80,"name":"FunctionDefinition","src":"577:207:0"}],"id":81,"name":"ContractDefinition","src":"25:761:0"}],"name":"SourceUnit"}}},"version":"0.4.11+commit.68ef5810.Linux.g++"}
+{
+    "contracts": {
+        "subcurrency.sol:Coin": {
+        }
+    },
+    "sourceList": [
+        "subcurrency.sol"
+    ],
+    "sources": {
+        "subcurrency.sol": {
+            "AST": {
+                "children": [
+                    {
+                        "attributes": {
+                            "literals": [
+                                "solidity",
+                                "^",
+                                "0.4",
+                                ".0"
+                            ]
+                        },
+                        "id": 1,
+                        "name": "PragmaDirective",
+                        "src": "0:23:0"
+                    },
+                    {
+                        "attributes": {
+                            "fullyImplemented": true,
+                            "isLibrary": false,
+                            "linearizedBaseContracts": [
+                                81
+                            ],
+                            "name": "Coin"
+                        },
+                        "children": [
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "minter",
+                                    "storageLocation": "default",
+                                    "type": "address",
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "attributes": {
+                                            "name": "address"
+                                        },
+                                        "id": 2,
+                                        "name": "ElementaryTypeName",
+                                        "src": "119:7:0"
+                                    }
+                                ],
+                                "id": 3,
+                                "name": "VariableDeclaration",
+                                "src": "119:21:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "balances",
+                                    "storageLocation": "default",
+                                    "type": "mapping(address => uint256)",
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "name": "address"
+                                                },
+                                                "id": 4,
+                                                "name": "ElementaryTypeName",
+                                                "src": "153:7:0"
+                                            },
+                                            {
+                                                "attributes": {
+                                                    "name": "uint"
+                                                },
+                                                "id": 5,
+                                                "name": "ElementaryTypeName",
+                                                "src": "164:4:0"
+                                            }
+                                        ],
+                                        "id": 6,
+                                        "name": "Mapping",
+                                        "src": "144:25:0"
+                                    }
+                                ],
+                                "id": 7,
+                                "name": "VariableDeclaration",
+                                "src": "144:41:0"
+                            },
+                            {
+                                "attributes": {
+                                    "name": "Sent"
+                                },
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "indexed": false,
+                                                    "name": "from",
+                                                    "storageLocation": "default",
+                                                    "type": "address",
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "address"
+                                                        },
+                                                        "id": 8,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "271:7:0"
+                                                    }
+                                                ],
+                                                "id": 9,
+                                                "name": "VariableDeclaration",
+                                                "src": "271:12:0"
+                                            },
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "indexed": false,
+                                                    "name": "to",
+                                                    "storageLocation": "default",
+                                                    "type": "address",
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "address"
+                                                        },
+                                                        "id": 10,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "285:7:0"
+                                                    }
+                                                ],
+                                                "id": 11,
+                                                "name": "VariableDeclaration",
+                                                "src": "285:10:0"
+                                            },
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "indexed": false,
+                                                    "name": "amount",
+                                                    "storageLocation": "default",
+                                                    "type": "uint256",
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "uint"
+                                                        },
+                                                        "id": 12,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "297:4:0"
+                                                    }
+                                                ],
+                                                "id": 13,
+                                                "name": "VariableDeclaration",
+                                                "src": "297:11:0"
+                                            }
+                                        ],
+                                        "id": 14,
+                                        "name": "ParameterList",
+                                        "src": "270:39:0"
+                                    }
+                                ],
+                                "id": 15,
+                                "name": "EventDefinition",
+                                "src": "260:50:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "Coin",
+                                    "payable": false,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [],
+                                        "id": 16,
+                                        "name": "ParameterList",
+                                        "src": "414:2:0"
+                                    },
+                                    {
+                                        "children": [],
+                                        "id": 17,
+                                        "name": "ParameterList",
+                                        "src": "417:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "=",
+                                                            "type": "address"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "address",
+                                                                    "value": "minter"
+                                                                },
+                                                                "id": 18,
+                                                                "name": "Identifier",
+                                                                "src": "423:6:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "sender",
+                                                                    "type": "address"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "msg",
+                                                                            "value": "msg"
+                                                                        },
+                                                                        "id": 19,
+                                                                        "name": "Identifier",
+                                                                        "src": "432:3:0"
+                                                                    }
+                                                                ],
+                                                                "id": 20,
+                                                                "name": "MemberAccess",
+                                                                "src": "432:10:0"
+                                                            }
+                                                        ],
+                                                        "id": 21,
+                                                        "name": "Assignment",
+                                                        "src": "423:19:0"
+                                                    }
+                                                ],
+                                                "id": 22,
+                                                "name": "ExpressionStatement",
+                                                "src": "423:19:0"
+                                            }
+                                        ],
+                                        "id": 23,
+                                        "name": "Block",
+                                        "src": "417:30:0"
+                                    }
+                                ],
+                                "id": 24,
+                                "name": "FunctionDefinition",
+                                "src": "401:46:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "mint",
+                                    "payable": false,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "name": "receiver",
+                                                    "storageLocation": "default",
+                                                    "type": "address",
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "address"
+                                                        },
+                                                        "id": 25,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "465:7:0"
+                                                    }
+                                                ],
+                                                "id": 26,
+                                                "name": "VariableDeclaration",
+                                                "src": "465:16:0"
+                                            },
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "name": "amount",
+                                                    "storageLocation": "default",
+                                                    "type": "uint256",
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "uint"
+                                                        },
+                                                        "id": 27,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "483:4:0"
+                                                    }
+                                                ],
+                                                "id": 28,
+                                                "name": "VariableDeclaration",
+                                                "src": "483:11:0"
+                                            }
+                                        ],
+                                        "id": 29,
+                                        "name": "ParameterList",
+                                        "src": "464:31:0"
+                                    },
+                                    {
+                                        "children": [],
+                                        "id": 30,
+                                        "name": "ParameterList",
+                                        "src": "496:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "!=",
+                                                            "type": "bool"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "sender",
+                                                                    "type": "address"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "msg",
+                                                                            "value": "msg"
+                                                                        },
+                                                                        "id": 31,
+                                                                        "name": "Identifier",
+                                                                        "src": "506:3:0"
+                                                                    }
+                                                                ],
+                                                                "id": 32,
+                                                                "name": "MemberAccess",
+                                                                "src": "506:10:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "address",
+                                                                    "value": "minter"
+                                                                },
+                                                                "id": 33,
+                                                                "name": "Identifier",
+                                                                "src": "520:6:0"
+                                                            }
+                                                        ],
+                                                        "id": 34,
+                                                        "name": "BinaryOperation",
+                                                        "src": "506:20:0"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "id": 35,
+                                                        "name": "Return",
+                                                        "src": "528:7:0"
+                                                    }
+                                                ],
+                                                "id": 36,
+                                                "name": "IfStatement",
+                                                "src": "502:33:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "+=",
+                                                            "type": "uint256"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "mapping(address => uint256)",
+                                                                            "value": "balances"
+                                                                        },
+                                                                        "id": 37,
+                                                                        "name": "Identifier",
+                                                                        "src": "540:8:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "address",
+                                                                            "value": "receiver"
+                                                                        },
+                                                                        "id": 38,
+                                                                        "name": "Identifier",
+                                                                        "src": "549:8:0"
+                                                                    }
+                                                                ],
+                                                                "id": 39,
+                                                                "name": "IndexAccess",
+                                                                "src": "540:18:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256",
+                                                                    "value": "amount"
+                                                                },
+                                                                "id": 40,
+                                                                "name": "Identifier",
+                                                                "src": "562:6:0"
+                                                            }
+                                                        ],
+                                                        "id": 41,
+                                                        "name": "Assignment",
+                                                        "src": "540:28:0"
+                                                    }
+                                                ],
+                                                "id": 42,
+                                                "name": "ExpressionStatement",
+                                                "src": "540:28:0"
+                                            }
+                                        ],
+                                        "id": 43,
+                                        "name": "Block",
+                                        "src": "496:77:0"
+                                    }
+                                ],
+                                "id": 44,
+                                "name": "FunctionDefinition",
+                                "src": "451:122:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "send",
+                                    "payable": false,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "name": "receiver",
+                                                    "storageLocation": "default",
+                                                    "type": "address",
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "address"
+                                                        },
+                                                        "id": 45,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "591:7:0"
+                                                    }
+                                                ],
+                                                "id": 46,
+                                                "name": "VariableDeclaration",
+                                                "src": "591:16:0"
+                                            },
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "name": "amount",
+                                                    "storageLocation": "default",
+                                                    "type": "uint256",
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "uint"
+                                                        },
+                                                        "id": 47,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "609:4:0"
+                                                    }
+                                                ],
+                                                "id": 48,
+                                                "name": "VariableDeclaration",
+                                                "src": "609:11:0"
+                                            }
+                                        ],
+                                        "id": 49,
+                                        "name": "ParameterList",
+                                        "src": "590:31:0"
+                                    },
+                                    {
+                                        "children": [],
+                                        "id": 50,
+                                        "name": "ParameterList",
+                                        "src": "622:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "<",
+                                                            "type": "bool"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "mapping(address => uint256)",
+                                                                            "value": "balances"
+                                                                        },
+                                                                        "id": 51,
+                                                                        "name": "Identifier",
+                                                                        "src": "632:8:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "member_name": "sender",
+                                                                            "type": "address"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "msg",
+                                                                                    "value": "msg"
+                                                                                },
+                                                                                "id": 52,
+                                                                                "name": "Identifier",
+                                                                                "src": "641:3:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 53,
+                                                                        "name": "MemberAccess",
+                                                                        "src": "641:10:0"
+                                                                    }
+                                                                ],
+                                                                "id": 54,
+                                                                "name": "IndexAccess",
+                                                                "src": "632:20:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256",
+                                                                    "value": "amount"
+                                                                },
+                                                                "id": 55,
+                                                                "name": "Identifier",
+                                                                "src": "655:6:0"
+                                                            }
+                                                        ],
+                                                        "id": 56,
+                                                        "name": "BinaryOperation",
+                                                        "src": "632:29:0"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "id": 57,
+                                                        "name": "Return",
+                                                        "src": "663:7:0"
+                                                    }
+                                                ],
+                                                "id": 58,
+                                                "name": "IfStatement",
+                                                "src": "628:42:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "-=",
+                                                            "type": "uint256"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "mapping(address => uint256)",
+                                                                            "value": "balances"
+                                                                        },
+                                                                        "id": 59,
+                                                                        "name": "Identifier",
+                                                                        "src": "675:8:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "member_name": "sender",
+                                                                            "type": "address"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "msg",
+                                                                                    "value": "msg"
+                                                                                },
+                                                                                "id": 60,
+                                                                                "name": "Identifier",
+                                                                                "src": "684:3:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 61,
+                                                                        "name": "MemberAccess",
+                                                                        "src": "684:10:0"
+                                                                    }
+                                                                ],
+                                                                "id": 62,
+                                                                "name": "IndexAccess",
+                                                                "src": "675:20:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256",
+                                                                    "value": "amount"
+                                                                },
+                                                                "id": 63,
+                                                                "name": "Identifier",
+                                                                "src": "699:6:0"
+                                                            }
+                                                        ],
+                                                        "id": 64,
+                                                        "name": "Assignment",
+                                                        "src": "675:30:0"
+                                                    }
+                                                ],
+                                                "id": 65,
+                                                "name": "ExpressionStatement",
+                                                "src": "675:30:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "+=",
+                                                            "type": "uint256"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "mapping(address => uint256)",
+                                                                            "value": "balances"
+                                                                        },
+                                                                        "id": 66,
+                                                                        "name": "Identifier",
+                                                                        "src": "711:8:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "address",
+                                                                            "value": "receiver"
+                                                                        },
+                                                                        "id": 67,
+                                                                        "name": "Identifier",
+                                                                        "src": "720:8:0"
+                                                                    }
+                                                                ],
+                                                                "id": 68,
+                                                                "name": "IndexAccess",
+                                                                "src": "711:18:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256",
+                                                                    "value": "amount"
+                                                                },
+                                                                "id": 69,
+                                                                "name": "Identifier",
+                                                                "src": "733:6:0"
+                                                            }
+                                                        ],
+                                                        "id": 70,
+                                                        "name": "Assignment",
+                                                        "src": "711:28:0"
+                                                    }
+                                                ],
+                                                "id": 71,
+                                                "name": "ExpressionStatement",
+                                                "src": "711:28:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "type": "tuple()",
+                                                            "type_conversion": false
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "function (address,address,uint256) constant",
+                                                                    "value": "Sent"
+                                                                },
+                                                                "id": 72,
+                                                                "name": "Identifier",
+                                                                "src": "745:4:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "sender",
+                                                                    "type": "address"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "msg",
+                                                                            "value": "msg"
+                                                                        },
+                                                                        "id": 73,
+                                                                        "name": "Identifier",
+                                                                        "src": "750:3:0"
+                                                                    }
+                                                                ],
+                                                                "id": 74,
+                                                                "name": "MemberAccess",
+                                                                "src": "750:10:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "address",
+                                                                    "value": "receiver"
+                                                                },
+                                                                "id": 75,
+                                                                "name": "Identifier",
+                                                                "src": "762:8:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint256",
+                                                                    "value": "amount"
+                                                                },
+                                                                "id": 76,
+                                                                "name": "Identifier",
+                                                                "src": "772:6:0"
+                                                            }
+                                                        ],
+                                                        "id": 77,
+                                                        "name": "FunctionCall",
+                                                        "src": "745:34:0"
+                                                    }
+                                                ],
+                                                "id": 78,
+                                                "name": "ExpressionStatement",
+                                                "src": "745:34:0"
+                                            }
+                                        ],
+                                        "id": 79,
+                                        "name": "Block",
+                                        "src": "622:162:0"
+                                    }
+                                ],
+                                "id": 80,
+                                "name": "FunctionDefinition",
+                                "src": "577:207:0"
+                            }
+                        ],
+                        "id": 81,
+                        "name": "ContractDefinition",
+                        "src": "25:761:0"
+                    }
+                ],
+                "name": "SourceUnit"
+            }
+        }
+    },
+    "version": "0.4.11+commit.68ef5810.Linux.g++"
+}
