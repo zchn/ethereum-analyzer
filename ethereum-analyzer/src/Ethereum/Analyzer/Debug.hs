@@ -1,7 +1,7 @@
 module Ethereum.Analyzer.Debug
-    ( pprintSimpleSol
-    , dbgGetSimpleSol
-    ) where
+  ( pprintSimpleSol
+  , dbgGetSimpleSol
+  ) where
 
 import Protolude
 
@@ -14,7 +14,7 @@ import qualified Text.PrettyPrint.GenericPretty as GP
 dbgGetSimpleSol :: Text -> Either Text [Contract]
 dbgGetSimpleSol astJsonText =
   runSimpleUniqueMonad . s2sContracts <$>
-    (s2t4Either $ eitherDecode (toS astJsonText))
+  (s2t4Either $ eitherDecode (toS astJsonText))
 
 pprintSimpleSol :: Text -> IO ()
 pprintSimpleSol = GP.pp . dbgGetSimpleSol

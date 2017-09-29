@@ -47,7 +47,7 @@ instance ToJSON SolNode where
 
 instance FromJSON SolNode where
   parseJSON =
-    genericParseJSON defaultOptions {fieldLabelModifier =  dropWhile (== '_')}
+    genericParseJSON defaultOptions {fieldLabelModifier = dropWhile (== '_')}
 
 defSolNode :: SolNode
 defSolNode =
@@ -107,7 +107,7 @@ showWithoutChildren :: SolNode -> Text
 showWithoutChildren n = toS $ show (n {children = Nothing})
 
 prettyAst :: SolNode -> Doc
-prettyAst SolNode { name = Nothing, _AST = Just ast } = pretty ast
+prettyAst SolNode {name = Nothing, _AST = Just ast} = pretty ast
 prettyAst n = unexpectedPanic n
 
 prettySourceUnit :: SolNode -> Doc

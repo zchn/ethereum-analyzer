@@ -19,8 +19,8 @@ decodeAst combined_ast = do
   value <- (s2t4Either (eitherDecode combined_ast) :: Either Text Value)
   case value of
     Object o1 -> do
-      srcObj <- (maybeToRight "Could not find 'sources' in object"
-                  (lookup "sources" o1) :: Either Text Value)
+      srcObj <-
+        (maybeToRight "Could not find 'sources' in object" (lookup "sources" o1) :: Either Text Value)
       case srcObj of
         Object o2 -> do
           let srcUnitObjs = elems o2
