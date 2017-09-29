@@ -16,26 +16,14 @@ import Text.PrettyPrint.Leijen.Text (Doc, pretty, renderPretty)
 spec :: Spec
 spec =
   describe "e2h" $ do
-    it "parses simpleDaoJson" $
-      ((listToMaybe =<<) <$>) children <$>
-      eitherDecode (toS simpleDaoJson) `shouldBe`
-      Right
-        (Just $
-         defSolNode
-         { attributes =
-             Just $ defSolNode {literals = Just ["solidity", "^", "0.4", ".2"]}
-         , _id = Just 1
-         , name = Just "PragmaDirective"
-         , src = Just "0:23:-1"
-         })
     it "pretty-prints simpleDaoJson" $ do
       let prettySol =
-            (show <$> renderPretty 1.0 80) . (pretty :: SolNode -> Doc) <$>
-            eitherDecode (toS simpleDaoJson)
+            (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
+            decodeAst (toS simpleDaoJson)
       putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
         Right
-          ("//--SourceUnit--\n" <>
+          ("[//--SourceUnit--\n" <>
            "contract SimpleDAO {mapping(address => uint256) credit\n" <>
            "                   ;fun donate (address to)(){(credit[to]+=msg.value)}\n" <>
            "                   ;fun withdraw (uint256 amount)\n" <>
@@ -68,23 +56,22 @@ spec =
            "                  ;fun ()\n" <>
            "                       ()\n" <>
            "                       {if(performAttack\n" <>
-           "                          ,{(performAttack=false);(dao.withdraw(1))})}}")
+           "                          ,{(performAttack=false);(dao.withdraw(1))})}}]")
     it "pretty-prints storageJson" $ do
       let prettySol =
-            (show <$> renderPretty 1.0 80) . (pretty :: SolNode -> Doc) <$>
-            eitherDecode (toS storageJson)
+            (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
+            decodeAst (toS storageJson)
       putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
         Right
-          ("//--SourceUnit--\n" <>
+          ("[//--SourceUnit--\n" <>
            "contract SimpleStorage {uint256 storedData\n" <>
            "                       ;fun set (uint256 x)(){(storedData=x)}\n" <>
-           "                       ;fun get ()(uint256){return(storedData)}}")
+           "                       ;fun get ()(uint256){return(storedData)}}]")
     it "works for storageJson" $
-      eitherDecode (toS storageJson) `shouldBe`
-      Right
-        (defSolNode
-         { children =
+      decodeAst (toS storageJson) `shouldBe`
+      Right [defSolNode
+         { _AST = Just (defSolNode {children =
              Just
                [ defSolNode
                  { _id = Just 1
@@ -342,4 +329,4 @@ spec =
                  }
                ]
          , name = Just "SourceUnit"
-         })
+         })}]

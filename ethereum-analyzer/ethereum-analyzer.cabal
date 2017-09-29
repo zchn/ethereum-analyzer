@@ -39,7 +39,9 @@ library
                      , hoopl >= 3.10.2.1
                      , pretty
                      , protolude
+                     , split
                      , text
+                     , unordered-containers
                      , wl-pprint-text
                        
   exposed-modules:     Ethereum.Analyzer
@@ -53,6 +55,7 @@ library
   other-modules:       Ethereum.Analyzer.IR
                      , Ethereum.Analyzer.Solidity.AstJson
                      , Ethereum.Analyzer.Solidity.Simple
+                     , Ethereum.Analyzer.Solidity.SolJson
   ghc-options:         -Wall
   hs-source-dirs:      src
   buildable:           True

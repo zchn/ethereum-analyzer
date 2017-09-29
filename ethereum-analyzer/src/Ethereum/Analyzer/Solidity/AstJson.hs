@@ -20,6 +20,7 @@ data SolNode = SolNode
   { name :: Maybe Text
   , _id :: Maybe Int
   , _type :: Maybe Text
+  , _AST :: Maybe SolNode
   , attributes :: Maybe SolNode
   , constant :: Maybe Bool
   , fullyImplemented :: Maybe Bool
@@ -46,7 +47,7 @@ instance ToJSON SolNode where
 
 instance FromJSON SolNode where
   parseJSON =
-    genericParseJSON defaultOptions {fieldLabelModifier = dropWhile (== '_')}
+    genericParseJSON defaultOptions {fieldLabelModifier =  dropWhile (== '_')}
 
 defSolNode :: SolNode
 defSolNode =
@@ -54,6 +55,7 @@ defSolNode =
   { children = Nothing
   , _id = Nothing
   , _type = Nothing
+  , _AST = Nothing
   , attributes = Nothing
   , constant = Nothing
   , fullyImplemented = Nothing
@@ -76,6 +78,7 @@ defSolNode =
 
 instance Pretty SolNode where
   pretty n@SolNode {name = name}
+    | name == Nothing = prettyAst n -- Top level AST
     | name == Just "SourceUnit" = prettySourceUnit n
     | name == Just "PragmaDirective" = PP.empty
     | name == Just "ContractDefinition" = prettyContractDefinition n
@@ -102,6 +105,10 @@ instance Pretty SolNode where
 
 showWithoutChildren :: SolNode -> Text
 showWithoutChildren n = toS $ show (n {children = Nothing})
+
+prettyAst :: SolNode -> Doc
+prettyAst SolNode { name = Nothing, _AST = Just ast } = pretty ast
+prettyAst n = unexpectedPanic n
 
 prettySourceUnit :: SolNode -> Doc
 prettySourceUnit SolNode {name = Just "SourceUnit", children = Just children} =
