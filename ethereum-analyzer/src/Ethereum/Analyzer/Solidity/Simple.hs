@@ -76,7 +76,8 @@ data Statement
   deriving (Eq, Generic, Show, GP.Out)
 
 data Expression
-  = ExpBin Text
+  = ExpUnary Text LValue
+  | ExpBin Text
            LValue
            LValue
   | ExpLiteral Text
@@ -220,6 +221,16 @@ s2sLval n@SolNode {name = Just "IndexAccess", children = Just (c1:ctail)} = do
       (presub', simpleLvalSub') <- handleSubscription lv [subNode]
       (presub'', simpleLvalSub'') <- handleSubscription simpleLvalSub' t
       return (presub'' <> presub', simpleLvalSub'')
+s2sLval SolNode { name = Just "UnaryOperation"
+                , children = Just [op1]
+                , attributes = Just SolNode {operator = Just vOp}
+                } = do
+  (preOp1, lvalOp1) <- s2sLval op1
+  newVar <- uniqueVar
+  return
+    ( preOp1 <>
+      [StAssign (JustId $ Idfr newVar) (ExpUnary vOp lvalOp1)]
+    , JustId $ Idfr newVar)
 s2sLval SolNode { name = Just "BinaryOperation"
                 , children = Just [op1, op2]
                 , attributes = Just SolNode {operator = Just vOp}
