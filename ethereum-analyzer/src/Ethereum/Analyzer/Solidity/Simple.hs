@@ -72,6 +72,7 @@ data Statement
          [Statement]
   | StReturn [LValue]
   | StTodo Text
+  | StThrow
   deriving (Eq, Generic, Show, GP.Out)
 
 data Expression
@@ -186,6 +187,7 @@ s2sStatements SolNode { name = Just "VariableDeclarationStatement"
 s2sStatements n@SolNode {name = Just "FunctionCall"} = do
   (precall, lvalcall) <- s2sLval n
   return $ precall <> [StAssign (JustId $ Idfr "_") (ExpLval lvalcall)]
+s2sStatements SolNode {name = Just "Throw"} = return [StThrow]
 s2sStatements s = unimplementedPanic s {children = Nothing}
 
 s2sLval
@@ -245,7 +247,10 @@ s2sLval SolNode { name = Just "Literal"
   newVar <- uniqueVar
   return
     ( [StAssign (JustId $ Idfr newVar) (ExpLiteral vValue)]
-    , (JustId $ Idfr newVar))
+    , JustId $ Idfr newVar)
+s2sLval SolNode { name = Just "ElementaryTypeNameExpression"
+                , attributes = Just SolNode { value = Just v }} =
+  return ([], JustId $ Idfr v)
 s2sLval n = unimplementedPanic n {children = Nothing}
 
 uniqueVar
