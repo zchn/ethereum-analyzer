@@ -6,15 +6,16 @@ module Ethereum.Analyzer.Debug
 import Protolude
 
 import Compiler.Hoopl
-import Data.Aeson
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
 import qualified Text.PrettyPrint.GenericPretty as GP
 
 dbgGetSimpleSol :: Text -> Either Text [Contract]
-dbgGetSimpleSol astJsonText =
-  runSimpleUniqueMonad . s2sContracts <$>
-  (s2t4Either $ eitherDecode (toS astJsonText))
+dbgGetSimpleSol astJsonText = do
+  solNodes <- decodeAst (toS astJsonText)
+  let mContracts = mapM s2sContracts solNodes
+  let contracts = concat $ runSimpleUniqueMonad mContracts
+  return contracts
 
 pprintSimpleSol :: Text -> IO ()
 pprintSimpleSol = GP.pp . dbgGetSimpleSol
