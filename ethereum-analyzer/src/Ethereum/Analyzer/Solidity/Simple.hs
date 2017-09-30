@@ -93,6 +93,7 @@ instance GP.Out SolNode
 s2sContracts
   :: UniqueMonad m
   => SolNode -> m [Contract]
+s2sContracts SolNode {_AST = Just n } = s2sContracts n
 s2sContracts SolNode {name = Just "SourceUnit", children = Just sChildren} =
   concat <$> mapM s2sContracts sChildren
 s2sContracts SolNode { name = Just "ContractDefinition"
@@ -111,6 +112,7 @@ s2sContracts SolNode { name = Just "ContractDefinition"
       hFuns <- s2sFuns h
       return (s2sVarDecls h <> vars', hFuns <> funs')
 s2sContracts _ = return []
+-- s2sContracts n = unexpectedPanic n
 
 s2sVarDecls :: SolNode -> [VarDecl]
 s2sVarDecls SolNode { name = Just "VariableDeclaration"
