@@ -4,7 +4,6 @@ module Ethereum.Analyzer.SoliditySpec
 
 import Protolude hiding (show)
 
-import Data.Aeson
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.DaoJson (simpleDaoJson)
@@ -20,7 +19,7 @@ spec =
       let prettySol =
             (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
             decodeAst (toS simpleDaoJson)
-      putStrLn $ fromRight "" prettySol
+      -- putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
         Right
           ("[//--SourceUnit--\n" <>
@@ -61,7 +60,7 @@ spec =
       let prettySol =
             (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
             decodeAst (toS storageJson)
-      putStrLn $ fromRight "" prettySol
+      -- putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
         Right
           ("[//--SourceUnit--\n" <>

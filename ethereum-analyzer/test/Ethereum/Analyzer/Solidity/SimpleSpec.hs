@@ -5,7 +5,6 @@ module Ethereum.Analyzer.Solidity.SimpleSpec
 import Protolude hiding (show)
 
 import Compiler.Hoopl
-import Data.Aeson
 
 -- import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
@@ -20,9 +19,11 @@ spec :: Spec
 spec =
   describe "e2h" $ do
     it "parses storageJson" $ do
-      let eitherContracts =
-            (runSimpleUniqueMonad . s2sContracts <$>
-             eitherDecode (toS storageJson))
+      let eitherContracts = do
+            solNodes <- decodeAst (toS storageJson)
+            let mContracts = mapM s2sContracts solNodes
+            let contracts = concat $ runSimpleUniqueMonad mContracts
+            return contracts
       GP.pp eitherContracts
       eitherContracts `shouldBe`
         Right
@@ -53,9 +54,11 @@ spec =
             }
           ]
     it "parses simpleDaoJson" $ do
-      let eitherContracts =
-            (runSimpleUniqueMonad . s2sContracts <$>
-             eitherDecode (toS simpleDaoJson))
+      let eitherContracts = do
+            solNodes <- decodeAst (toS simpleDaoJson)
+            let mContracts = mapM s2sContracts solNodes
+            let contracts = concat $ runSimpleUniqueMonad mContracts
+            return contracts
       GP.pp eitherContracts
       eitherContracts `shouldBe`
         Right
