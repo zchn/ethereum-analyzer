@@ -14,7 +14,7 @@ import Text.PrettyPrint.Leijen.Text (Doc, pretty, renderPretty)
 
 spec :: Spec
 spec =
-  describe "e2h" $ do
+  describe "e2h" $ parallel $ do
     it "pretty-prints simpleDaoJson" $ do
       let prettySol =
             (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
