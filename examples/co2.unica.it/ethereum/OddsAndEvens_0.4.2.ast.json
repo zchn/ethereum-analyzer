@@ -1,1 +1,1275 @@
-{"contracts":{"./co2.unica.it/ethereum/OddsAndEvens_0.4.2.sol:OddsAndEvens":{}},"sourceList":["./co2.unica.it/ethereum/OddsAndEvens_0.4.2.sol"],"sources":{"./co2.unica.it/ethereum/OddsAndEvens_0.4.2.sol":{"AST":{"children":[{"attributes":{"literals":["solidity","^","0.4",".2"]},"id":1,"name":"PragmaDirective","src":"0:23:0"},{"attributes":{"fullyImplemented":true,"isLibrary":false,"linearizedBaseContracts":[129],"name":"OddsAndEvens"},"children":[{"attributes":{"name":"Player"},"children":[{"attributes":{"constant":false,"name":"addr","storageLocation":"default","type":"address","visibility":"internal"},"children":[{"attributes":{"name":"address"},"id":2,"name":"ElementaryTypeName","src":"71:7:0"}],"id":3,"name":"VariableDeclaration","src":"71:12:0"},{"attributes":{"constant":false,"name":"number","storageLocation":"default","type":"uint256","visibility":"internal"},"children":[{"attributes":{"name":"uint"},"id":4,"name":"ElementaryTypeName","src":"89:4:0"}],"id":5,"name":"VariableDeclaration","src":"89:11:0"}],"id":6,"name":"StructDefinition","src":"51:54:0"},{"attributes":{"constant":false,"name":"players","storageLocation":"default","type":"struct OddsAndEvens.Player storage ref[2] storage ref","visibility":"public"},"children":[{"children":[{"attributes":{"name":"Player"},"id":7,"name":"UserDefinedTypeName","src":"111:6:0"},{"attributes":{"hexvalue":"32","subdenomination":null,"token":null,"type":"int_const 2","value":"2"},"id":8,"name":"Literal","src":"118:1:0"}],"id":9,"name":"ArrayTypeName","src":"111:9:0"}],"id":10,"name":"VariableDeclaration","src":"111:24:0"},{"attributes":{"constant":false,"name":"tot","storageLocation":"default","type":"uint8","visibility":"internal"},"children":[{"attributes":{"name":"uint8"},"id":11,"name":"ElementaryTypeName","src":"180:5:0"}],"id":12,"name":"VariableDeclaration","src":"180:9:0"},{"attributes":{"constant":false,"name":"owner","storageLocation":"default","type":"address","visibility":"internal"},"children":[{"attributes":{"name":"address"},"id":13,"name":"ElementaryTypeName","src":"193:7:0"}],"id":14,"name":"VariableDeclaration","src":"193:13:0"},{"attributes":{"constant":false,"name":"OddsAndEvens","payable":false,"visibility":"public"},"children":[{"children":[],"id":15,"name":"ParameterList","src":"232:2:0"},{"children":[],"id":16,"name":"ParameterList","src":"235:0:0"},{"children":[{"children":[{"attributes":{"operator":"=","type":"address"},"children":[{"attributes":{"type":"address","value":"owner"},"id":17,"name":"Identifier","src":"241:5:0"},{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":18,"name":"Identifier","src":"249:3:0"}],"id":19,"name":"MemberAccess","src":"249:10:0"}],"id":20,"name":"Assignment","src":"241:18:0"}],"id":21,"name":"ExpressionStatement","src":"241:18:0"}],"id":22,"name":"Block","src":"235:29:0"}],"id":23,"name":"FunctionDefinition","src":"211:53:0"},{"attributes":{"constant":false,"name":"play","payable":true,"visibility":"public"},"children":[{"children":[{"attributes":{"constant":false,"name":"number","storageLocation":"default","type":"uint256","visibility":"internal"},"children":[{"attributes":{"name":"uint"},"id":24,"name":"ElementaryTypeName","src":"284:4:0"}],"id":25,"name":"VariableDeclaration","src":"284:11:0"}],"id":26,"name":"ParameterList","src":"283:13:0"},{"children":[],"id":27,"name":"ParameterList","src":"304:0:0"},{"children":[{"children":[{"attributes":{"operator":"!=","type":"bool"},"children":[{"attributes":{"member_name":"value","type":"uint256"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":28,"name":"Identifier","src":"314:3:0"}],"id":29,"name":"MemberAccess","src":"314:9:0"},{"attributes":{"hexvalue":"31","subdenomination":"ether","token":null,"type":"int_const 1000000000000000000","value":"1"},"id":30,"name":"Literal","src":"327:7:0"}],"id":31,"name":"BinaryOperation","src":"314:20:0"},{"children":[],"id":32,"name":"Throw","src":"336:5:0"}],"id":33,"name":"IfStatement","src":"310:31:0"},{"children":[{"attributes":{"operator":"=","type":"struct OddsAndEvens.Player storage ref"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref[2] storage ref","value":"players"},"id":34,"name":"Identifier","src":"352:7:0"},{"attributes":{"type":"uint8","value":"tot"},"id":35,"name":"Identifier","src":"360:3:0"}],"id":36,"name":"IndexAccess","src":"352:12:0"},{"attributes":{"type":"struct OddsAndEvens.Player memory","type_conversion":false},"children":[{"attributes":{"type":"type(struct OddsAndEvens.Player storage pointer)","value":"Player"},"id":37,"name":"Identifier","src":"367:6:0"},{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":38,"name":"Identifier","src":"374:3:0"}],"id":39,"name":"MemberAccess","src":"374:10:0"},{"attributes":{"type":"uint256","value":"number"},"id":40,"name":"Identifier","src":"386:6:0"}],"id":41,"name":"FunctionCall","src":"367:26:0"}],"id":42,"name":"Assignment","src":"352:41:0"}],"id":43,"name":"ExpressionStatement","src":"352:41:0"},{"children":[{"attributes":{"operator":"++","prefix":false,"type":"uint8"},"children":[{"attributes":{"type":"uint8","value":"tot"},"id":44,"name":"Identifier","src":"399:3:0"}],"id":45,"name":"UnaryOperation","src":"399:5:0"}],"id":46,"name":"ExpressionStatement","src":"399:5:0"},{"children":[{"attributes":{"operator":"==","type":"bool"},"children":[{"attributes":{"type":"uint8","value":"tot"},"id":47,"name":"Identifier","src":"419:3:0"},{"attributes":{"hexvalue":"32","subdenomination":null,"token":null,"type":"int_const 2","value":"2"},"id":48,"name":"Literal","src":"424:1:0"}],"id":49,"name":"BinaryOperation","src":"419:6:0"},{"children":[{"attributes":{"type":"tuple()","type_conversion":false},"children":[{"attributes":{"type":"function ()","value":"andTheWinnerIs"},"id":50,"name":"Identifier","src":"427:14:0"}],"id":51,"name":"FunctionCall","src":"427:16:0"}],"id":52,"name":"ExpressionStatement","src":"427:16:0"}],"id":53,"name":"IfStatement","src":"415:28:0"}],"id":54,"name":"Block","src":"304:144:0"}],"id":55,"name":"FunctionDefinition","src":"270:178:0"},{"attributes":{"constant":false,"name":"andTheWinnerIs","payable":false,"visibility":"private"},"children":[{"children":[],"id":56,"name":"ParameterList","src":"477:2:0"},{"children":[],"id":57,"name":"ParameterList","src":"488:0:0"},{"children":[{"children":[{"attributes":{"constant":false,"name":"res","storageLocation":"default","type":"bool","visibility":"internal"},"children":[{"attributes":{"name":"bool"},"id":58,"name":"ElementaryTypeName","src":"494:4:0"}],"id":59,"name":"VariableDeclaration","src":"494:8:0"}],"id":60,"name":"VariableDeclarationStatement","src":"494:10:0"},{"children":[{"attributes":{"constant":false,"name":"n","storageLocation":"default","type":"uint256","visibility":"internal"},"children":[{"attributes":{"name":"uint"},"id":61,"name":"ElementaryTypeName","src":"509:4:0"}],"id":62,"name":"VariableDeclaration","src":"509:6:0"},{"attributes":{"operator":"+","type":"uint256"},"children":[{"attributes":{"member_name":"number","type":"uint256"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref[2] storage ref","value":"players"},"id":63,"name":"Identifier","src":"518:7:0"},{"attributes":{"hexvalue":"30","subdenomination":null,"token":null,"type":"int_const 0","value":"0"},"id":64,"name":"Literal","src":"526:1:0"}],"id":65,"name":"IndexAccess","src":"518:10:0"}],"id":66,"name":"MemberAccess","src":"518:17:0"},{"attributes":{"member_name":"number","type":"uint256"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref[2] storage ref","value":"players"},"id":67,"name":"Identifier","src":"536:7:0"},{"attributes":{"hexvalue":"31","subdenomination":null,"token":null,"type":"int_const 1","value":"1"},"id":68,"name":"Literal","src":"544:1:0"}],"id":69,"name":"IndexAccess","src":"536:10:0"}],"id":70,"name":"MemberAccess","src":"536:17:0"}],"id":71,"name":"BinaryOperation","src":"518:35:0"}],"id":72,"name":"VariableDeclarationStatement","src":"509:44:0"},{"children":[{"attributes":{"operator":"==","type":"bool"},"children":[{"attributes":{"operator":"%","type":"uint256"},"children":[{"attributes":{"type":"uint256","value":"n"},"id":73,"name":"Identifier","src":"563:1:0"},{"attributes":{"hexvalue":"32","subdenomination":null,"token":null,"type":"int_const 2","value":"2"},"id":74,"name":"Literal","src":"565:1:0"}],"id":75,"name":"BinaryOperation","src":"563:3:0"},{"attributes":{"hexvalue":"30","subdenomination":null,"token":null,"type":"int_const 0","value":"0"},"id":76,"name":"Literal","src":"568:1:0"}],"id":77,"name":"BinaryOperation","src":"563:6:0"},{"children":[{"children":[{"attributes":{"operator":"=","type":"bool"},"children":[{"attributes":{"type":"bool","value":"res"},"id":78,"name":"Identifier","src":"579:3:0"},{"attributes":{"type":"bool","type_conversion":false},"children":[{"attributes":{"member_name":"send","type":"function (uint256) returns (bool)"},"children":[{"attributes":{"member_name":"addr","type":"address"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref[2] storage ref","value":"players"},"id":79,"name":"Identifier","src":"585:7:0"},{"attributes":{"hexvalue":"30","subdenomination":null,"token":null,"type":"int_const 0","value":"0"},"id":80,"name":"Literal","src":"593:1:0"}],"id":81,"name":"IndexAccess","src":"585:10:0"}],"id":82,"name":"MemberAccess","src":"585:15:0"}],"id":83,"name":"MemberAccess","src":"585:20:0"},{"attributes":{"hexvalue":"31383030","subdenomination":"finney","token":null,"type":"int_const 1800000000000000000","value":"1800"},"id":84,"name":"Literal","src":"606:11:0"}],"id":85,"name":"FunctionCall","src":"585:33:0"}],"id":86,"name":"Assignment","src":"579:39:0"}],"id":87,"name":"ExpressionStatement","src":"579:39:0"}],"id":88,"name":"Block","src":"571:54:0"},{"children":[{"children":[{"attributes":{"operator":"=","type":"bool"},"children":[{"attributes":{"type":"bool","value":"res"},"id":89,"name":"Identifier","src":"643:3:0"},{"attributes":{"type":"bool","type_conversion":false},"children":[{"attributes":{"member_name":"send","type":"function (uint256) returns (bool)"},"children":[{"attributes":{"member_name":"addr","type":"address"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref[2] storage ref","value":"players"},"id":90,"name":"Identifier","src":"649:7:0"},{"attributes":{"hexvalue":"31","subdenomination":null,"token":null,"type":"int_const 1","value":"1"},"id":91,"name":"Literal","src":"657:1:0"}],"id":92,"name":"IndexAccess","src":"649:10:0"}],"id":93,"name":"MemberAccess","src":"649:15:0"}],"id":94,"name":"MemberAccess","src":"649:20:0"},{"attributes":{"hexvalue":"31383030","subdenomination":"finney","token":null,"type":"int_const 1800000000000000000","value":"1800"},"id":95,"name":"Literal","src":"670:11:0"}],"id":96,"name":"FunctionCall","src":"649:33:0"}],"id":97,"name":"Assignment","src":"643:39:0"}],"id":98,"name":"ExpressionStatement","src":"643:39:0"}],"id":99,"name":"Block","src":"635:54:0"}],"id":100,"name":"IfStatement","src":"559:130:0"},{"children":[{"attributes":{"operator":"delete","prefix":true,"type":"tuple()"},"children":[{"attributes":{"type":"struct OddsAndEvens.Player storage ref[2] storage ref","value":"players"},"id":101,"name":"Identifier","src":"710:7:0"}],"id":102,"name":"UnaryOperation","src":"703:14:0"}],"id":103,"name":"ExpressionStatement","src":"703:14:0"},{"children":[{"attributes":{"operator":"=","type":"uint8"},"children":[{"attributes":{"type":"uint8","value":"tot"},"id":104,"name":"Identifier","src":"723:3:0"},{"attributes":{"hexvalue":"30","subdenomination":null,"token":null,"type":"int_const 0","value":"0"},"id":105,"name":"Literal","src":"727:1:0"}],"id":106,"name":"Assignment","src":"723:5:0"}],"id":107,"name":"ExpressionStatement","src":"723:5:0"}],"id":108,"name":"Block","src":"488:245:0"}],"id":109,"name":"FunctionDefinition","src":"454:279:0"},{"attributes":{"constant":false,"name":"getProfit","payable":false,"visibility":"public"},"children":[{"children":[],"id":110,"name":"ParameterList","src":"757:2:0"},{"children":[],"id":111,"name":"ParameterList","src":"760:0:0"},{"children":[{"children":[{"attributes":{"operator":"!=","type":"bool"},"children":[{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":112,"name":"Identifier","src":"769:3:0"}],"id":113,"name":"MemberAccess","src":"769:10:0"},{"attributes":{"type":"address","value":"owner"},"id":114,"name":"Identifier","src":"781:5:0"}],"id":115,"name":"BinaryOperation","src":"769:17:0"},{"children":[],"id":116,"name":"Throw","src":"788:5:0"}],"id":117,"name":"IfStatement","src":"766:27:0"},{"children":[{"attributes":{"constant":false,"name":"res","storageLocation":"default","type":"bool","visibility":"internal"},"children":[{"attributes":{"name":"bool"},"id":118,"name":"ElementaryTypeName","src":"799:4:0"}],"id":119,"name":"VariableDeclaration","src":"799:8:0"},{"attributes":{"type":"bool","type_conversion":false},"children":[{"attributes":{"member_name":"send","type":"function (uint256) returns (bool)"},"children":[{"attributes":{"member_name":"sender","type":"address"},"children":[{"attributes":{"type":"msg","value":"msg"},"id":120,"name":"Identifier","src":"810:3:0"}],"id":121,"name":"MemberAccess","src":"810:10:0"}],"id":122,"name":"MemberAccess","src":"810:15:0"},{"attributes":{"member_name":"balance","type":"uint256"},"children":[{"attributes":{"type":"contract OddsAndEvens","value":"this"},"id":123,"name":"Identifier","src":"826:4:0"}],"id":124,"name":"MemberAccess","src":"826:12:0"}],"id":125,"name":"FunctionCall","src":"810:29:0"}],"id":126,"name":"VariableDeclarationStatement","src":"799:40:0"}],"id":127,"name":"Block","src":"760:84:0"}],"id":128,"name":"FunctionDefinition","src":"739:105:0"}],"id":129,"name":"ContractDefinition","src":"25:822:0"}],"name":"SourceUnit"}}},"version":"0.4.11+commit.68ef5810.Linux.g++"}
+{
+    "contracts": {
+        "./co2.unica.it/ethereum/OddsAndEvens_0.4.2.sol:OddsAndEvens": {
+        }
+    },
+    "sourceList": [
+        "./co2.unica.it/ethereum/OddsAndEvens_0.4.2.sol"
+    ],
+    "sources": {
+        "./co2.unica.it/ethereum/OddsAndEvens_0.4.2.sol": {
+            "AST": {
+                "children": [
+                    {
+                        "attributes": {
+                            "literals": [
+                                "solidity",
+                                "^",
+                                "0.4",
+                                ".2"
+                            ]
+                        },
+                        "id": 1,
+                        "name": "PragmaDirective",
+                        "src": "0:23:0"
+                    },
+                    {
+                        "attributes": {
+                            "fullyImplemented": true,
+                            "isLibrary": false,
+                            "linearizedBaseContracts": [
+                                129
+                            ],
+                            "name": "OddsAndEvens"
+                        },
+                        "children": [
+                            {
+                                "attributes": {
+                                    "name": "Player"
+                                },
+                                "children": [
+                                    {
+                                        "attributes": {
+                                            "constant": false,
+                                            "name": "addr",
+                                            "storageLocation": "default",
+                                            "type": "address",
+                                            "visibility": "internal"
+                                        },
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "name": "address"
+                                                },
+                                                "id": 2,
+                                                "name": "ElementaryTypeName",
+                                                "src": "71:7:0"
+                                            }
+                                        ],
+                                        "id": 3,
+                                        "name": "VariableDeclaration",
+                                        "src": "71:12:0"
+                                    },
+                                    {
+                                        "attributes": {
+                                            "constant": false,
+                                            "name": "number",
+                                            "storageLocation": "default",
+                                            "type": "uint256",
+                                            "visibility": "internal"
+                                        },
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "name": "uint"
+                                                },
+                                                "id": 4,
+                                                "name": "ElementaryTypeName",
+                                                "src": "89:4:0"
+                                            }
+                                        ],
+                                        "id": 5,
+                                        "name": "VariableDeclaration",
+                                        "src": "89:11:0"
+                                    }
+                                ],
+                                "id": 6,
+                                "name": "StructDefinition",
+                                "src": "51:54:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "players",
+                                    "storageLocation": "default",
+                                    "type": "struct OddsAndEvens.Player storage ref[2] storage ref",
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "name": "Player"
+                                                },
+                                                "id": 7,
+                                                "name": "UserDefinedTypeName",
+                                                "src": "111:6:0"
+                                            },
+                                            {
+                                                "attributes": {
+                                                    "hexvalue": "32",
+                                                    "subdenomination": null,
+                                                    "token": null,
+                                                    "type": "int_const 2",
+                                                    "value": "2"
+                                                },
+                                                "id": 8,
+                                                "name": "Literal",
+                                                "src": "118:1:0"
+                                            }
+                                        ],
+                                        "id": 9,
+                                        "name": "ArrayTypeName",
+                                        "src": "111:9:0"
+                                    }
+                                ],
+                                "id": 10,
+                                "name": "VariableDeclaration",
+                                "src": "111:24:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "tot",
+                                    "storageLocation": "default",
+                                    "type": "uint8",
+                                    "visibility": "internal"
+                                },
+                                "children": [
+                                    {
+                                        "attributes": {
+                                            "name": "uint8"
+                                        },
+                                        "id": 11,
+                                        "name": "ElementaryTypeName",
+                                        "src": "180:5:0"
+                                    }
+                                ],
+                                "id": 12,
+                                "name": "VariableDeclaration",
+                                "src": "180:9:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "owner",
+                                    "storageLocation": "default",
+                                    "type": "address",
+                                    "visibility": "internal"
+                                },
+                                "children": [
+                                    {
+                                        "attributes": {
+                                            "name": "address"
+                                        },
+                                        "id": 13,
+                                        "name": "ElementaryTypeName",
+                                        "src": "193:7:0"
+                                    }
+                                ],
+                                "id": 14,
+                                "name": "VariableDeclaration",
+                                "src": "193:13:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "OddsAndEvens",
+                                    "payable": false,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [],
+                                        "id": 15,
+                                        "name": "ParameterList",
+                                        "src": "232:2:0"
+                                    },
+                                    {
+                                        "children": [],
+                                        "id": 16,
+                                        "name": "ParameterList",
+                                        "src": "235:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "=",
+                                                            "type": "address"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "address",
+                                                                    "value": "owner"
+                                                                },
+                                                                "id": 17,
+                                                                "name": "Identifier",
+                                                                "src": "241:5:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "sender",
+                                                                    "type": "address"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "msg",
+                                                                            "value": "msg"
+                                                                        },
+                                                                        "id": 18,
+                                                                        "name": "Identifier",
+                                                                        "src": "249:3:0"
+                                                                    }
+                                                                ],
+                                                                "id": 19,
+                                                                "name": "MemberAccess",
+                                                                "src": "249:10:0"
+                                                            }
+                                                        ],
+                                                        "id": 20,
+                                                        "name": "Assignment",
+                                                        "src": "241:18:0"
+                                                    }
+                                                ],
+                                                "id": 21,
+                                                "name": "ExpressionStatement",
+                                                "src": "241:18:0"
+                                            }
+                                        ],
+                                        "id": 22,
+                                        "name": "Block",
+                                        "src": "235:29:0"
+                                    }
+                                ],
+                                "id": 23,
+                                "name": "FunctionDefinition",
+                                "src": "211:53:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "play",
+                                    "payable": true,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "constant": false,
+                                                    "name": "number",
+                                                    "storageLocation": "default",
+                                                    "type": "uint256",
+                                                    "visibility": "internal"
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "name": "uint"
+                                                        },
+                                                        "id": 24,
+                                                        "name": "ElementaryTypeName",
+                                                        "src": "284:4:0"
+                                                    }
+                                                ],
+                                                "id": 25,
+                                                "name": "VariableDeclaration",
+                                                "src": "284:11:0"
+                                            }
+                                        ],
+                                        "id": 26,
+                                        "name": "ParameterList",
+                                        "src": "283:13:0"
+                                    },
+                                    {
+                                        "children": [],
+                                        "id": 27,
+                                        "name": "ParameterList",
+                                        "src": "304:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "!=",
+                                                            "type": "bool"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "value",
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "msg",
+                                                                            "value": "msg"
+                                                                        },
+                                                                        "id": 28,
+                                                                        "name": "Identifier",
+                                                                        "src": "314:3:0"
+                                                                    }
+                                                                ],
+                                                                "id": 29,
+                                                                "name": "MemberAccess",
+                                                                "src": "314:9:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "hexvalue": "31",
+                                                                    "subdenomination": "ether",
+                                                                    "token": null,
+                                                                    "type": "int_const 1000000000000000000",
+                                                                    "value": "1"
+                                                                },
+                                                                "id": 30,
+                                                                "name": "Literal",
+                                                                "src": "327:7:0"
+                                                            }
+                                                        ],
+                                                        "id": 31,
+                                                        "name": "BinaryOperation",
+                                                        "src": "314:20:0"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "id": 32,
+                                                        "name": "Throw",
+                                                        "src": "336:5:0"
+                                                    }
+                                                ],
+                                                "id": 33,
+                                                "name": "IfStatement",
+                                                "src": "310:31:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "=",
+                                                            "type": "struct OddsAndEvens.Player storage ref"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "struct OddsAndEvens.Player storage ref"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "struct OddsAndEvens.Player storage ref[2] storage ref",
+                                                                            "value": "players"
+                                                                        },
+                                                                        "id": 34,
+                                                                        "name": "Identifier",
+                                                                        "src": "352:7:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "uint8",
+                                                                            "value": "tot"
+                                                                        },
+                                                                        "id": 35,
+                                                                        "name": "Identifier",
+                                                                        "src": "360:3:0"
+                                                                    }
+                                                                ],
+                                                                "id": 36,
+                                                                "name": "IndexAccess",
+                                                                "src": "352:12:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "struct OddsAndEvens.Player memory",
+                                                                    "type_conversion": false
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "type(struct OddsAndEvens.Player storage pointer)",
+                                                                            "value": "Player"
+                                                                        },
+                                                                        "id": 37,
+                                                                        "name": "Identifier",
+                                                                        "src": "367:6:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "member_name": "sender",
+                                                                            "type": "address"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "msg",
+                                                                                    "value": "msg"
+                                                                                },
+                                                                                "id": 38,
+                                                                                "name": "Identifier",
+                                                                                "src": "374:3:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 39,
+                                                                        "name": "MemberAccess",
+                                                                        "src": "374:10:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "uint256",
+                                                                            "value": "number"
+                                                                        },
+                                                                        "id": 40,
+                                                                        "name": "Identifier",
+                                                                        "src": "386:6:0"
+                                                                    }
+                                                                ],
+                                                                "id": 41,
+                                                                "name": "FunctionCall",
+                                                                "src": "367:26:0"
+                                                            }
+                                                        ],
+                                                        "id": 42,
+                                                        "name": "Assignment",
+                                                        "src": "352:41:0"
+                                                    }
+                                                ],
+                                                "id": 43,
+                                                "name": "ExpressionStatement",
+                                                "src": "352:41:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "++",
+                                                            "prefix": false,
+                                                            "type": "uint8"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint8",
+                                                                    "value": "tot"
+                                                                },
+                                                                "id": 44,
+                                                                "name": "Identifier",
+                                                                "src": "399:3:0"
+                                                            }
+                                                        ],
+                                                        "id": 45,
+                                                        "name": "UnaryOperation",
+                                                        "src": "399:5:0"
+                                                    }
+                                                ],
+                                                "id": 46,
+                                                "name": "ExpressionStatement",
+                                                "src": "399:5:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "==",
+                                                            "type": "bool"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint8",
+                                                                    "value": "tot"
+                                                                },
+                                                                "id": 47,
+                                                                "name": "Identifier",
+                                                                "src": "419:3:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "hexvalue": "32",
+                                                                    "subdenomination": null,
+                                                                    "token": null,
+                                                                    "type": "int_const 2",
+                                                                    "value": "2"
+                                                                },
+                                                                "id": 48,
+                                                                "name": "Literal",
+                                                                "src": "424:1:0"
+                                                            }
+                                                        ],
+                                                        "id": 49,
+                                                        "name": "BinaryOperation",
+                                                        "src": "419:6:0"
+                                                    },
+                                                    {
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "tuple()",
+                                                                    "type_conversion": false
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "function ()",
+                                                                            "value": "andTheWinnerIs"
+                                                                        },
+                                                                        "id": 50,
+                                                                        "name": "Identifier",
+                                                                        "src": "427:14:0"
+                                                                    }
+                                                                ],
+                                                                "id": 51,
+                                                                "name": "FunctionCall",
+                                                                "src": "427:16:0"
+                                                            }
+                                                        ],
+                                                        "id": 52,
+                                                        "name": "ExpressionStatement",
+                                                        "src": "427:16:0"
+                                                    }
+                                                ],
+                                                "id": 53,
+                                                "name": "IfStatement",
+                                                "src": "415:28:0"
+                                            }
+                                        ],
+                                        "id": 54,
+                                        "name": "Block",
+                                        "src": "304:144:0"
+                                    }
+                                ],
+                                "id": 55,
+                                "name": "FunctionDefinition",
+                                "src": "270:178:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "andTheWinnerIs",
+                                    "payable": false,
+                                    "visibility": "private"
+                                },
+                                "children": [
+                                    {
+                                        "children": [],
+                                        "id": 56,
+                                        "name": "ParameterList",
+                                        "src": "477:2:0"
+                                    },
+                                    {
+                                        "children": [],
+                                        "id": 57,
+                                        "name": "ParameterList",
+                                        "src": "488:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "constant": false,
+                                                            "name": "res",
+                                                            "storageLocation": "default",
+                                                            "type": "bool",
+                                                            "visibility": "internal"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "name": "bool"
+                                                                },
+                                                                "id": 58,
+                                                                "name": "ElementaryTypeName",
+                                                                "src": "494:4:0"
+                                                            }
+                                                        ],
+                                                        "id": 59,
+                                                        "name": "VariableDeclaration",
+                                                        "src": "494:8:0"
+                                                    }
+                                                ],
+                                                "id": 60,
+                                                "name": "VariableDeclarationStatement",
+                                                "src": "494:10:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "constant": false,
+                                                            "name": "n",
+                                                            "storageLocation": "default",
+                                                            "type": "uint256",
+                                                            "visibility": "internal"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "name": "uint"
+                                                                },
+                                                                "id": 61,
+                                                                "name": "ElementaryTypeName",
+                                                                "src": "509:4:0"
+                                                            }
+                                                        ],
+                                                        "id": 62,
+                                                        "name": "VariableDeclaration",
+                                                        "src": "509:6:0"
+                                                    },
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "+",
+                                                            "type": "uint256"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "number",
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "struct OddsAndEvens.Player storage ref"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "struct OddsAndEvens.Player storage ref[2] storage ref",
+                                                                                    "value": "players"
+                                                                                },
+                                                                                "id": 63,
+                                                                                "name": "Identifier",
+                                                                                "src": "518:7:0"
+                                                                            },
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "hexvalue": "30",
+                                                                                    "subdenomination": null,
+                                                                                    "token": null,
+                                                                                    "type": "int_const 0",
+                                                                                    "value": "0"
+                                                                                },
+                                                                                "id": 64,
+                                                                                "name": "Literal",
+                                                                                "src": "526:1:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 65,
+                                                                        "name": "IndexAccess",
+                                                                        "src": "518:10:0"
+                                                                    }
+                                                                ],
+                                                                "id": 66,
+                                                                "name": "MemberAccess",
+                                                                "src": "518:17:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "number",
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "struct OddsAndEvens.Player storage ref"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "struct OddsAndEvens.Player storage ref[2] storage ref",
+                                                                                    "value": "players"
+                                                                                },
+                                                                                "id": 67,
+                                                                                "name": "Identifier",
+                                                                                "src": "536:7:0"
+                                                                            },
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "hexvalue": "31",
+                                                                                    "subdenomination": null,
+                                                                                    "token": null,
+                                                                                    "type": "int_const 1",
+                                                                                    "value": "1"
+                                                                                },
+                                                                                "id": 68,
+                                                                                "name": "Literal",
+                                                                                "src": "544:1:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 69,
+                                                                        "name": "IndexAccess",
+                                                                        "src": "536:10:0"
+                                                                    }
+                                                                ],
+                                                                "id": 70,
+                                                                "name": "MemberAccess",
+                                                                "src": "536:17:0"
+                                                            }
+                                                        ],
+                                                        "id": 71,
+                                                        "name": "BinaryOperation",
+                                                        "src": "518:35:0"
+                                                    }
+                                                ],
+                                                "id": 72,
+                                                "name": "VariableDeclarationStatement",
+                                                "src": "509:44:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "==",
+                                                            "type": "bool"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "operator": "%",
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "uint256",
+                                                                            "value": "n"
+                                                                        },
+                                                                        "id": 73,
+                                                                        "name": "Identifier",
+                                                                        "src": "563:1:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "hexvalue": "32",
+                                                                            "subdenomination": null,
+                                                                            "token": null,
+                                                                            "type": "int_const 2",
+                                                                            "value": "2"
+                                                                        },
+                                                                        "id": 74,
+                                                                        "name": "Literal",
+                                                                        "src": "565:1:0"
+                                                                    }
+                                                                ],
+                                                                "id": 75,
+                                                                "name": "BinaryOperation",
+                                                                "src": "563:3:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "hexvalue": "30",
+                                                                    "subdenomination": null,
+                                                                    "token": null,
+                                                                    "type": "int_const 0",
+                                                                    "value": "0"
+                                                                },
+                                                                "id": 76,
+                                                                "name": "Literal",
+                                                                "src": "568:1:0"
+                                                            }
+                                                        ],
+                                                        "id": 77,
+                                                        "name": "BinaryOperation",
+                                                        "src": "563:6:0"
+                                                    },
+                                                    {
+                                                        "children": [
+                                                            {
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "operator": "=",
+                                                                            "type": "bool"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "bool",
+                                                                                    "value": "res"
+                                                                                },
+                                                                                "id": 78,
+                                                                                "name": "Identifier",
+                                                                                "src": "579:3:0"
+                                                                            },
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "bool",
+                                                                                    "type_conversion": false
+                                                                                },
+                                                                                "children": [
+                                                                                    {
+                                                                                        "attributes": {
+                                                                                            "member_name": "send",
+                                                                                            "type": "function (uint256) returns (bool)"
+                                                                                        },
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "attributes": {
+                                                                                                    "member_name": "addr",
+                                                                                                    "type": "address"
+                                                                                                },
+                                                                                                "children": [
+                                                                                                    {
+                                                                                                        "attributes": {
+                                                                                                            "type": "struct OddsAndEvens.Player storage ref"
+                                                                                                        },
+                                                                                                        "children": [
+                                                                                                            {
+                                                                                                                "attributes": {
+                                                                                                                    "type": "struct OddsAndEvens.Player storage ref[2] storage ref",
+                                                                                                                    "value": "players"
+                                                                                                                },
+                                                                                                                "id": 79,
+                                                                                                                "name": "Identifier",
+                                                                                                                "src": "585:7:0"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "attributes": {
+                                                                                                                    "hexvalue": "30",
+                                                                                                                    "subdenomination": null,
+                                                                                                                    "token": null,
+                                                                                                                    "type": "int_const 0",
+                                                                                                                    "value": "0"
+                                                                                                                },
+                                                                                                                "id": 80,
+                                                                                                                "name": "Literal",
+                                                                                                                "src": "593:1:0"
+                                                                                                            }
+                                                                                                        ],
+                                                                                                        "id": 81,
+                                                                                                        "name": "IndexAccess",
+                                                                                                        "src": "585:10:0"
+                                                                                                    }
+                                                                                                ],
+                                                                                                "id": 82,
+                                                                                                "name": "MemberAccess",
+                                                                                                "src": "585:15:0"
+                                                                                            }
+                                                                                        ],
+                                                                                        "id": 83,
+                                                                                        "name": "MemberAccess",
+                                                                                        "src": "585:20:0"
+                                                                                    },
+                                                                                    {
+                                                                                        "attributes": {
+                                                                                            "hexvalue": "31383030",
+                                                                                            "subdenomination": "finney",
+                                                                                            "token": null,
+                                                                                            "type": "int_const 1800000000000000000",
+                                                                                            "value": "1800"
+                                                                                        },
+                                                                                        "id": 84,
+                                                                                        "name": "Literal",
+                                                                                        "src": "606:11:0"
+                                                                                    }
+                                                                                ],
+                                                                                "id": 85,
+                                                                                "name": "FunctionCall",
+                                                                                "src": "585:33:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 86,
+                                                                        "name": "Assignment",
+                                                                        "src": "579:39:0"
+                                                                    }
+                                                                ],
+                                                                "id": 87,
+                                                                "name": "ExpressionStatement",
+                                                                "src": "579:39:0"
+                                                            }
+                                                        ],
+                                                        "id": 88,
+                                                        "name": "Block",
+                                                        "src": "571:54:0"
+                                                    },
+                                                    {
+                                                        "children": [
+                                                            {
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "operator": "=",
+                                                                            "type": "bool"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "bool",
+                                                                                    "value": "res"
+                                                                                },
+                                                                                "id": 89,
+                                                                                "name": "Identifier",
+                                                                                "src": "643:3:0"
+                                                                            },
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "bool",
+                                                                                    "type_conversion": false
+                                                                                },
+                                                                                "children": [
+                                                                                    {
+                                                                                        "attributes": {
+                                                                                            "member_name": "send",
+                                                                                            "type": "function (uint256) returns (bool)"
+                                                                                        },
+                                                                                        "children": [
+                                                                                            {
+                                                                                                "attributes": {
+                                                                                                    "member_name": "addr",
+                                                                                                    "type": "address"
+                                                                                                },
+                                                                                                "children": [
+                                                                                                    {
+                                                                                                        "attributes": {
+                                                                                                            "type": "struct OddsAndEvens.Player storage ref"
+                                                                                                        },
+                                                                                                        "children": [
+                                                                                                            {
+                                                                                                                "attributes": {
+                                                                                                                    "type": "struct OddsAndEvens.Player storage ref[2] storage ref",
+                                                                                                                    "value": "players"
+                                                                                                                },
+                                                                                                                "id": 90,
+                                                                                                                "name": "Identifier",
+                                                                                                                "src": "649:7:0"
+                                                                                                            },
+                                                                                                            {
+                                                                                                                "attributes": {
+                                                                                                                    "hexvalue": "31",
+                                                                                                                    "subdenomination": null,
+                                                                                                                    "token": null,
+                                                                                                                    "type": "int_const 1",
+                                                                                                                    "value": "1"
+                                                                                                                },
+                                                                                                                "id": 91,
+                                                                                                                "name": "Literal",
+                                                                                                                "src": "657:1:0"
+                                                                                                            }
+                                                                                                        ],
+                                                                                                        "id": 92,
+                                                                                                        "name": "IndexAccess",
+                                                                                                        "src": "649:10:0"
+                                                                                                    }
+                                                                                                ],
+                                                                                                "id": 93,
+                                                                                                "name": "MemberAccess",
+                                                                                                "src": "649:15:0"
+                                                                                            }
+                                                                                        ],
+                                                                                        "id": 94,
+                                                                                        "name": "MemberAccess",
+                                                                                        "src": "649:20:0"
+                                                                                    },
+                                                                                    {
+                                                                                        "attributes": {
+                                                                                            "hexvalue": "31383030",
+                                                                                            "subdenomination": "finney",
+                                                                                            "token": null,
+                                                                                            "type": "int_const 1800000000000000000",
+                                                                                            "value": "1800"
+                                                                                        },
+                                                                                        "id": 95,
+                                                                                        "name": "Literal",
+                                                                                        "src": "670:11:0"
+                                                                                    }
+                                                                                ],
+                                                                                "id": 96,
+                                                                                "name": "FunctionCall",
+                                                                                "src": "649:33:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 97,
+                                                                        "name": "Assignment",
+                                                                        "src": "643:39:0"
+                                                                    }
+                                                                ],
+                                                                "id": 98,
+                                                                "name": "ExpressionStatement",
+                                                                "src": "643:39:0"
+                                                            }
+                                                        ],
+                                                        "id": 99,
+                                                        "name": "Block",
+                                                        "src": "635:54:0"
+                                                    }
+                                                ],
+                                                "id": 100,
+                                                "name": "IfStatement",
+                                                "src": "559:130:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "delete",
+                                                            "prefix": true,
+                                                            "type": "tuple()"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "struct OddsAndEvens.Player storage ref[2] storage ref",
+                                                                    "value": "players"
+                                                                },
+                                                                "id": 101,
+                                                                "name": "Identifier",
+                                                                "src": "710:7:0"
+                                                            }
+                                                        ],
+                                                        "id": 102,
+                                                        "name": "UnaryOperation",
+                                                        "src": "703:14:0"
+                                                    }
+                                                ],
+                                                "id": 103,
+                                                "name": "ExpressionStatement",
+                                                "src": "703:14:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "=",
+                                                            "type": "uint8"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "uint8",
+                                                                    "value": "tot"
+                                                                },
+                                                                "id": 104,
+                                                                "name": "Identifier",
+                                                                "src": "723:3:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "hexvalue": "30",
+                                                                    "subdenomination": null,
+                                                                    "token": null,
+                                                                    "type": "int_const 0",
+                                                                    "value": "0"
+                                                                },
+                                                                "id": 105,
+                                                                "name": "Literal",
+                                                                "src": "727:1:0"
+                                                            }
+                                                        ],
+                                                        "id": 106,
+                                                        "name": "Assignment",
+                                                        "src": "723:5:0"
+                                                    }
+                                                ],
+                                                "id": 107,
+                                                "name": "ExpressionStatement",
+                                                "src": "723:5:0"
+                                            }
+                                        ],
+                                        "id": 108,
+                                        "name": "Block",
+                                        "src": "488:245:0"
+                                    }
+                                ],
+                                "id": 109,
+                                "name": "FunctionDefinition",
+                                "src": "454:279:0"
+                            },
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "getProfit",
+                                    "payable": false,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [],
+                                        "id": 110,
+                                        "name": "ParameterList",
+                                        "src": "757:2:0"
+                                    },
+                                    {
+                                        "children": [],
+                                        "id": 111,
+                                        "name": "ParameterList",
+                                        "src": "760:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "!=",
+                                                            "type": "bool"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "sender",
+                                                                    "type": "address"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "msg",
+                                                                            "value": "msg"
+                                                                        },
+                                                                        "id": 112,
+                                                                        "name": "Identifier",
+                                                                        "src": "769:3:0"
+                                                                    }
+                                                                ],
+                                                                "id": 113,
+                                                                "name": "MemberAccess",
+                                                                "src": "769:10:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "type": "address",
+                                                                    "value": "owner"
+                                                                },
+                                                                "id": 114,
+                                                                "name": "Identifier",
+                                                                "src": "781:5:0"
+                                                            }
+                                                        ],
+                                                        "id": 115,
+                                                        "name": "BinaryOperation",
+                                                        "src": "769:17:0"
+                                                    },
+                                                    {
+                                                        "children": [],
+                                                        "id": 116,
+                                                        "name": "Throw",
+                                                        "src": "788:5:0"
+                                                    }
+                                                ],
+                                                "id": 117,
+                                                "name": "IfStatement",
+                                                "src": "766:27:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "constant": false,
+                                                            "name": "res",
+                                                            "storageLocation": "default",
+                                                            "type": "bool",
+                                                            "visibility": "internal"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "name": "bool"
+                                                                },
+                                                                "id": 118,
+                                                                "name": "ElementaryTypeName",
+                                                                "src": "799:4:0"
+                                                            }
+                                                        ],
+                                                        "id": 119,
+                                                        "name": "VariableDeclaration",
+                                                        "src": "799:8:0"
+                                                    },
+                                                    {
+                                                        "attributes": {
+                                                            "type": "bool",
+                                                            "type_conversion": false
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "send",
+                                                                    "type": "function (uint256) returns (bool)"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "member_name": "sender",
+                                                                            "type": "address"
+                                                                        },
+                                                                        "children": [
+                                                                            {
+                                                                                "attributes": {
+                                                                                    "type": "msg",
+                                                                                    "value": "msg"
+                                                                                },
+                                                                                "id": 120,
+                                                                                "name": "Identifier",
+                                                                                "src": "810:3:0"
+                                                                            }
+                                                                        ],
+                                                                        "id": 121,
+                                                                        "name": "MemberAccess",
+                                                                        "src": "810:10:0"
+                                                                    }
+                                                                ],
+                                                                "id": 122,
+                                                                "name": "MemberAccess",
+                                                                "src": "810:15:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "member_name": "balance",
+                                                                    "type": "uint256"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "contract OddsAndEvens",
+                                                                            "value": "this"
+                                                                        },
+                                                                        "id": 123,
+                                                                        "name": "Identifier",
+                                                                        "src": "826:4:0"
+                                                                    }
+                                                                ],
+                                                                "id": 124,
+                                                                "name": "MemberAccess",
+                                                                "src": "826:12:0"
+                                                            }
+                                                        ],
+                                                        "id": 125,
+                                                        "name": "FunctionCall",
+                                                        "src": "810:29:0"
+                                                    }
+                                                ],
+                                                "id": 126,
+                                                "name": "VariableDeclarationStatement",
+                                                "src": "799:40:0"
+                                            }
+                                        ],
+                                        "id": 127,
+                                        "name": "Block",
+                                        "src": "760:84:0"
+                                    }
+                                ],
+                                "id": 128,
+                                "name": "FunctionDefinition",
+                                "src": "739:105:0"
+                            }
+                        ],
+                        "id": 129,
+                        "name": "ContractDefinition",
+                        "src": "25:822:0"
+                    }
+                ],
+                "name": "SourceUnit"
+            }
+        }
+    },
+    "version": "0.4.11+commit.68ef5810.Linux.g++"
+}

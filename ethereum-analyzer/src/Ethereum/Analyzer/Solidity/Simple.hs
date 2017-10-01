@@ -71,6 +71,7 @@ data Statement
          [Statement]
          [Statement]
   | StReturn [LValue]
+  | StDelete LValue
   | StTodo Text
   | StThrow
   deriving (Eq, Generic, Show, GP.Out)
@@ -163,6 +164,24 @@ s2sStatements e@SolNode {name = Just "Return", children = Just sChildren} = do
   let prerval = concat (map fst presAndRvals)
   let simpleRvals = map snd presAndRvals
   return $ prerval <> [StReturn simpleRvals]
+s2sStatements e@SolNode { name = Just "UnaryOperation"
+                , children = Just [op1]
+                , attributes = Just SolNode {operator = Just "delete"}
+                } = do
+  (preOp1, lvalOp1) <- s2sLval op1
+  newVar <- uniqueVar
+  return $ preOp1 <> [StDelete (JustId $ Idfr newVar)]
+s2sStatements e@SolNode { name = Just "UnaryOperation"
+                , children = Just [
+                    SolNode { name = Just "Identifier"
+                            , attributes = Just SolNode { value = Just idName }}]
+                , attributes = Just SolNode {operator = Just "++"}
+                } = do
+  let idfr = JustId $ Idfr idName
+  newVar <- uniqueVar
+  let newidfr = JustId $ Idfr newVar
+  return [ StAssign newidfr $ ExpLiteral "1"
+         , StAssign idfr $ ExpBin "+" idfr newidfr]
 s2sStatements SolNode { name = Just "IfStatement"
                       , children = Just [cond, thenBr]
                       } = do
@@ -188,6 +207,9 @@ s2sStatements SolNode { name = Just "VariableDeclarationStatement"
 s2sStatements n@SolNode {name = Just "FunctionCall"} = do
   (precall, lvalcall) <- s2sLval n
   return $ precall <> [StAssign (JustId $ Idfr "_") (ExpLval lvalcall)]
+s2sStatements SolNode {name = Just "VariableDeclarationStatement"} =
+  -- TODO(zchn): Handle this properly.
+  return []
 s2sStatements SolNode {name = Just "Throw"} = return [StThrow]
 s2sStatements s = unimplementedPanic s {children = Nothing}
 
