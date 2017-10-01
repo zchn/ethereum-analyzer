@@ -11,6 +11,7 @@ module Ethereum.Analyzer.Solidity.Simple
   , Statement(..)
   , Expression(..)
   , s2sContracts
+  , decodeContracts
   ) where
 
 import Protolude hiding (show)
@@ -23,6 +24,13 @@ import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 
 import qualified Text.PrettyPrint as PP
 import qualified Text.PrettyPrint.GenericPretty as GP
+
+decodeContracts :: Text -> Either Text [Contract]
+decodeContracts astJsonText = do
+  solNodes <- decodeSoleNodes (toS astJsonText)
+  let mContracts = mapM s2sContracts solNodes
+  let contracts = concat $ runSimpleUniqueMonad mContracts
+  return contracts
 
 data Contract = Contract
   { cName :: Text

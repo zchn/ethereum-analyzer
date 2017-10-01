@@ -20,7 +20,7 @@ spec =
   describe "e2h" $ do
     it "parses storageJson" $ do
       let eitherContracts = do
-            solNodes <- decodeAst (toS storageJson)
+            solNodes <- decodeSoleNodes (toS storageJson)
             let mContracts = mapM s2sContracts solNodes
             let contracts = concat $ runSimpleUniqueMonad mContracts
             return contracts
@@ -55,7 +55,7 @@ spec =
           ]
     it "parses simpleDaoJson" $ do
       let eitherContracts = do
-            solNodes <- decodeAst (toS simpleDaoJson)
+            solNodes <- decodeSoleNodes (toS simpleDaoJson)
             let mContracts = mapM s2sContracts solNodes
             let contracts = concat $ runSimpleUniqueMonad mContracts
             return contracts

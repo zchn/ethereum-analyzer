@@ -3,7 +3,7 @@
 
 module Ethereum.Analyzer.Solidity.AstJson
   ( SolNode(..)
-  , decodeAst
+  , decodeSoleNodes
   , defSolNode
   ) where
 
@@ -16,8 +16,8 @@ import Ethereum.Analyzer.Common
 import GHC.Show (Show(..))
 import Text.PrettyPrint.Leijen.Text as PP
 
-decodeAst :: LByteString -> Either Text [SolNode]
-decodeAst combined_ast = do
+decodeSoleNodes :: LByteString -> Either Text [SolNode]
+decodeSoleNodes combined_ast = do
   value <- (s2t4Either (eitherDecode combined_ast) :: Either Text Value)
   case value of
     Object o1 -> do

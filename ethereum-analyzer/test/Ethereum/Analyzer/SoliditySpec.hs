@@ -18,7 +18,7 @@ spec =
     it "pretty-prints simpleDaoJson" $ do
       let prettySol =
             (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
-            decodeAst (toS simpleDaoJson)
+            decodeSoleNodes (toS simpleDaoJson)
       -- putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
         Right
@@ -59,7 +59,7 @@ spec =
     it "pretty-prints storageJson" $ do
       let prettySol =
             (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
-            decodeAst (toS storageJson)
+            decodeSoleNodes (toS storageJson)
       -- putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`
         Right
@@ -68,7 +68,7 @@ spec =
            "                       ;fun set (uint256 x)(){(storedData=x)}\n" <>
            "                       ;fun get ()(uint256){return(storedData)}}]")
     it "works for storageJson" $
-      decodeAst (toS storageJson) `shouldBe`
+      decodeSoleNodes (toS storageJson) `shouldBe`
       Right
         [ defSolNode
           { _AST =

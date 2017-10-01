@@ -11,11 +11,7 @@ import Ethereum.Analyzer.Solidity
 import qualified Text.PrettyPrint.GenericPretty as GP
 
 dbgGetSimpleSol :: Text -> Either Text [Contract]
-dbgGetSimpleSol astJsonText = do
-  solNodes <- decodeAst (toS astJsonText)
-  let mContracts = mapM s2sContracts solNodes
-  let contracts = concat $ runSimpleUniqueMonad mContracts
-  return contracts
+dbgGetSimpleSol = decodeContracts
 
 pprintSimpleSol :: Text -> IO ()
 pprintSimpleSol = GP.pp . dbgGetSimpleSol
