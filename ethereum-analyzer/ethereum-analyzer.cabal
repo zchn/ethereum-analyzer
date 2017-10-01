@@ -54,6 +54,7 @@ library
                      , Ethereum.Analyzer.Util
   other-modules:       Ethereum.Analyzer.IR
                      , Ethereum.Analyzer.Solidity.AstJson
+                     , Ethereum.Analyzer.Solidity.Finding
                      , Ethereum.Analyzer.Solidity.Foreach
                      , Ethereum.Analyzer.Solidity.Simple
   ghc-options:         -Wall

@@ -64,6 +64,7 @@ executable ea-analyze
                      , optparse-applicative
                      , optparse-text
                      , protolude
+                     , text
   ghc-options:         -Wall
   hs-source-dirs:      exec_src
   buildable:           True

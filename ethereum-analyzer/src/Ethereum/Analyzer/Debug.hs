@@ -1,5 +1,6 @@
 module Ethereum.Analyzer.Debug
-  ( pprintSimpleSol
+  ( pprintContracts
+  , pprintSimpleSol
   , dbgGetSimpleSol
   ) where
 
@@ -15,3 +16,6 @@ dbgGetSimpleSol = decodeContracts
 
 pprintSimpleSol :: Text -> IO ()
 pprintSimpleSol = GP.pp . dbgGetSimpleSol
+
+pprintContracts :: [Contract] -> IO ()
+pprintContracts = GP.pp

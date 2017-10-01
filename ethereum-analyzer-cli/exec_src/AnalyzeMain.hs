@@ -4,7 +4,10 @@ module Main
 
 import Protolude
 
+import qualified Data.Text as T
+
 import Ethereum.Analyzer.Debug
+import Ethereum.Analyzer.Solidity
 
 import Options.Applicative
 import Options.Applicative.Text
@@ -36,6 +39,10 @@ analyze :: AnalyzeFlags -> IO ()
 analyze flags@AnalyzeFlags {astJson = theAstJson} = do
   putText $ show flags
   content <- readFile $ toS theAstJson
-  -- putText content
-  pprintSimpleSol content
+  case decodeContracts content of
+    Right contracts -> do
+      pprintContracts contracts
+      putText "Findins: \n"
+      putText ("\n" `T.intercalate` concatMap findingsFor contracts)
+    Left err -> putText err
   return ()
