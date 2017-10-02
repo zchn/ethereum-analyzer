@@ -85,7 +85,8 @@ data Statement
   deriving (Eq, Generic, Show, GP.Out)
 
 data Expression
-  = ExpUnary Text LValue
+  = ExpUnary Text
+             LValue
   | ExpBin Text
            LValue
            LValue
@@ -104,7 +105,7 @@ instance GP.Out SolNode
 s2sContracts
   :: UniqueMonad m
   => SolNode -> m [Contract]
-s2sContracts SolNode {_AST = Just n } = s2sContracts n
+s2sContracts SolNode {_AST = Just n} = s2sContracts n
 s2sContracts SolNode {name = Just "SourceUnit", children = Just sChildren} =
   concat <$> mapM s2sContracts sChildren
 s2sContracts SolNode { name = Just "ContractDefinition"
@@ -123,8 +124,8 @@ s2sContracts SolNode { name = Just "ContractDefinition"
       hFuns <- s2sFuns h
       return (s2sVarDecls h <> vars', hFuns <> funs')
 s2sContracts _ = return []
--- s2sContracts n = unexpectedPanic n
 
+-- s2sContracts n = unexpectedPanic n
 s2sVarDecls :: SolNode -> [VarDecl]
 s2sVarDecls SolNode { name = Just "VariableDeclaration"
                     , attributes = Just SolNode { name = Just vName
@@ -173,23 +174,23 @@ s2sStatements e@SolNode {name = Just "Return", children = Just sChildren} = do
   let simpleRvals = map snd presAndRvals
   return $ prerval <> [StReturn simpleRvals]
 s2sStatements e@SolNode { name = Just "UnaryOperation"
-                , children = Just [op1]
-                , attributes = Just SolNode {operator = Just "delete"}
-                } = do
+                        , children = Just [op1]
+                        , attributes = Just SolNode {operator = Just "delete"}
+                        } = do
   (preOp1, lvalOp1) <- s2sLval op1
   newVar <- uniqueVar
   return $ preOp1 <> [StDelete (JustId $ Idfr newVar)]
 s2sStatements e@SolNode { name = Just "UnaryOperation"
-                , children = Just [
-                    SolNode { name = Just "Identifier"
-                            , attributes = Just SolNode { value = Just idName }}]
-                , attributes = Just SolNode {operator = Just "++"}
-                } = do
+                        , children = Just [SolNode { name = Just "Identifier"
+                                                   , attributes = Just SolNode {value = Just idName}
+                                                   }]
+                        , attributes = Just SolNode {operator = Just "++"}
+                        } = do
   let idfr = JustId $ Idfr idName
   newVar <- uniqueVar
   let newidfr = JustId $ Idfr newVar
-  return [ StAssign newidfr $ ExpLiteral "1"
-         , StAssign idfr $ ExpBin "+" idfr newidfr]
+  return
+    [StAssign newidfr $ ExpLiteral "1", StAssign idfr $ ExpBin "+" idfr newidfr]
 s2sStatements SolNode { name = Just "IfStatement"
                       , children = Just [cond, thenBr]
                       } = do
@@ -215,9 +216,9 @@ s2sStatements SolNode { name = Just "VariableDeclarationStatement"
 s2sStatements n@SolNode {name = Just "FunctionCall"} = do
   (precall, lvalcall) <- s2sLval n
   return $ precall <> [StAssign (JustId $ Idfr "_") (ExpLval lvalcall)]
-s2sStatements SolNode {name = Just "VariableDeclarationStatement"} =
+s2sStatements SolNode {name = Just "VariableDeclarationStatement"}
   -- TODO(zchn): Handle this properly.
-  return []
+ = return []
 s2sStatements SolNode {name = Just "Throw"} = return [StThrow]
 s2sStatements s = unimplementedPanic s {children = Nothing}
 
@@ -258,8 +259,7 @@ s2sLval SolNode { name = Just "UnaryOperation"
   (preOp1, lvalOp1) <- s2sLval op1
   newVar <- uniqueVar
   return
-    ( preOp1 <>
-      [StAssign (JustId $ Idfr newVar) (ExpUnary vOp lvalOp1)]
+    ( preOp1 <> [StAssign (JustId $ Idfr newVar) (ExpUnary vOp lvalOp1)]
     , JustId $ Idfr newVar)
 s2sLval SolNode { name = Just "BinaryOperation"
                 , children = Just [op1, op2]
@@ -290,8 +290,8 @@ s2sLval SolNode { name = Just "Literal"
     ( [StAssign (JustId $ Idfr newVar) (ExpLiteral vValue)]
     , JustId $ Idfr newVar)
 s2sLval SolNode { name = Just "ElementaryTypeNameExpression"
-                , attributes = Just SolNode { value = Just v }} =
-  return ([], JustId $ Idfr v)
+                , attributes = Just SolNode {value = Just v}
+                } = return ([], JustId $ Idfr v)
 s2sLval n = unimplementedPanic n {children = Nothing}
 
 uniqueVar

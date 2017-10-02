@@ -17,7 +17,8 @@ import qualified Text.PrettyPrint.GenericPretty as GP
 
 spec :: Spec
 spec =
-  describe "e2h" $ parallel $ do
+  describe "e2h" $
+  parallel $ do
     it "parses storageJson" $ do
       let eitherContracts = do
             solNodes <- decodeSoleNodes (toS storageJson)
