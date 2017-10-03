@@ -7,7 +7,7 @@ import Protolude
 import qualified Data.Text as T
 
 import Ethereum.Analyzer.Debug
-import Ethereum.Analyzer.Solidity
+import Ethereum.Analyzer.Solidity hiding (value)
 
 import Options.Applicative
 import Options.Applicative.Text
@@ -21,7 +21,8 @@ analyzeFlags :: Parser AnalyzeFlags
 analyzeFlags =
   AnalyzeFlags <$>
   textOption
-    (long "astJson" <> metavar "PATH" <> help "Path to the ast-json file.") <*>
+    (long "astJson" <> value "" <> metavar "PATH" <>
+     help "Path to the ast-json file.") <*>
   switch (long "debug" <> help "Whether to print debug info")
 
 main :: IO ()
@@ -36,13 +37,16 @@ main = analyze =<< execParser opts
            (toS ("ea-analyze - CLI interface for ethereum-analyzer" :: Text)))
 
 analyze :: AnalyzeFlags -> IO ()
-analyze flags@AnalyzeFlags {astJson = theAstJson} = do
+analyze flags@AnalyzeFlags { astJson = theAstJson
+                           , debug = debug } = do
   putText $ show flags
-  content <- readFile $ toS theAstJson
+  content <- if (theAstJson == "" || theAstJson == "-")
+             then getContents
+             else readFile $ toS theAstJson
   case decodeContracts content of
     Right contracts -> do
-      pprintContracts contracts
-      putText "Findins: \n"
+      when debug $ pprintContracts contracts
+      putText "Findings: \n"
       putText ("\n" `T.intercalate` concatMap findingsFor contracts)
     Left err -> putText err
   return ()
