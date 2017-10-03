@@ -16,5 +16,5 @@ selfdestruct c = concatMap sdExp $ expressionsOf c
     sdExp exp =
       case exp of
         ExpCall (JustId (Idfr "suicide")) _ ->
-          ["Prefer 'selfdestruct' than 'suicide'."]
+          ["Prefer 'selfdestruct' over 'suicide'."]
         _ -> []
