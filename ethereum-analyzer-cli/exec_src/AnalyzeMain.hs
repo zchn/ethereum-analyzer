@@ -39,7 +39,7 @@ main = analyze =<< execParser opts
 analyze :: AnalyzeFlags -> IO ()
 analyze flags@AnalyzeFlags { astJson = theAstJson
                            , debug = debug } = do
-  putText $ show flags
+  when debug $ putText $ show flags
   content <- if (theAstJson == "" || theAstJson == "-")
              then getContents
              else readFile $ toS theAstJson
