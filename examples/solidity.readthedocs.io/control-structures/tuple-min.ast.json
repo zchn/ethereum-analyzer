@@ -1,0 +1,188 @@
+{
+    "contracts": {
+        "examples/solidity.readthedocs.io/control-structures/tuple-min.sol:C": {
+        }
+    },
+    "sourceList": [
+        "examples/solidity.readthedocs.io/control-structures/tuple-min.sol"
+    ],
+    "sources": {
+        "examples/solidity.readthedocs.io/control-structures/tuple-min.sol": {
+            "AST": {
+                "children": [
+                    {
+                        "attributes": {
+                            "literals": [
+                                "solidity",
+                                "^",
+                                "0.4",
+                                ".0"
+                            ]
+                        },
+                        "id": 1,
+                        "name": "PragmaDirective",
+                        "src": "0:23:0"
+                    },
+                    {
+                        "attributes": {
+                            "fullyImplemented": true,
+                            "isLibrary": false,
+                            "linearizedBaseContracts": [
+                                17
+                            ],
+                            "name": "C"
+                        },
+                        "children": [
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "name": "g",
+                                    "payable": false,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "children": [],
+                                        "id": 2,
+                                        "name": "ParameterList",
+                                        "src": "50:2:0"
+                                    },
+                                    {
+                                        "children": [],
+                                        "id": 3,
+                                        "name": "ParameterList",
+                                        "src": "53:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "constant": false,
+                                                            "name": "x",
+                                                            "storageLocation": "default",
+                                                            "type": "uint8",
+                                                            "visibility": "internal"
+                                                        },
+                                                        "children": [],
+                                                        "id": 4,
+                                                        "name": "VariableDeclaration",
+                                                        "src": "59:5:0"
+                                                    },
+                                                    {
+                                                        "attributes": {
+                                                            "hexvalue": "30",
+                                                            "subdenomination": null,
+                                                            "token": null,
+                                                            "type": "int_const 0",
+                                                            "value": "0"
+                                                        },
+                                                        "id": 5,
+                                                        "name": "Literal",
+                                                        "src": "67:1:0"
+                                                    }
+                                                ],
+                                                "id": 6,
+                                                "name": "VariableDeclarationStatement",
+                                                "src": "59:9:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "operator": "=",
+                                                            "type": "tuple()"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "type": "uint8",
+                                                                            "value": "x"
+                                                                        },
+                                                                        "id": 7,
+                                                                        "name": "Identifier",
+                                                                        "src": "76:1:0"
+                                                                    }
+                                                                ],
+                                                                "id": 8,
+                                                                "name": "TupleExpression",
+                                                                "src": "74:4:0"
+                                                            },
+                                                            {
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "hexvalue": "31",
+                                                                            "subdenomination": null,
+                                                                            "token": null,
+                                                                            "type": "int_const 1",
+                                                                            "value": "1"
+                                                                        },
+                                                                        "id": 9,
+                                                                        "name": "Literal",
+                                                                        "src": "82:1:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "hexvalue": "32",
+                                                                            "subdenomination": null,
+                                                                            "token": null,
+                                                                            "type": "int_const 2",
+                                                                            "value": "2"
+                                                                        },
+                                                                        "id": 10,
+                                                                        "name": "Literal",
+                                                                        "src": "84:1:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "hexvalue": "33",
+                                                                            "subdenomination": null,
+                                                                            "token": null,
+                                                                            "type": "int_const 3",
+                                                                            "value": "3"
+                                                                        },
+                                                                        "id": 11,
+                                                                        "name": "Literal",
+                                                                        "src": "86:1:0"
+                                                                    }
+                                                                ],
+                                                                "id": 12,
+                                                                "name": "TupleExpression",
+                                                                "src": "81:7:0"
+                                                            }
+                                                        ],
+                                                        "id": 13,
+                                                        "name": "Assignment",
+                                                        "src": "74:14:0"
+                                                    }
+                                                ],
+                                                "id": 14,
+                                                "name": "ExpressionStatement",
+                                                "src": "74:14:0"
+                                            }
+                                        ],
+                                        "id": 15,
+                                        "name": "Block",
+                                        "src": "53:40:0"
+                                    }
+                                ],
+                                "id": 16,
+                                "name": "FunctionDefinition",
+                                "src": "40:53:0"
+                            }
+                        ],
+                        "id": 17,
+                        "name": "ContractDefinition",
+                        "src": "25:70:0"
+                    }
+                ],
+                "name": "SourceUnit"
+            }
+        }
+    },
+    "version": "0.4.11+commit.68ef5810.Linux.g++"
+}
