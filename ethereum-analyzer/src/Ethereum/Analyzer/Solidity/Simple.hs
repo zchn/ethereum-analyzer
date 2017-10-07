@@ -53,6 +53,7 @@ data LValue
          ,  iIndex :: LValue}
   | Member { mObj :: LValue
           ,  mField :: Idfr}
+  | Tuple [LValue]
   deriving (Eq, Generic, Show, GP.Out)
 
 data VarType
@@ -275,7 +276,7 @@ s2sLval SolNode { name = Just "BinaryOperation"
 s2sLval SolNode {name = Just "FunctionCall", children = Just (func:params)} = do
   (preFun, lvalFun) <- s2sLval func
   preAndlvals <- mapM s2sLval params
-  let preArgs = concat (map fst preAndlvals) -- TODO(zchn): reverse?
+  let preArgs = concatMap fst preAndlvals -- TODO(zchn): reverse?
   let lvalArgs = map snd preAndlvals
   newVar <- uniqueVar
   return
@@ -292,6 +293,13 @@ s2sLval SolNode { name = Just "Literal"
 s2sLval SolNode { name = Just "ElementaryTypeNameExpression"
                 , attributes = Just SolNode {value = Just v}
                 } = return ([], JustId $ Idfr v)
+s2sLval SolNode { name = Just "TupleExpression"
+                , children = Just elems
+                } = do
+  preAndlvals <- mapM s2sLval elems
+  let preArgs = concatMap fst preAndlvals -- TODO(zchn): reverse?
+  let lvalArgs = map snd preAndlvals
+  return (preArgs, Tuple lvalArgs)
 s2sLval n = unimplementedPanic n {children = Nothing}
 
 uniqueVar
