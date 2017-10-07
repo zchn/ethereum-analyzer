@@ -1,0 +1,282 @@
+{
+    "contracts": {
+        "examples/solidity.readthedocs.io/control-structures/tuple-min.sol:C": {
+        }
+    },
+    "sourceList": [
+        "examples/solidity.readthedocs.io/control-structures/tuple-min.sol"
+    ],
+    "sources": {
+        "examples/solidity.readthedocs.io/control-structures/tuple-min.sol": {
+            "AST": {
+                "attributes": {
+                    "absolutePath": "examples/solidity.readthedocs.io/control-structures/tuple-min.sol",
+                    "exportedSymbols": {
+                        "C": [
+                            17
+                        ]
+                    }
+                },
+                "children": [
+                    {
+                        "attributes": {
+                            "literals": [
+                                "solidity",
+                                "^",
+                                "0.4",
+                                ".0"
+                            ]
+                        },
+                        "id": 1,
+                        "name": "PragmaDirective",
+                        "src": "0:23:0"
+                    },
+                    {
+                        "attributes": {
+                            "baseContracts": [
+                                null
+                            ],
+                            "contractDependencies": [
+                                null
+                            ],
+                            "contractKind": "contract",
+                            "documentation": null,
+                            "fullyImplemented": true,
+                            "linearizedBaseContracts": [
+                                17
+                            ],
+                            "name": "C",
+                            "scope": 18
+                        },
+                        "children": [
+                            {
+                                "attributes": {
+                                    "constant": false,
+                                    "implemented": true,
+                                    "isConstructor": false,
+                                    "modifiers": [
+                                        null
+                                    ],
+                                    "name": "g",
+                                    "payable": false,
+                                    "scope": 17,
+                                    "stateMutability": "nonpayable",
+                                    "superFunction": null,
+                                    "visibility": "public"
+                                },
+                                "children": [
+                                    {
+                                        "attributes": {
+                                            "parameters": [
+                                                null
+                                            ]
+                                        },
+                                        "children": [],
+                                        "id": 2,
+                                        "name": "ParameterList",
+                                        "src": "50:2:0"
+                                    },
+                                    {
+                                        "attributes": {
+                                            "parameters": [
+                                                null
+                                            ]
+                                        },
+                                        "children": [],
+                                        "id": 3,
+                                        "name": "ParameterList",
+                                        "src": "53:0:0"
+                                    },
+                                    {
+                                        "children": [
+                                            {
+                                                "attributes": {
+                                                    "assignments": [
+                                                        4
+                                                    ]
+                                                },
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "constant": false,
+                                                            "name": "x",
+                                                            "scope": 16,
+                                                            "stateVariable": false,
+                                                            "storageLocation": "default",
+                                                            "type": "uint8",
+                                                            "typeName": null,
+                                                            "value": null,
+                                                            "visibility": "internal"
+                                                        },
+                                                        "children": [],
+                                                        "id": 4,
+                                                        "name": "VariableDeclaration",
+                                                        "src": "59:5:0"
+                                                    },
+                                                    {
+                                                        "attributes": {
+                                                            "argumentTypes": null,
+                                                            "hexvalue": "30",
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": true,
+                                                            "lValueRequested": false,
+                                                            "subdenomination": null,
+                                                            "token": "number",
+                                                            "type": "int_const 0",
+                                                            "value": "0"
+                                                        },
+                                                        "id": 5,
+                                                        "name": "Literal",
+                                                        "src": "67:1:0"
+                                                    }
+                                                ],
+                                                "id": 6,
+                                                "name": "VariableDeclarationStatement",
+                                                "src": "59:9:0"
+                                            },
+                                            {
+                                                "children": [
+                                                    {
+                                                        "attributes": {
+                                                            "argumentTypes": null,
+                                                            "isConstant": false,
+                                                            "isLValue": false,
+                                                            "isPure": false,
+                                                            "lValueRequested": false,
+                                                            "operator": "=",
+                                                            "type": "tuple()"
+                                                        },
+                                                        "children": [
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "components": [
+                                                                        null,
+                                                                        {
+                                                                            "attributes": {
+                                                                                "argumentTypes": null,
+                                                                                "overloadedDeclarations": [
+                                                                                    null
+                                                                                ],
+                                                                                "referencedDeclaration": 4,
+                                                                                "type": "uint8",
+                                                                                "value": "x"
+                                                                            },
+                                                                            "id": 7,
+                                                                            "name": "Identifier",
+                                                                            "src": "76:1:0"
+                                                                        }
+                                                                    ],
+                                                                    "isConstant": false,
+                                                                    "isInlineArray": false,
+                                                                    "isLValue": true,
+                                                                    "isPure": false,
+                                                                    "lValueRequested": true,
+                                                                    "type": "tuple(,uint8)"
+                                                                },
+                                                                "id": 8,
+                                                                "name": "TupleExpression",
+                                                                "src": "74:4:0"
+                                                            },
+                                                            {
+                                                                "attributes": {
+                                                                    "argumentTypes": null,
+                                                                    "isConstant": false,
+                                                                    "isInlineArray": false,
+                                                                    "isLValue": false,
+                                                                    "isPure": true,
+                                                                    "lValueRequested": false,
+                                                                    "type": "tuple(int_const 1,int_const 2,int_const 3)"
+                                                                },
+                                                                "children": [
+                                                                    {
+                                                                        "attributes": {
+                                                                            "argumentTypes": null,
+                                                                            "hexvalue": "31",
+                                                                            "isConstant": false,
+                                                                            "isLValue": false,
+                                                                            "isPure": true,
+                                                                            "lValueRequested": false,
+                                                                            "subdenomination": null,
+                                                                            "token": "number",
+                                                                            "type": "int_const 1",
+                                                                            "value": "1"
+                                                                        },
+                                                                        "id": 9,
+                                                                        "name": "Literal",
+                                                                        "src": "82:1:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "argumentTypes": null,
+                                                                            "hexvalue": "32",
+                                                                            "isConstant": false,
+                                                                            "isLValue": false,
+                                                                            "isPure": true,
+                                                                            "lValueRequested": false,
+                                                                            "subdenomination": null,
+                                                                            "token": "number",
+                                                                            "type": "int_const 2",
+                                                                            "value": "2"
+                                                                        },
+                                                                        "id": 10,
+                                                                        "name": "Literal",
+                                                                        "src": "84:1:0"
+                                                                    },
+                                                                    {
+                                                                        "attributes": {
+                                                                            "argumentTypes": null,
+                                                                            "hexvalue": "33",
+                                                                            "isConstant": false,
+                                                                            "isLValue": false,
+                                                                            "isPure": true,
+                                                                            "lValueRequested": false,
+                                                                            "subdenomination": null,
+                                                                            "token": "number",
+                                                                            "type": "int_const 3",
+                                                                            "value": "3"
+                                                                        },
+                                                                        "id": 11,
+                                                                        "name": "Literal",
+                                                                        "src": "86:1:0"
+                                                                    }
+                                                                ],
+                                                                "id": 12,
+                                                                "name": "TupleExpression",
+                                                                "src": "81:7:0"
+                                                            }
+                                                        ],
+                                                        "id": 13,
+                                                        "name": "Assignment",
+                                                        "src": "74:14:0"
+                                                    }
+                                                ],
+                                                "id": 14,
+                                                "name": "ExpressionStatement",
+                                                "src": "74:14:0"
+                                            }
+                                        ],
+                                        "id": 15,
+                                        "name": "Block",
+                                        "src": "53:40:0"
+                                    }
+                                ],
+                                "id": 16,
+                                "name": "FunctionDefinition",
+                                "src": "40:53:0"
+                            }
+                        ],
+                        "id": 17,
+                        "name": "ContractDefinition",
+                        "src": "25:70:0"
+                    }
+                ],
+                "id": 18,
+                "name": "SourceUnit",
+                "src": "0:96:0"
+            }
+        }
+    },
+    "version": "0.4.17+commit.bdeb9e52.Linux.g++"
+}
