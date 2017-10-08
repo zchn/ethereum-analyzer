@@ -79,6 +79,8 @@ data Statement
   | StIf LValue
          [Statement]
          [Statement]
+  | StLoop [Statement]
+  | StBreak
   | StReturn [LValue]
   | StDelete LValue
   | StTodo Text
@@ -205,6 +207,20 @@ s2sStatements SolNode { name = Just "IfStatement"
   thenSts <- s2sStatements thenBr
   elseSts <- s2sStatements elseBr
   return $ precond <> [StIf lvalcond thenSts elseSts]
+s2sStatements SolNode { name = Just "WhileStatement"
+                      , children = Just [cond, body]
+                      } = do
+  (precond, lvalcond) <- s2sLval cond
+  bodySts <- s2sStatements body
+  return [StLoop (precond <> [StIf lvalcond bodySts [StBreak]])]
+s2sStatements SolNode { name = Just "ForStatement"
+                      , children = Just [inits, cond, iters, body]
+                      } = do
+  initSts <- s2sStatements inits
+  (precond, lvalcond) <- s2sLval cond
+  iterSts <- s2sStatements iters
+  bodySts <- s2sStatements body
+  return $ initSts <> [StLoop (precond <> [StIf lvalcond (bodySts <> iterSts) [StBreak]])]
 s2sStatements SolNode { name = Just "VariableDeclarationStatement"
                       , children = Just [vdec@SolNode {name = Just "VariableDeclaration"}, vinit]
                       } = do

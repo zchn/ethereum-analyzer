@@ -24,6 +24,7 @@ instance HasStatements FunDefinition where
 instance HasStatements Statement where
   _sOf s@(StIf _ thenSts elseSts) =
     [s] <> concatMap _sOf thenSts <> concatMap _sOf elseSts
+  _sOf s@(StLoop bodySts) = [s] <> concatMap _sOf bodySts
   _sOf s = [s]
 
 expressionsOf :: Contract -> [Expression]
@@ -33,6 +34,8 @@ _eOf :: Statement -> [Expression]
 _eOf (StLocalVarDecl _) = []
 _eOf (StAssign _ e) = [e]
 _eOf (StIf _ _ _) = []
+_eOf (StLoop _) = []
+_eOf StBreak = []
 _eOf (StReturn _) = []
 _eOf (StDelete _) = []
 _eOf st@(StTodo _) = unimplementedPanic st
