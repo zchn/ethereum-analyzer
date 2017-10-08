@@ -170,7 +170,8 @@ s2sStatements SolNode { name = Just "Assignment"
   (prelval, simpleLval) <- s2sLval lval
   (prerval, simpleRval) <- s2sLval rval
   return $ prerval <> prelval <> [StAssign simpleLval $ ExpLval simpleRval]
-s2sStatements e@SolNode {name = Just "Return", children = Just sChildren} = do
+s2sStatements e@SolNode {name = Just "Return", children = ch} = do
+  let sChildren = fromMaybe [] ch
   presAndRvals <- mapM s2sLval sChildren
   let prerval = concat (map fst presAndRvals)
   let simpleRvals = map snd presAndRvals
