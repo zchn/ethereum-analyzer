@@ -7,7 +7,7 @@ module Ethereum.Analyzer.Solidity.AstJson
   , defSolNode
   ) where
 
-import Protolude hiding (show)
+import Protolude hiding (show, (<>))
 
 import Data.Aeson
 import Data.Aeson.Types
@@ -60,13 +60,15 @@ data SolNode = SolNode
 
 instance ToJSON SolNode where
   toJSON =
-    genericToJSON defaultOptions { fieldLabelModifier = dropWhile (== '_')
-                                 , omitNothingFields = True }
+    genericToJSON
+      defaultOptions
+      {fieldLabelModifier = dropWhile (== '_'), omitNothingFields = True}
 
 instance FromJSON SolNode where
   parseJSON =
-    genericParseJSON defaultOptions { fieldLabelModifier = dropWhile (== '_')
-                                 , omitNothingFields = True }
+    genericParseJSON
+      defaultOptions
+      {fieldLabelModifier = dropWhile (== '_'), omitNothingFields = True}
 
 defSolNode :: SolNode
 defSolNode =
@@ -121,10 +123,7 @@ instance Pretty SolNode where
     | name == Just "FunctionCall" = prettyFunctionCall n
     | name == Just "UserDefinedTypeName" = prettyUserDefinedTypeName n
     | name == Just "Literal" = prettyLiteral n
-    | otherwise = panic . toS $ "unimplemented: " <> showWithoutChildren n
-
-showWithoutChildren :: SolNode -> Text
-showWithoutChildren n = toS $ show (n {children = Nothing})
+    | otherwise = unimplementedPanic n
 
 prettyAst :: SolNode -> Doc
 prettyAst SolNode {name = Nothing, _AST = Just ast} = pretty ast

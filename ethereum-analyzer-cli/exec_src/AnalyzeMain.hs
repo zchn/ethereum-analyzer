@@ -37,12 +37,12 @@ main = analyze =<< execParser opts
            (toS ("ea-analyze - CLI interface for ethereum-analyzer" :: Text)))
 
 analyze :: AnalyzeFlags -> IO ()
-analyze flags@AnalyzeFlags { astJson = theAstJson
-                           , debug = debug } = do
+analyze flags@AnalyzeFlags {astJson = theAstJson, debug = debug} = do
   when debug $ putText $ show flags
-  content <- if (theAstJson == "" || theAstJson == "-")
-             then getContents
-             else readFile $ toS theAstJson
+  content <-
+    if (theAstJson == "" || theAstJson == "-")
+      then getContents
+      else readFile $ toS theAstJson
   case decodeContracts content of
     Right contracts -> do
       when debug $ pprintContracts contracts

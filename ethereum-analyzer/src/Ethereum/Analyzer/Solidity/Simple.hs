@@ -238,9 +238,11 @@ s2sStatements SolNode { name = Just "ForStatement"
   (precond, lvalcond) <- s2sLval cond
   iterSts <- s2sStatements iters
   bodySts <- s2sStatements body
-  return $ initSts <> [StLoop (precond <> [StIf lvalcond (bodySts <> iterSts) [StBreak]])]
-s2sStatements SolNode { name = Just "Break" } = return [StBreak]
-s2sStatements SolNode { name = Just "Continue" } = return [StContinue]
+  return $
+    initSts <>
+    [StLoop (precond <> [StIf lvalcond (bodySts <> iterSts) [StBreak]])]
+s2sStatements SolNode {name = Just "Break"} = return [StBreak]
+s2sStatements SolNode {name = Just "Continue"} = return [StContinue]
 s2sStatements SolNode { name = Just "VariableDeclarationStatement"
                       , children = Just [vdec@SolNode {name = Just "VariableDeclaration"}, vinit]
                       } = do
@@ -317,11 +319,12 @@ s2sLval SolNode { name = Just "Conditional"
   (preOpElse, lvalOpElse) <- s2sLval opElse
   opVar <- uniqueVar
   return
-    ( preCond <> [StIf lvalCond
-                   (preOpThen <> [StAssign (JustId $ Idfr opVar)
-                                                (ExpLval lvalOpThen)])
-                   (preOpElse <> [StAssign (JustId $ Idfr opVar)
-                                                (ExpLval lvalOpElse)])]
+    ( preCond <>
+      [ StIf
+          lvalCond
+          (preOpThen <> [StAssign (JustId $ Idfr opVar) (ExpLval lvalOpThen)])
+          (preOpElse <> [StAssign (JustId $ Idfr opVar) (ExpLval lvalOpElse)])
+      ]
     , JustId $ Idfr opVar)
 s2sLval SolNode {name = Just "FunctionCall", children = Just (func:params)} = do
   (preFun, lvalFun) <- s2sLval func
@@ -344,17 +347,14 @@ s2sLval SolNode { name = Just "ElementaryTypeNameExpression"
                 , attributes = Just SolNode {value = Just v}
                 } = return ([], JustId $ Idfr v)
 -- For TupleExpression @ solc-0.4.11
-s2sLval SolNode { name = Just "TupleExpression"
-                , children = Just elems
-                } = do
+s2sLval SolNode {name = Just "TupleExpression", children = Just elems} = do
   preAndlvals <- mapM s2sLval elems
   let preArgs = concatMap fst preAndlvals -- TODO(zchn): reverse?
   let lvalArgs = map snd preAndlvals
   return (preArgs, Tuple lvalArgs)
 -- For TupleExpression @ solc-0.4.17
 s2sLval SolNode { name = Just "TupleExpression"
-                , attributes = Just SolNode {
-                    components = Just maybeComps }
+                , attributes = Just SolNode {components = Just maybeComps}
                 } = do
   let comps = catMaybes maybeComps
   preAndlvals <- mapM s2sLval comps
