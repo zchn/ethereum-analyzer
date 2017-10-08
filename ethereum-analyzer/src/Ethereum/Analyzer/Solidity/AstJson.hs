@@ -39,6 +39,7 @@ data SolNode = SolNode
   , _AST :: Maybe SolNode
   , attributes :: Maybe SolNode
   , constant :: Maybe Bool
+  , components :: Maybe [Maybe SolNode]
   , fullyImplemented :: Maybe Bool
   , hexvalue :: Maybe Text
   , isLibrary :: Maybe Bool
@@ -59,11 +60,13 @@ data SolNode = SolNode
 
 instance ToJSON SolNode where
   toJSON =
-    genericToJSON defaultOptions {fieldLabelModifier = dropWhile (== '_')}
+    genericToJSON defaultOptions { fieldLabelModifier = dropWhile (== '_')
+                                 , omitNothingFields = True }
 
 instance FromJSON SolNode where
   parseJSON =
-    genericParseJSON defaultOptions {fieldLabelModifier = dropWhile (== '_')}
+    genericParseJSON defaultOptions { fieldLabelModifier = dropWhile (== '_')
+                                 , omitNothingFields = True }
 
 defSolNode :: SolNode
 defSolNode =
@@ -74,6 +77,7 @@ defSolNode =
   , _AST = Nothing
   , attributes = Nothing
   , constant = Nothing
+  , components = Nothing
   , fullyImplemented = Nothing
   , hexvalue = Nothing
   , isLibrary = Nothing

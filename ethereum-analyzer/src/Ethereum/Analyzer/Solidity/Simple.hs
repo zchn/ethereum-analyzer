@@ -293,10 +293,21 @@ s2sLval SolNode { name = Just "Literal"
 s2sLval SolNode { name = Just "ElementaryTypeNameExpression"
                 , attributes = Just SolNode {value = Just v}
                 } = return ([], JustId $ Idfr v)
+-- For TupleExpression @ solc-0.4.11
 s2sLval SolNode { name = Just "TupleExpression"
                 , children = Just elems
                 } = do
   preAndlvals <- mapM s2sLval elems
+  let preArgs = concatMap fst preAndlvals -- TODO(zchn): reverse?
+  let lvalArgs = map snd preAndlvals
+  return (preArgs, Tuple lvalArgs)
+-- For TupleExpression @ solc-0.4.17
+s2sLval SolNode { name = Just "TupleExpression"
+                , attributes = Just SolNode {
+                    components = Just maybeComps }
+                } = do
+  let comps = catMaybes maybeComps
+  preAndlvals <- mapM s2sLval comps
   let preArgs = concatMap fst preAndlvals -- TODO(zchn): reverse?
   let lvalArgs = map snd preAndlvals
   return (preArgs, Tuple lvalArgs)
