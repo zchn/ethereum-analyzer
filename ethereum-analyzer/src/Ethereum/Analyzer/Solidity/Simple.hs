@@ -20,8 +20,6 @@ import Compiler.Hoopl
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity.AstJson
 import GHC.Show (Show(..))
-import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-
 import qualified Text.PrettyPrint as PP
 import qualified Text.PrettyPrint.GenericPretty as GP
 
