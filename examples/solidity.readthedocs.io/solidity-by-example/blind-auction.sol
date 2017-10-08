@@ -1,119 +1,144 @@
 pragma solidity ^0.4.11;
 
-contract SimpleAuction {
-  // Parameters of the auction. Times are either
-  // absolute unix timestamps (seconds since 1970-01-01)
-  // or time periods in seconds.
+contract BlindAuction {
+  struct Bid {
+    bytes32 blindedBid;
+    uint deposit;
+  }
+
   address public beneficiary;
   uint public auctionStart;
-  uint public biddingTime;
+  uint public biddingEnd;
+  uint public revealEnd;
+  bool public ended;
 
-  // Current state of the auction.
+  mapping(address => Bid[]) public bids;
+
   address public highestBidder;
   uint public highestBid;
 
   // Allowed withdrawals of previous bids
   mapping(address => uint) pendingReturns;
 
-  // Set to true at the end, disallows any change
-  bool ended;
+  event AuctionEnded(address winner, uint highestBid);
 
-  // Events that will be fired on changes.
-  event HighestBidIncreased(address bidder, uint amount);
-  event AuctionEnded(address winner, uint amount);
+  /// Modifiers are a convenient way to validate inputs to
+  /// functions. `onlyBefore` is applied to `bid` below:
+  /// The new function body is the modifier's body where
+  /// `_` is replaced by the old function body.
+  modifier onlyBefore(uint _time) { require(now < _time); _; }
+  modifier onlyAfter(uint _time) { require(now > _time); _; }
 
-  // The following is a so-called natspec comment,
-  // recognizable by the three slashes.
-  // It will be shown when the user is asked to
-  // confirm a transaction.
-
-  /// Create a simple auction with `_biddingTime`
-  /// seconds bidding time on behalf of the
-  /// beneficiary address `_beneficiary`.
-  function SimpleAuction(
-                         uint _biddingTime,
-                                 address _beneficiary
-                         ) {
+  function BlindAuction(
+                        uint _biddingTime,
+                        uint _revealTime,
+                                address _beneficiary
+                        ) {
     beneficiary = _beneficiary;
     auctionStart = now;
-    biddingTime = _biddingTime;
+    biddingEnd = now + _biddingTime;
+    revealEnd = biddingEnd + _revealTime;
   }
 
-  /// Bid on the auction with the value sent
-  /// together with this transaction.
-  /// The value will only be refunded if the
-  /// auction is not won.
-  function bid() payable {
-    // No arguments are necessary, all
-    // information is already part of
-    // the transaction. The keyword payable
-    // is required for the function to
-    // be able to receive Ether.
+  /// Place a blinded bid with `_blindedBid` = keccak256(value,
+  /// fake, secret).
+  /// The sent ether is only refunded if the bid is correctly
+  /// revealed in the revealing phase. The bid is valid if the
+  /// ether sent together with the bid is at least "value" and
+  /// "fake" is not true. Setting "fake" to true and sending
+  /// not the exact amount are ways to hide the real bid but
+  /// still make the required deposit. The same address can
+  /// place multiple bids.
+  function bid(bytes32 _blindedBid)
+            payable
+    onlyBefore(biddingEnd)
+  {
+    bids[msg.sender].push(Bid({
+        blindedBid: _blindedBid,
+            deposit: msg.value
+            }));
+  }
 
-    // Revert the call if the bidding
-    // period is over.
-    require(now <= (auctionStart + biddingTime));
+  /// Reveal your blinded bids. You will get a refund for all
+  /// correctly blinded invalid bids and for all bids except for
+  /// the totally highest.
+  function reveal(
+                  uint[] _values,
+                  bool[] _fake,
+                          bytes32[] _secret
+                  )
+    onlyAfter(biddingEnd)
+    onlyBefore(revealEnd)
+  {
+    uint length = bids[msg.sender].length;
+    require(_values.length == length);
+    require(_fake.length == length);
+    require(_secret.length == length);
 
-    // If the bid is not higher, send the
-    // money back.
-    require(msg.value > highestBid);
+    uint refund;
+    for (uint i = 0; i < length; i++) {
+      var bid = bids[msg.sender][i];
+      var (value, fake, secret) =
+        (_values[i], _fake[i], _secret[i]);
+      if (bid.blindedBid != keccak256(value, fake, secret)) {
+        // Bid was not actually revealed.
+        // Do not refund deposit.
+        continue;
+      }
+      refund += bid.deposit;
+      if (!fake && bid.deposit >= value) {
+        if (placeBid(msg.sender, value))
+          refund -= value;
+      }
+      // Make it impossible for the sender to re-claim
+      // the same deposit.
+      bid.blindedBid = bytes32(0);
+    }
+    msg.sender.transfer(refund);
+  }
 
+  // This is an "internal" function which means that it
+  // can only be called from the contract itself (or from
+  // derived contracts).
+  function placeBid(address bidder, uint value) internal
+    returns (bool success)
+  {
+    if (value <= highestBid) {
+      return false;
+    }
     if (highestBidder != 0) {
-      // Sending back the money by simply using
-      // highestBidder.send(highestBid) is a security risk
-      // because it could execute an untrusted contract.
-      // It is always safer to let the recipients
-      // withdraw their money themselves.
+      // Refund the previously highest bidder.
       pendingReturns[highestBidder] += highestBid;
     }
-    highestBidder = msg.sender;
-    highestBid = msg.value;
-    HighestBidIncreased(msg.sender, msg.value);
+    highestBid = value;
+    highestBidder = bidder;
+    return true;
   }
 
   /// Withdraw a bid that was overbid.
-  function withdraw() returns (bool) {
+  function withdraw() {
     uint amount = pendingReturns[msg.sender];
     if (amount > 0) {
       // It is important to set this to zero because the recipient
       // can call this function again as part of the receiving call
-      // before `send` returns.
+      // before `send` returns (see the remark above about
+      // conditions -> effects -> interaction).
       pendingReturns[msg.sender] = 0;
 
-      if (!msg.sender.send(amount)) {
-        // No need to call throw here, just reset the amount owing
-        pendingReturns[msg.sender] = amount;
-        return false;
-      }
+      msg.sender.transfer(amount);
     }
-    return true;
   }
 
   /// End the auction and send the highest bid
   /// to the beneficiary.
-  function auctionEnd() {
-    // It is a good guideline to structure functions that interact
-    // with other contracts (i.e. they call functions or send Ether)
-    // into three phases:
-    // 1. checking conditions
-    // 2. performing actions (potentially changing conditions)
-    // 3. interacting with other contracts
-    // If these phases are mixed up, the other contract could call
-    // back into the current contract and modify the state or cause
-    // effects (ether payout) to be performed multiple times.
-    // If functions called internally include interaction with external
-    // contracts, they also have to be considered interaction with
-    // external contracts.
-
-    // 1. Conditions
-    require(now >= (auctionStart + biddingTime)); // auction did not yet end
-    require(!ended); // this function has already been called
-
-    // 2. Effects
-    ended = true;
+  function auctionEnd()
+    onlyAfter(revealEnd)
+  {
+    require(!ended);
     AuctionEnded(highestBidder, highestBid);
-
-    // 3. Interaction
-    beneficiary.transfer(highestBid);
+    ended = true;
+    // We send all the money we have, because some
+    // of the refunds might have failed.
+    beneficiary.transfer(this.balance);
   }
 }
