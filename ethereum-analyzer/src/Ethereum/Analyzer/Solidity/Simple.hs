@@ -195,6 +195,17 @@ s2sStatements e@SolNode { name = Just "UnaryOperation"
   let newidfr = JustId $ Idfr newVar
   return
     [StAssign newidfr $ ExpLiteral "1", StAssign idfr $ ExpBin "+" idfr newidfr]
+s2sStatements e@SolNode { name = Just "UnaryOperation"
+                        , children = Just [SolNode { name = Just "Identifier"
+                                                   , attributes = Just SolNode {value = Just idName}
+                                                   }]
+                        , attributes = Just SolNode {operator = Just "--"}
+                        } = do
+  let idfr = JustId $ Idfr idName
+  newVar <- uniqueVar
+  let newidfr = JustId $ Idfr newVar
+  return
+    [StAssign newidfr $ ExpLiteral "1", StAssign idfr $ ExpBin "-" idfr newidfr]
 s2sStatements SolNode { name = Just "IfStatement"
                       , children = Just [cond, thenBr]
                       } = do
@@ -298,6 +309,20 @@ s2sLval SolNode { name = Just "BinaryOperation"
     ( preOp1 <> preOp2 <>
       [StAssign (JustId $ Idfr newVar) (ExpBin vOp lvalOp1 lvalOp2)]
     , JustId $ Idfr newVar)
+s2sLval SolNode { name = Just "Conditional"
+                , children = Just [cond, opThen, opElse]
+                } = do
+  (preCond, lvalCond) <- s2sLval cond
+  (preOpThen, lvalOpThen) <- s2sLval opThen
+  (preOpElse, lvalOpElse) <- s2sLval opElse
+  opVar <- uniqueVar
+  return
+    ( preCond <> [StIf lvalCond
+                   (preOpThen <> [StAssign (JustId $ Idfr opVar)
+                                                (ExpLval lvalOpThen)])
+                   (preOpElse <> [StAssign (JustId $ Idfr opVar)
+                                                (ExpLval lvalOpElse)])]
+    , JustId $ Idfr opVar)
 s2sLval SolNode {name = Just "FunctionCall", children = Just (func:params)} = do
   (preFun, lvalFun) <- s2sLval func
   preAndlvals <- mapM s2sLval params

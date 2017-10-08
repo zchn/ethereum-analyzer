@@ -36,6 +36,7 @@ _eOf (StAssign _ e) = [e]
 _eOf (StIf _ _ _) = []
 _eOf (StLoop _) = []
 _eOf StBreak = []
+_eOf StContinue = []
 _eOf (StReturn _) = []
 _eOf (StDelete _) = []
 _eOf st@(StTodo _) = unimplementedPanic st
