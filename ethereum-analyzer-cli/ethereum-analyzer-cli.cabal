@@ -1,5 +1,5 @@
 name:                ethereum-analyzer-cli
-version:             2.0.1
+version:             2.0.2
 synopsis:            A CLI frontend for ethereum-analyzer.
 homepage:            https://github.com/ethereumK/ethereum-analyzer
 license:             Apache-2.0
@@ -21,7 +21,7 @@ source-repository head
 source-repository this
   type:     git
   location: https://github.com/zchn/ethereum-analyzer
-  tag:      v2.0.1
+  tag:      v2.0.2
   subdir:   ethereum-analyzer-cli
 
 library
