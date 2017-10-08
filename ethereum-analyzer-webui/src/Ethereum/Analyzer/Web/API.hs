@@ -86,7 +86,7 @@ instance MimeRender HTML RootPage where
          <li><a href="/metrics"><code>/metrics</code></a></li>
          </ul>
          <p>
-         Source code at <a href="https://github.com/ethereumK/ethereum-analyzer">https://github.com/ethereumK/ethereum-analyzer/</a>
+         Source code at <a href="https://github.com/zchn/ethereum-analyzer">https://github.com/zchn/ethereum-analyzer/</a>
          </p>
          </body>
          <html>
