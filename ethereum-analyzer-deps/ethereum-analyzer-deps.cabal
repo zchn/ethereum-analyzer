@@ -1,5 +1,5 @@
 name: ethereum-analyzer-deps
-version: 2.0.0
+version: 2.0.1
 cabal-version: >=1.10
 build-type: Simple
 author: Jamshid
@@ -15,7 +15,7 @@ source-repository this
   type:     git
   location: https://github.com/zchn/ethereum-analyzer
   branch:   master
-  tag:      v2.0.0
+  tag:      v2.0.1
 
 library
     default-language: Haskell98
