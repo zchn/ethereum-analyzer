@@ -9,8 +9,8 @@ import Protolude hiding (show)
 import Data.Text
 import Ethereum.Analyzer
 import Ethereum.Analyzer.EVM.CfgAugmentPass
-import Ethereum.Analyzer.TestData.Basic
 import Ethereum.Analyzer.EVM.Util
+import Ethereum.Analyzer.TestData.Basic
 import Test.Hspec
 
 spec :: Spec

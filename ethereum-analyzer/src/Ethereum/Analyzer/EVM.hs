@@ -7,9 +7,9 @@ module Ethereum.Analyzer.EVM
   , module Ethereum.Analyzer.EVM.Util
   ) where
 
-import Ethereum.Analyzer.EVM.CfgAugmentPass
 import Ethereum.Analyzer.EVM.CfgAugWithTopNPass
+import Ethereum.Analyzer.EVM.CfgAugmentPass
 import Ethereum.Analyzer.EVM.Disasm
-import Ethereum.Analyzer.EVM.InstCounter
 import Ethereum.Analyzer.EVM.IR
+import Ethereum.Analyzer.EVM.InstCounter
 import Ethereum.Analyzer.EVM.Util
