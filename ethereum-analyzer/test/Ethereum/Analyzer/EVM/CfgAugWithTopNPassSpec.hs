@@ -1,7 +1,7 @@
 {-# LANGUAGE OverloadedStrings, NoImplicitPrelude, FlexibleContexts
   #-}
 
-module Ethereum.Analyzer.CfgAugWithTopNPassSpec
+module Ethereum.Analyzer.EVM.CfgAugWithTopNPassSpec
   ( spec
   ) where
 
@@ -9,7 +9,7 @@ import Protolude hiding (show)
 
 import Data.Text as DT
 import Ethereum.Analyzer
-import Ethereum.Analyzer.CfgAugWithTopNPass
+import Ethereum.Analyzer.EVM.CfgAugWithTopNPass
 import Ethereum.Analyzer.TestData.Basic
 import GHC.Show
 import Test.Hspec

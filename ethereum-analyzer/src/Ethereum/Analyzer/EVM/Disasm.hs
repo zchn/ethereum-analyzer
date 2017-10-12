@@ -1,4 +1,4 @@
-module Ethereum.Analyzer.Disasm
+module Ethereum.Analyzer.EVM.Disasm
   ( EvmBytecode(..)
   , EvmHexString(..)
   , HasEvmBytecode(..)

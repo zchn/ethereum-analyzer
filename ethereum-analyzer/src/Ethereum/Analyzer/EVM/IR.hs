@@ -2,7 +2,7 @@
   NoImplicitPrelude, FlexibleInstances, GADTs, Rank2Types,
   TypeFamilies, ScopedTypeVariables, UndecidableInstances #-}
 
-module Ethereum.Analyzer.IR
+module Ethereum.Analyzer.EVM.IR
   ( HplBody
   , HplCode(..)
   , HplContract(..)

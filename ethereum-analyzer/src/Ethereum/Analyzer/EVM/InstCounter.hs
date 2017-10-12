@@ -1,4 +1,4 @@
-module Ethereum.Analyzer.InstCounter
+module Ethereum.Analyzer.EVM.InstCounter
   ( doInstCounter
   ) where
 

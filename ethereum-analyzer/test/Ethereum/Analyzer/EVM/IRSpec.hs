@@ -1,35 +1,34 @@
-{-# LANGUAGE OverloadedStrings, FlexibleContexts #-}
-
-module Ethereum.Analyzer.CfgAugmentPassSpec
+module Ethereum.Analyzer.EVM.IRSpec
   ( spec
   ) where
 
 import Protolude hiding (show)
 
-import Data.Text (length)
+import Compiler.Hoopl
 import Ethereum.Analyzer
-import Ethereum.Analyzer.CfgAugmentPass
 import Ethereum.Analyzer.TestData.Basic
 import GHC.Show
 import Test.Hspec
 
 spec :: Spec
 spec =
-  describe "doCfgAugmentPass" $ do
+  describe "e2h" $ do
     it "works for hexstring1" $ do
       let disasmd = disasm hexstring1
-          result =
-            unWordLabelMapM $ do
-              contract <- evmOps2HplContract disasmd
-              (toS . show <$> doCfgAugmentPass contract) :: WordLabelMapM Text
-      Data.Text.length result `shouldBe` 4769
+      unWordLabelMapM (mapSize . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
+        327
     it "works for hexstring2" $ do
-      let disasmd@((_, _):_) = disasm hexstring2
-          result =
-            unWordLabelMapM $ do
-              contract <- evmOps2HplContract disasmd
-              toS . show . bodyOf . ctorOf <$> doCfgAugmentPass contract
-      result `shouldBe` expectedHexString2CtorBody
+      let disasmd = disasm hexstring2
+      unWordLabelMapM (mapSize . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
+        12
+     -- it "shows voteHexstring" $
+     --   do let disasmd = disasm voteHexstring
+     --      unWordLabelMapM (show <$> (evmOps2HplBody disasmd)) `shouldBe` ""
+    it "shows HplBody" $ do
+      let disasmd = disasm hexstring2
+      unWordLabelMapM
+        ((toS . show . bodyOf . ctorOf <$> evmOps2HplContract disasmd) :: WordLabelMapM Text) `shouldBe`
+        toS expectedHexString2CtorBody
 
 expectedHexString2CtorBody :: Text
 expectedHexString2CtorBody =
@@ -39,7 +38,7 @@ expectedHexString2CtorBody =
   "OO: 5: CALLDATASIZE\n" <>
   "OO: 6: ISZERO\n" <>
   "OO: 7: PUSH [39]\n" <>
-  "OC: 9: JUMPI -> [L2,L4]\n" <>
+  "OC: 9: JUMPI -> [L2]\n" <>
   "),(2,CO: L2\n" <>
   "OO: 10: PUSH [224]\n" <>
   "OO: 12: PUSH [2]\n" <>
@@ -51,13 +50,13 @@ expectedHexString2CtorBody =
   "OO: 24: DUP2\n" <>
   "OO: 25: EQ\n" <>
   "OO: 26: PUSH [110]\n" <>
-  "OC: 28: JUMPI -> [L3,L7]\n" <>
+  "OC: 28: JUMPI -> [L3]\n" <>
   "),(3,CO: L3\n" <>
   "OO: 29: DUP1\n" <>
   "OO: 30: PUSH [229,34,83,129]\n" <>
   "OO: 35: EQ\n" <>
   "OO: 36: PUSH [150]\n" <>
-  "OC: 38: JUMPI -> [L4,L9]\n" <>
+  "OC: 38: JUMPI -> [L4]\n" <>
   "),(4,CO: L4\n" <>
   "OO: 39: JUMPDEST\n" <>
   "OO: 40: PUSH [213]\n" <>
@@ -66,7 +65,7 @@ expectedHexString2CtorBody =
   "OO: 45: GT\n" <>
   "OO: 46: ISZERO\n" <>
   "OO: 47: PUSH [108]\n" <>
-  "OC: 49: JUMPI -> [L5,L6]\n" <>
+  "OC: 49: JUMPI -> [L5]\n" <>
   "),(5,CO: L5\n" <>
   "OO: 50: CALLVALUE\n" <>
   "OO: 51: PUSH [96]\n" <>
@@ -112,7 +111,7 @@ expectedHexString2CtorBody =
   "OO: 132: EQ\n" <>
   "OO: 133: ISZERO\n" <>
   "OO: 134: PUSH [108]\n" <>
-  "OC: 136: JUMPI -> [L6,L8]\n" <>
+  "OC: 136: JUMPI -> [L8]\n" <>
   "),(8,CO: L8\n" <>
   "OO: 137: PUSH [0]\n" <>
   "OO: 139: SLOAD\n" <>
@@ -144,7 +143,7 @@ expectedHexString2CtorBody =
   "OO: 172: EQ\n" <>
   "OO: 173: ISZERO\n" <>
   "OO: 174: PUSH [108]\n" <>
-  "OC: 176: JUMPI -> [L6,L10]\n" <>
+  "OC: 176: JUMPI -> [L10]\n" <>
   "),(10,CO: L10\n" <>
   "OO: 177: PUSH [0]\n" <>
   "OO: 179: DUP1\n" <>
@@ -178,4 +177,7 @@ expectedHexString2CtorBody =
   "OO: 210: POP\n" <>
   "OO: 211: POP\n" <>
   "OC: 212: JUMP -> []\n" <>
+  "),(12,CO: L12\n" <>
+  "OO: 213: JUMPDEST\n" <>
+  "OC: 214: STOP -> []\n" <>
   ")]))"

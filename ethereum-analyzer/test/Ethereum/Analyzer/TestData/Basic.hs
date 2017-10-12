@@ -6,7 +6,7 @@ module Ethereum.Analyzer.TestData.Basic
   , voteHexstring
   ) where
 
-import Ethereum.Analyzer.Disasm
+import Ethereum.Analyzer.EVM.Disasm
 
 hexstring1 :: EvmHexString
 hexstring1 =

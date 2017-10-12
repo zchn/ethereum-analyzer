@@ -2,7 +2,7 @@
   NoImplicitPrelude, Rank2Types, TypeFamilies, UndecidableInstances
   #-}
 
-module Ethereum.Analyzer.Util
+module Ethereum.Analyzer.EVM.Util
   ( toDotText
   , disasmToDotText
   , disasmToDotText2
@@ -16,10 +16,10 @@ import Data.Graph.Inductive.PatriciaTree
 import Data.GraphViz
 import Data.GraphViz.Printing hiding ((<>))
 import qualified Data.Text.Lazy as DTL
-import Ethereum.Analyzer.CfgAugWithTopNPass
-import Ethereum.Analyzer.CfgAugmentPass
-import Ethereum.Analyzer.Disasm
-import Ethereum.Analyzer.IR
+import Ethereum.Analyzer.EVM.CfgAugWithTopNPass
+import Ethereum.Analyzer.EVM.CfgAugmentPass
+import Ethereum.Analyzer.EVM.Disasm
+import Ethereum.Analyzer.EVM.IR
 import GHC.Show
 import Text.Read (read)
 

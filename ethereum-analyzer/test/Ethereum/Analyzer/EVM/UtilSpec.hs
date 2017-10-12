@@ -1,6 +1,6 @@
 {-# LANGUAGE OverloadedStrings, NoImplicitPrelude #-}
 
-module Ethereum.Analyzer.UtilSpec
+module Ethereum.Analyzer.EVM.UtilSpec
   ( spec
   ) where
 
@@ -8,9 +8,9 @@ import Protolude hiding (show)
 
 import Data.Text
 import Ethereum.Analyzer
-import Ethereum.Analyzer.CfgAugmentPass
+import Ethereum.Analyzer.EVM.CfgAugmentPass
 import Ethereum.Analyzer.TestData.Basic
-import Ethereum.Analyzer.Util
+import Ethereum.Analyzer.EVM.Util
 import Test.Hspec
 
 spec :: Spec

@@ -2,7 +2,7 @@
   FlexibleInstances, GADTs, Rank2Types, TypeFamilies,
   UndecidableInstances #-}
 
-module Ethereum.Analyzer.CfgAugmentPass
+module Ethereum.Analyzer.EVM.CfgAugmentPass
   ( doCfgAugmentPass
   ) where
 
@@ -15,8 +15,8 @@ import Compiler.Hoopl
 -- import Data.Bits
 import Data.List as DL
 import Data.Set as DS hiding (toList)
-import Ethereum.Analyzer
 import Ethereum.Analyzer.Common
+import Ethereum.Analyzer.EVM.IR
 import GHC.Show
 
 type StackTopFact = WithTop (Set Word256)

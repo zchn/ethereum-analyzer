@@ -2,7 +2,7 @@
   NoImplicitPrelude, FlexibleInstances, GADTs, Rank2Types,
   TypeFamilies, UndecidableInstances #-}
 
-module Ethereum.Analyzer.CfgAugWithTopNPass
+module Ethereum.Analyzer.EVM.CfgAugWithTopNPass
   ( doCfgAugWithTopNPass
   ) where
 
@@ -16,8 +16,9 @@ import Data.ByteString as DB
 import Data.List as DL
 import Data.List.Extra as DLE
 import Data.Set as DS hiding (toList)
-import Ethereum.Analyzer
 import Ethereum.Analyzer.Common
+import Ethereum.Analyzer.EVM.Disasm
+import Ethereum.Analyzer.EVM.IR
 import GHC.Show
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
