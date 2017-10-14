@@ -45,13 +45,14 @@ library
                      , wl-pprint-text
                        
   exposed-modules:     Ethereum.Analyzer.Common
+                     , Ethereum.Analyzer.EVM
+                     , Ethereum.Analyzer.Debug
+                     , Ethereum.Analyzer.Solidity
+  other-modules:       Ethereum.Analyzer.EVM.IR
                      , Ethereum.Analyzer.EVM.CfgAugmentPass
                      , Ethereum.Analyzer.EVM.CfgAugWithTopNPass
-                     , Ethereum.Analyzer.Debug
                      , Ethereum.Analyzer.EVM.Disasm
-                     , Ethereum.Analyzer.Solidity
                      , Ethereum.Analyzer.EVM.Util
-  other-modules:       Ethereum.Analyzer.EVM.IR
                      , Ethereum.Analyzer.Solidity.AstJson
                      , Ethereum.Analyzer.Solidity.Finding
                      , Ethereum.Analyzer.Solidity.Foreach

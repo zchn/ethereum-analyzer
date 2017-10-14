@@ -11,8 +11,7 @@ import Protolude
 
 import Control.Monad.Except (ExceptT(..))
 import Control.Monad.Log (Severity, logInfo)
-import Ethereum.Analyzer.EVM.Disasm
-import Ethereum.Analyzer.EVM.Util
+import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.Web.API
        (API, RootPage(..), User(..), Users(..), DotCfgResp(..))
 import qualified Ethereum.Analyzer.Web.Server.Logging as Log

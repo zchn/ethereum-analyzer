@@ -8,8 +8,7 @@ module Ethereum.Executable.BytecodeVisMain
 import Control.Monad.Logger
 import Data.String.ToString
 import Data.Text (null)
-import Ethereum.Analyzer.EVM.Disasm
-import Ethereum.Analyzer.EVM.Util
+import Ethereum.Analyzer.EVM
 import Protolude hiding (null)
 
 bytecodeVisMain :: Text -> Text -> LoggingT IO ()
