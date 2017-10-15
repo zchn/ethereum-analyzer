@@ -8,14 +8,16 @@ import Compiler.Hoopl
 
 -- import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
+import Ethereum.Analyzer.TestData.Asts
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
+
 
 -- import GHC.Show (Show(..))
 import Test.Hspec
 import qualified Text.PrettyPrint.GenericPretty as GP
 
 spec :: Spec
-spec =
+spec = do
   describe "e2h" $ do
     it "parses storageJson" $ do
       let eitherContracts = do
@@ -23,7 +25,7 @@ spec =
             let mContracts = mapM s2sContracts solNodes
             let contracts = concat $ runSimpleUniqueMonad mContracts
             return contracts
-      GP.pp eitherContracts
+      -- GP.pp eitherContracts
       eitherContracts `shouldBe`
         Right
           [ Contract
@@ -52,3 +54,15 @@ spec =
                 ]
             }
           ]
+  describe "Simple" $ mapM_ nonEmptySimple testFilepaths
+
+nonEmptySimple :: Text -> SpecWith ()
+nonEmptySimple filepath = do
+  context (toS filepath) $
+    it "converts SolNode to Contracts" $ do
+      contracts <- do
+            solNodes <- solNodesOf filepath
+            let mContracts = mapM s2sContracts solNodes
+            let contracts = concat $ runSimpleUniqueMonad mContracts
+            return contracts
+      length contracts `shouldSatisfy` (0 <)
