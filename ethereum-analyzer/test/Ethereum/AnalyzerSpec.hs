@@ -8,7 +8,7 @@ import Protolude hiding (show)
 
 import Data.List as DL
 import Data.List.Extra as DLE
-import Ethereum.Analyzer
+import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
 import GHC.Show
 import Test.Hspec
@@ -17,13 +17,13 @@ spec :: Spec
 spec =
   describe "disasm" $ do
     it "works for hexstring1" $ do
-      let disasmd1 = toS $ show $ showOps $ disasm hexstring1
+      let disasmd1 = show $ showOps $ disasm hexstring1
       DL.take 60 disasmd1 `shouldBe`
         "[\"0: PUSH [96]\",\"2: PUSH [64]\",\"4: MSTORE\",\"5: PUSH [2]\",\"7:"
       DLE.takeEnd 60 disasmd1 `shouldBe`
         "]\",\"6989: JUMP\",\"6990: JUMPDEST\",\"6991: SWAP1\",\"6992: JUMP\"]"
     it "works for hexstring2" $ do
-      let disasmd2 = toS $ show $ showOps $ disasm hexstring2
+      let disasmd2 = show $ showOps $ disasm hexstring2
       disasmd2 `shouldBe` "[\"0: PUSH [96]\"," ++
         "\"2: PUSH [64]\"," ++
         "\"4: MSTORE\"," ++

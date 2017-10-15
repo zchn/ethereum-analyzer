@@ -7,9 +7,7 @@ module Ethereum.Analyzer.EVM.UtilSpec
 import Protolude hiding (show)
 
 import Data.Text
-import Ethereum.Analyzer
-import Ethereum.Analyzer.EVM.CfgAugmentPass
-import Ethereum.Analyzer.EVM.Util
+import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
 import Test.Hspec
 

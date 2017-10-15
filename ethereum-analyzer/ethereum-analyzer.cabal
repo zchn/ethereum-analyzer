@@ -76,7 +76,6 @@ test-suite spec
                      , Ethereum.Analyzer.Solidity.ForeachSpec
                      , Ethereum.Analyzer.Solidity.SimpleSpec
                      , Ethereum.Analyzer.TestData.Basic
-                     , Ethereum.Analyzer.TestData.DaoJson
                      , Ethereum.Analyzer.TestData.StorageJson
                      , Ethereum.Analyzer.EVM.UtilSpec
                      , Ethereum.AnalyzerSpec

@@ -5,7 +5,7 @@ module Ethereum.Analyzer.EVM.IRSpec
 import Protolude hiding (show)
 
 import Compiler.Hoopl
-import Ethereum.Analyzer
+import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
 import GHC.Show
 import Test.Hspec

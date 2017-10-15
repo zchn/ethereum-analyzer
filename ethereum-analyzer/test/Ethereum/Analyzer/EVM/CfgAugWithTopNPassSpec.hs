@@ -8,8 +8,7 @@ module Ethereum.Analyzer.EVM.CfgAugWithTopNPassSpec
 import Protolude hiding (show)
 
 import Data.Text as DT
-import Ethereum.Analyzer
-import Ethereum.Analyzer.EVM.CfgAugWithTopNPass
+import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
 import GHC.Show
 import Test.Hspec
@@ -26,4 +25,4 @@ spec =
             toS $
             unWordLabelMapM
               ((toS . show <$> doCfgAugWithTopNPass hexstring2) :: WordLabelMapM Text)
-      result `shouldContain` "OC: 9: JUMPI -> [L2,L4]"
+      (result :: [Char]) `shouldContain` "OC: 9: JUMPI -> [L2,L4]"

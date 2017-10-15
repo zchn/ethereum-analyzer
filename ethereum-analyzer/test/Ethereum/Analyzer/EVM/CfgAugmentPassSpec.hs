@@ -7,8 +7,7 @@ module Ethereum.Analyzer.EVM.CfgAugmentPassSpec
 import Protolude hiding (show)
 
 import Data.Text (length)
-import Ethereum.Analyzer
-import Ethereum.Analyzer.EVM.CfgAugmentPass
+import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
 import GHC.Show
 import Test.Hspec

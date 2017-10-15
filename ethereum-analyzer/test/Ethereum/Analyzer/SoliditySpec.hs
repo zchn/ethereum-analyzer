@@ -4,9 +4,7 @@ module Ethereum.Analyzer.SoliditySpec
 
 import Protolude hiding (show)
 
-import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
-import Ethereum.Analyzer.TestData.DaoJson (simpleDaoJson)
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
 import GHC.Show (Show(..))
 import Test.Hspec
@@ -14,49 +12,7 @@ import Text.PrettyPrint.Leijen.Text (Doc, pretty, renderPretty)
 
 spec :: Spec
 spec =
-  describe "e2h" $
-  parallel $ do
-    it "pretty-prints simpleDaoJson" $ do
-      let prettySol =
-            (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
-            decodeSoleNodes (toS simpleDaoJson)
-      -- putStrLn $ fromRight "" prettySol
-      prettySol `shouldBe`
-        Right
-          ("[//--SourceUnit--\n" <>
-           "contract SimpleDAO {mapping(address => uint256) credit\n" <>
-           "                   ;fun donate (address to)(){(credit[to]+=msg.value)}\n" <>
-           "                   ;fun withdraw (uint256 amount)\n" <>
-           "                        ()\n" <>
-           "                        {if((credit[msg.sender]>=amount)\n" <>
-           "                           ,{bool res = msg.sender.call.value(amount)()\n" <>
-           "                            ;(credit[msg.sender]-=amount)})}\n" <>
-           "                   ;fun queryCredit (address to)(uint256){return(credit[to])}}\n" <>
-           "contract Mallory {contract SimpleDAO dao\n" <>
-           "                 ;address owner\n" <>
-           "                 ;fun Mallory (contract SimpleDAO addr)\n" <>
-           "                      ()\n" <>
-           "                      {(owner=msg.sender);(dao=addr)}\n" <>
-           "                 ;fun getJackpot ()(){bool res = owner.send(this.balance)}\n" <>
-           "                 ;fun ()(){(dao.withdraw(dao.queryCredit(this)))}}\n" <>
-           "contract Mallory2 {contract SimpleDAO dao\n" <>
-           "                  ;address owner\n" <>
-           "                  ;bool performAttack\n" <>
-           "                  ;fun Mallory2 (contract SimpleDAO addr)\n" <>
-           "                       ()\n" <>
-           "                       {(owner=msg.sender);(dao=addr)}\n" <>
-           "                  ;fun attack ()\n" <>
-           "                       ()\n" <>
-           "                       {(dao.donate.value(1)(this));(dao.withdraw(1))}\n" <>
-           "                  ;fun getJackpot ()\n" <>
-           "                       ()\n" <>
-           "                       {(dao.withdraw(dao.balance))\n" <>
-           "                       ;bool res = owner.send(this.balance)\n" <>
-           "                       ;(performAttack=true)}\n" <>
-           "                  ;fun ()\n" <>
-           "                       ()\n" <>
-           "                       {if(performAttack\n" <>
-           "                          ,{(performAttack=false);(dao.withdraw(1))})}}]")
+  describe "e2h" $ do
     it "pretty-prints storageJson" $ do
       let prettySol =
             (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
