@@ -11,7 +11,6 @@ import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.Asts
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
 
-
 -- import GHC.Show (Show(..))
 import Test.Hspec
 import qualified Text.PrettyPrint.GenericPretty as GP
@@ -60,9 +59,9 @@ nonEmptySimple :: Text -> SpecWith ()
 nonEmptySimple filepath = do
   context (toS filepath) $
     it "converts SolNode to Contracts" $ do
-      contracts <- do
-            solNodes <- solNodesOf filepath
-            let mContracts = mapM s2sContracts solNodes
-            let contracts = concat $ runSimpleUniqueMonad mContracts
-            return contracts
+      contracts <-
+        do solNodes <- solNodesOf filepath
+           let mContracts = mapM s2sContracts solNodes
+           let contracts = concat $ runSimpleUniqueMonad mContracts
+           return contracts
       length contracts `shouldSatisfy` (0 <)

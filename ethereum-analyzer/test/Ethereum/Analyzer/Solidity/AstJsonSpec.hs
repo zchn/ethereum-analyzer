@@ -11,8 +11,7 @@ import Ethereum.Analyzer.TestData.Asts
 import Test.Hspec
 
 spec :: Spec
-spec =
-  describe "AstJson" $ mapM_ nonEmptyAstFile testFilepaths
+spec = describe "AstJson" $ mapM_ nonEmptyAstFile testFilepaths
 
 nonEmptyAstFile :: Text -> SpecWith ()
 nonEmptyAstFile filepath = do
