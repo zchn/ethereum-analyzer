@@ -22,8 +22,8 @@ fromRight v (Left _) = v
 s2t4Either
   :: StringConv s Text
   => Either s a -> Either Text a
-s2t4Either (Left s) = (Left $ toS s)
-s2t4Either (Right r) = (Right r)
+s2t4Either (Left s) = Left $ toS s
+s2t4Either (Right r) = Right r
 
 unexpectedPanic
   :: Show a
