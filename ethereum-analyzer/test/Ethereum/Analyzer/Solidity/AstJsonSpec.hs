@@ -14,8 +14,8 @@ spec :: Spec
 spec = describe "AstJson" $ mapM_ nonEmptyAstFile testFilepaths
 
 nonEmptyAstFile :: Text -> SpecWith ()
-nonEmptyAstFile filepath = do
+nonEmptyAstFile filepath =
   context (toS filepath) $
-    it "returns [SolNode]" $ do
-      nodes <- solNodesOf filepath
-      length (nodes :: [SolNode]) `shouldSatisfy` (0 <)
+  it "returns [SolNode]" $ do
+    nodes <- solNodesOf filepath
+    length (nodes :: [SolNode]) `shouldSatisfy` (0 <)
