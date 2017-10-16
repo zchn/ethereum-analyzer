@@ -18,11 +18,11 @@ import Text.PrettyPrint.Leijen.Text as PP
 
 decodeSoleNodes :: LByteString -> Either Text [SolNode]
 decodeSoleNodes combined_ast = do
-  value <- (s2t4Either (eitherDecode combined_ast) :: Either Text Value)
+  value <- s2t4Either (eitherDecode combined_ast) :: Either Text Value
   case value of
     Object o1 -> do
       srcObj <-
-        (maybeToRight "Could not find 'sources' in object" (lookup "sources" o1) :: Either Text Value)
+        maybeToRight "Could not find 'sources' in object" (lookup "sources" o1) :: Either Text Value
       case srcObj of
         Object o2 -> do
           let srcUnitObjs = elems o2
@@ -100,7 +100,7 @@ defSolNode =
 
 instance Pretty SolNode where
   pretty n@SolNode {name = name}
-    | name == Nothing = prettyAst n -- Top level AST
+    | isNothing name = prettyAst n -- Top level AST
     | name == Just "SourceUnit" = prettySourceUnit n
     | name == Just "PragmaDirective" = PP.empty
     | name == Just "ContractDefinition" = prettyContractDefinition n

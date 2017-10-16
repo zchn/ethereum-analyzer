@@ -6,8 +6,6 @@ module Ethereum.Analyzer.Debug
 
 import Protolude
 
-import Compiler.Hoopl
-import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity
 import qualified Text.PrettyPrint.GenericPretty as GP
 
