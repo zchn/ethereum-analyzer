@@ -13,8 +13,8 @@ findingsFor = selfdestruct
 selfdestruct :: Contract -> [Text]
 selfdestruct c = concatMap sdExp $ expressionsOf c
   where
-    sdExp exp =
-      case exp of
+    sdExp e =
+      case e of
         ExpCall (JustId (Idfr "suicide")) _ ->
           ["Prefer 'selfdestruct' over 'suicide'."]
         _ -> []
