@@ -1,5 +1,6 @@
 {-# LANGUAGE DeriveAnyClass #-}
 {-# LANGUAGE DeriveGeneric #-}
+{-# OPTIONS_GHC -fno-warn-name-shadowing #-}
 
 module Ethereum.Analyzer.Solidity.Simple
   ( Contract(..)
@@ -194,7 +195,7 @@ s2sStatements e@SolNode { name = Just "UnaryOperation"
   let newidfr = JustId $ Idfr newVar
   return
     [StAssign newidfr $ ExpLiteral "1", StAssign idfr $ ExpBin "+" idfr newidfr]
-s2sStatements e@SolNode { name = Just "UnaryOperation"
+s2sStatements SolNode { name = Just "UnaryOperation"
                         , children = Just [SolNode { name = Just "Identifier"
                                                    , attributes = Just SolNode {value = Just idName}
                                                    }]
