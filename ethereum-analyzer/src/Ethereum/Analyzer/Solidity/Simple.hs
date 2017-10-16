@@ -135,7 +135,7 @@ s2sVarDecls SolNode { name = Just "VariableDeclaration"
                                                 }
                     } = [VarDecl (Idfr vName) (Unknown vType)]
 s2sVarDecls SolNode {name = Just "ParameterList", children = Just pChildren} =
-  concat (map s2sVarDecls pChildren)
+  concatMap s2sVarDecls pChildren
 s2sVarDecls _ = []
 
 s2sFuns
@@ -159,10 +159,10 @@ s2sStatements
   :: UniqueMonad m
   => SolNode -> m [Statement]
 s2sStatements SolNode {name = Just "Block", children = Just sChildren} =
-  concat <$> (mapM s2sStatements sChildren)
+  concat <$> mapM s2sStatements sChildren
 s2sStatements SolNode { name = Just "ExpressionStatement"
                       , children = Just sChildren
-                      } = concat <$> (mapM s2sStatements sChildren)
+                      } = concat <$> mapM s2sStatements sChildren
 s2sStatements SolNode { name = Just "Assignment"
                       , children = Just [lval, rval]
                       , attributes = Just SolNode {operator = Just op}
@@ -173,7 +173,7 @@ s2sStatements SolNode { name = Just "Assignment"
 s2sStatements e@SolNode {name = Just "Return", children = ch} = do
   let sChildren = fromMaybe [] ch
   presAndRvals <- mapM s2sLval sChildren
-  let prerval = concat (map fst presAndRvals)
+  let prerval = concatMap fst presAndRvals
   let simpleRvals = map snd presAndRvals
   return $ prerval <> [StReturn simpleRvals]
 s2sStatements e@SolNode { name = Just "UnaryOperation"
