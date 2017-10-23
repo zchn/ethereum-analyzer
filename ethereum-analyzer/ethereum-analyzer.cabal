@@ -56,6 +56,7 @@ library
                      , Ethereum.Analyzer.Solidity.AstJson
                      , Ethereum.Analyzer.Solidity.Finding
                      , Ethereum.Analyzer.Solidity.Foreach
+                     , Ethereum.Analyzer.Solidity.Hoople
                      , Ethereum.Analyzer.Solidity.Simple
   ghc-options:         -Wall
   hs-source-dirs:      src
