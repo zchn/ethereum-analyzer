@@ -33,7 +33,7 @@ expressionsOf c = concatMap _eOf $ statementsOf c
 _eOf :: Statement -> [Expression]
 _eOf (StLocalVarDecl _) = []
 _eOf (StAssign _ e) = [e]
-_eOf (StIf {}) = []
+_eOf StIf {} = []
 _eOf (StLoop _) = []
 _eOf StBreak = []
 _eOf StContinue = []

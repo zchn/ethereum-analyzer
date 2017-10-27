@@ -40,7 +40,7 @@ analyze :: AnalyzeFlags -> IO ()
 analyze flags@AnalyzeFlags {astJson = theAstJson, debug = debug} = do
   when debug $ putText $ show flags
   content <-
-    if (theAstJson == "" || theAstJson == "-")
+    if theAstJson == "" || theAstJson == "-"
       then getContents
       else readFile $ toS theAstJson
   case decodeContracts content of

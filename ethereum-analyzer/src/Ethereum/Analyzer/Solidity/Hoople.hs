@@ -1,6 +1,6 @@
 {-# LANGUAGE GADTs #-}
-{-# LANGUAGE DeriveGeneric #-}
-{-# LANGUAGE DeriveAnyClass #-}
+
+
 
 module Ethereum.Analyzer.Solidity.Hoople
   ( hoopleOf
