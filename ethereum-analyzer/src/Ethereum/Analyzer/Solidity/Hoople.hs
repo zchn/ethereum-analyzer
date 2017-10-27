@@ -4,6 +4,8 @@
 
 module Ethereum.Analyzer.Solidity.Hoople
     ( hoopleOf
+    , HContract(..)
+    , HFunDefinition(..)
     ) where
 
 import Protolude hiding ((<*>))
@@ -17,8 +19,8 @@ data HContract = HContract
   , hcFunctions :: [HFunDefinition]
   }
 
-
-type CFG = AGraph HStatement O C
+type CFG = Graph HStatement O C
+type ACFG = AGraph HStatement O C
 
 data HFunDefinition = HFunDefinition
   { hfName :: Idfr
@@ -58,10 +60,11 @@ hfunOf FunDefinition { fName = name
   entryL <- freshLabel
   exitL <- freshLabel
   stmtGraph <- graphOf stmts exitL entryL
-  let cfg = (mkBranch entryL |*><*| mkLabel entryL <*> stmtGraph) :: CFG
+  let acfg = (mkBranch entryL |*><*| mkLabel entryL <*> stmtGraph) :: ACFG
+  cfg <- graphOfAGraph acfg
   return $ HFunDefinition name params returns cfg
 
-graphOf :: UniqueMonad m => [Statement] -> Label -> Label -> m CFG
+graphOf :: UniqueMonad m => [Statement] -> Label -> Label -> m ACFG
 graphOf [] exitL _ = return $ mkBranch exitL
 graphOf (h:t) exitL loopL = do
   postDom <- graphOf t exitL loopL
