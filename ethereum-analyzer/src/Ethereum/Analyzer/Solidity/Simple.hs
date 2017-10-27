@@ -196,11 +196,11 @@ s2sStatements e@SolNode { name = Just "UnaryOperation"
   return
     [StAssign newidfr $ ExpLiteral "1", StAssign idfr $ ExpBin "+" idfr newidfr]
 s2sStatements SolNode { name = Just "UnaryOperation"
-                        , children = Just [SolNode { name = Just "Identifier"
-                                                   , attributes = Just SolNode {value = Just idName}
-                                                   }]
-                        , attributes = Just SolNode {operator = Just "--"}
-                        } = do
+                      , children = Just [SolNode { name = Just "Identifier"
+                                                 , attributes = Just SolNode {value = Just idName}
+                                                 }]
+                      , attributes = Just SolNode {operator = Just "--"}
+                      } = do
   let idfr = JustId $ Idfr idName
   newVar <- uniqueVar
   let newidfr = JustId $ Idfr newVar

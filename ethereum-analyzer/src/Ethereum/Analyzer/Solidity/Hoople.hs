@@ -3,10 +3,10 @@
 {-# LANGUAGE DeriveAnyClass #-}
 
 module Ethereum.Analyzer.Solidity.Hoople
-    ( hoopleOf
-    , HContract(..)
-    , HFunDefinition(..)
-    ) where
+  ( hoopleOf
+  , HContract(..)
+  , HFunDefinition(..)
+  ) where
 
 import Protolude hiding ((<*>))
 
@@ -20,6 +20,7 @@ data HContract = HContract
   }
 
 type CFG = Graph HStatement O C
+
 type ACFG = AGraph HStatement O C
 
 data HFunDefinition = HFunDefinition
@@ -30,10 +31,10 @@ data HFunDefinition = HFunDefinition
   }
 
 data HStatement e x where
-  CoSt :: Label -> HStatement C O
-  OoSt :: Statement -> HStatement O O
-  OcSt :: Statement -> [Label] -> HStatement O C
-  OcJump :: Label -> HStatement O C
+        CoSt :: Label -> HStatement C O
+        OoSt :: Statement -> HStatement O O
+        OcSt :: Statement -> [Label] -> HStatement O C
+        OcJump :: Label -> HStatement O C
 
 instance NonLocal HStatement where
   entryLabel (CoSt lbl) = lbl
@@ -44,19 +45,21 @@ instance HooplNode HStatement where
   mkBranchNode = OcJump
   mkLabelNode = CoSt
 
-hoopleOf :: UniqueMonad m => Contract -> m HContract
-hoopleOf Contract { cName = name
-                  , cStateVars = vars
-                  , cFunctions = funs
-                  } = do
+hoopleOf
+  :: UniqueMonad m
+  => Contract -> m HContract
+hoopleOf Contract {cName = name, cStateVars = vars, cFunctions = funs} = do
   hFuns <- mapM hfunOf funs
   return $ HContract name vars hFuns
 
-hfunOf :: UniqueMonad m => FunDefinition -> m HFunDefinition
+hfunOf
+  :: UniqueMonad m
+  => FunDefinition -> m HFunDefinition
 hfunOf FunDefinition { fName = name
                      , fParams = params
                      , fReturns = returns
-                     , fBody = stmts } = do
+                     , fBody = stmts
+                     } = do
   entryL <- freshLabel
   exitL <- freshLabel
   stmtGraph <- graphOf stmts exitL entryL
@@ -64,12 +67,14 @@ hfunOf FunDefinition { fName = name
   cfg <- graphOfAGraph acfg
   return $ HFunDefinition name params returns cfg
 
-graphOf :: UniqueMonad m => [Statement] -> Label -> Label -> m ACFG
+graphOf
+  :: UniqueMonad m
+  => [Statement] -> Label -> Label -> m ACFG
 graphOf [] exitL _ = return $ mkBranch exitL
 graphOf (h:t) exitL loopL = do
   postDom <- graphOf t exitL loopL
   case h of
-    StLocalVarDecl _ ->  return $ mkMiddle' h <*> postDom
+    StLocalVarDecl _ -> return $ mkMiddle' h <*> postDom
     StAssign _ _ -> return $ mkMiddle' h <*> postDom
     StDelete _ -> return $ mkMiddle' h <*> postDom
     StTodo _ -> return $ mkMiddle' h <*> postDom
@@ -85,13 +90,20 @@ graphOf (h:t) exitL loopL = do
       elseG <- graphOf elseSts pdL loopL
       -- TODO(zchn): remove the then and else statements in h when
       -- constructing OcSt.
-      let ifte = mkIfThenElse (\thenLbl elseLbl -> mkLast (OcSt h [thenLbl, elseLbl])) thenG elseG
+      let ifte =
+            mkIfThenElse
+              (\thenLbl elseLbl -> mkLast (OcSt h [thenLbl, elseLbl]))
+              thenG
+              elseG
       return $ ifte |*><*| (mkLabel pdL <*> postDom)
     StLoop stmts -> do
       pdL <- freshLabel
       bodyLbl <- freshLabel
       bodyG <- graphOf stmts pdL bodyLbl
-      return $ mkBranch bodyLbl |*><*| (mkLabel bodyLbl <*> bodyG) |*><*| (mkLabel pdL <*> postDom)
+      return $
+        mkBranch bodyLbl |*><*| (mkLabel bodyLbl <*> bodyG) |*><*|
+        (mkLabel pdL <*> postDom)
     StBreak -> return $ mkBranch exitL
     StContinue -> return $ mkBranch loopL
-  where mkMiddle' a = mkMiddle (OoSt a)
+  where
+    mkMiddle' a = mkMiddle (OoSt a)

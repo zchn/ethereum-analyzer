@@ -19,40 +19,40 @@ spec :: Spec
 spec = do
   describe "e2h" $
     it "parses storageJson" $ do
-    let eitherContracts = do
-          solNodes <- decodeSoleNodes (toS storageJson)
-          let mContracts = mapM s2sContracts solNodes
-          let contracts = concat $ runSimpleUniqueMonad mContracts
-          return contracts
+      let eitherContracts = do
+            solNodes <- decodeSoleNodes (toS storageJson)
+            let mContracts = mapM s2sContracts solNodes
+            let contracts = concat $ runSimpleUniqueMonad mContracts
+            return contracts
     -- GP.pp eitherContracts
-    eitherContracts `shouldBe`
-      Right
-        [ Contract
-          { cName = "SimpleStorage"
-          , cStateVars =
-              [VarDecl {vName = Idfr "storedData", vType = Unknown "uint256"}]
-          , cFunctions =
-              [ FunDefinition
-                { fName = Idfr "set"
-                , fParams =
-                    [VarDecl {vName = Idfr "x", vType = Unknown "uint256"}]
-                , fReturns = []
-                , fBody =
-                    [ StAssign
-                        (JustId (Idfr "storedData"))
-                        (ExpLval (JustId (Idfr "x")))
-                    ]
-                }
-              , FunDefinition
-                { fName = Idfr "get"
-                , fParams = []
-                , fReturns =
-                    [VarDecl {vName = Idfr "", vType = Unknown "uint256"}]
-                , fBody = [StReturn [JustId (Idfr "storedData")]]
-                }
-              ]
-          }
-        ]
+      eitherContracts `shouldBe`
+        Right
+          [ Contract
+            { cName = "SimpleStorage"
+            , cStateVars =
+                [VarDecl {vName = Idfr "storedData", vType = Unknown "uint256"}]
+            , cFunctions =
+                [ FunDefinition
+                  { fName = Idfr "set"
+                  , fParams =
+                      [VarDecl {vName = Idfr "x", vType = Unknown "uint256"}]
+                  , fReturns = []
+                  , fBody =
+                      [ StAssign
+                          (JustId (Idfr "storedData"))
+                          (ExpLval (JustId (Idfr "x")))
+                      ]
+                  }
+                , FunDefinition
+                  { fName = Idfr "get"
+                  , fParams = []
+                  , fReturns =
+                      [VarDecl {vName = Idfr "", vType = Unknown "uint256"}]
+                  , fBody = [StReturn [JustId (Idfr "storedData")]]
+                  }
+                ]
+            }
+          ]
   describe "Simple" $ mapM_ nonEmptySimple testFilepaths
 
 nonEmptySimple :: Text -> SpecWith ()
