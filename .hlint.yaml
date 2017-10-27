@@ -10,6 +10,7 @@
 - ignore: {name: "Use camelCase"}
 - ignore: {name: "Use module export list"}
 - ignore: {name: "Reduce duplication"}
+- ignore: {name: "Use String"}
 
 # Specify additional command line arguments
 #
