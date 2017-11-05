@@ -154,6 +154,8 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
     ocT :: HplOp O C -> StackNFact -> FactBase StackNFact
     -- TODO(zchn): Implement JUMPI narrowing
     ocT hplop@(OcOp (_, op) _) f = distributeFact hplop (opT op f)
+    ocT hplop@(HpJump _ _) f = distributeFact hplop f
+    ocT hplop@(HpEnd _) f = distributeFact hplop f
     opT :: Operation -> StackNFact -> StackNFact
     opT STOP flist = flist
     opT ADD flist = pairCompute (+) flist
@@ -307,6 +309,8 @@ cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
     ocR :: HplOp O C
         -> StackNFact
         -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
+    ocR op@HpJump {} _ = return (Just (opGUnit op))
+    ocR op@HpEnd {} _ = return (Just (opGUnit op))
     ocR op@(OcOp (loc, ope) ll) f =
       case ope of
         JUMP -> handleJmp
@@ -340,57 +344,44 @@ doCfgAugWithTopNPass
 doCfgAugWithTopNPass a = do
   let disasmd = disasm a
   contract <- evmOps2HplContract disasmd
-  let entry_ = entryOf $ ctorOf contract
-      body = bodyOf $ ctorOf contract
-  case entry_ of
-    Nothing -> return contract
-    Just entry -> do
-      newBody <-
+  let body = bodyOf $ ctorOf contract
+  newBody <-
+    runWithFuel
+      10000000000
+      ((\(a,b,c) -> a) <$>
+       analyzeAndRewriteFwdOx
+         cfgAugWithTopNPass
+         body
+         (fact_bot $ fp_lattice cfgAugWithTopNPass))
+  let newHexstrings = foldGraphNodes (
+        \n l -> case n of
+                  HpCodeCopy offset ->
+                    let newhs =
+                          EvmBytecode $
+                          DB.drop (fromInteger (getBigWordInteger offset)) $
+                          unEvmBytecode (evmBytecodeOf a)
+                    in if DB.null $ unEvmBytecode newhs
+                       then l
+                       else l <> [newhs]
+                  _ -> l) newBody ([] :: [EvmBytecode])
+  case newHexstrings of
+    [] -> return contract {ctorOf = HplCode newBody}
+    [newhs] -> do
+      HplCode disBody <- evmOps2HplCode $ disasm newhs
+      newDisBody <-
         runWithFuel
           10000000000
-          (fst <$>
-           analyzeAndRewriteFwdBody
+          ((\(a,b,c) -> a) <$>
+           analyzeAndRewriteFwdOx
              cfgAugWithTopNPass
-             entry
-             body
-             (mapSingleton entry $ fact_bot $ fp_lattice cfgAugWithTopNPass))
-      let blocks = DL.map snd $ bodyList newBody
-          ooOps =
-            DL.concatMap ((\(_, b, _) -> blockToList b) . blockSplit) blocks
-          newHexstrings =
-            mapMaybe
-              (\op ->
-                 case op of
-                   HpCodeCopy offset ->
-                     let newhs =
-                           EvmBytecode $
-                           DB.drop (fromInteger (getBigWordInteger offset)) $
-                           unEvmBytecode (evmBytecodeOf a)
-                     in if DB.null $ unEvmBytecode newhs
-                          then Nothing
-                          else Just newhs
-                   _ -> Nothing)
-              ooOps
-      case newHexstrings of
-        [] -> return contract {ctorOf = HplCode (Just entry) newBody}
-        [newhs] -> do
-          HplCode (Just disEntry) disBody <- evmOps2HplCode $ disasm newhs
-          newDisBody <-
-            runWithFuel
-              10000000000
-              (fst <$>
-               analyzeAndRewriteFwdBody
-                 cfgAugWithTopNPass
-                 disEntry
-                 disBody
-                 (mapSingleton disEntry $
-                  fact_bot $ fp_lattice cfgAugWithTopNPass))
-          return
-            HplContract
-            { ctorOf = HplCode (Just entry) newBody
-            , dispatcherOf = HplCode (Just disEntry) newDisBody
-            }
-        _ ->
-          panic $
-          "doCfgAugWithTopNPass: unexpected newHexstrings length: " <>
-          toS (show (DL.length newHexstrings))
+             disBody
+             (fact_bot $ fp_lattice cfgAugWithTopNPass))
+      return
+        HplContract
+        { ctorOf = HplCode newBody
+        , dispatcherOf = HplCode newDisBody
+        }
+    _ ->
+      panic $
+      "doCfgAugWithTopNPass: unexpected newHexstrings length: " <>
+      toS (show (DL.length newHexstrings))

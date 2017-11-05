@@ -15,11 +15,13 @@ spec =
   describe "e2h" $ do
     it "works for hexstring1" $ do
       let disasmd = disasm hexstring1
-      unWordLabelMapM (mapSize . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
+      unWordLabelMapM (setSize . labelsUsed . bodyOf . ctorOf
+                       <$> evmOps2HplContract disasmd) `shouldBe`
         327
     it "works for hexstring2" $ do
       let disasmd = disasm hexstring2
-      unWordLabelMapM (mapSize . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
+      unWordLabelMapM (setSize . labelsUsed . bodyOf . ctorOf
+                       <$> evmOps2HplContract disasmd) `shouldBe`
         12
      -- it "shows voteHexstring" $
      --   do let disasmd = disasm voteHexstring

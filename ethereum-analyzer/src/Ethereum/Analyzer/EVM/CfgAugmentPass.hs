@@ -56,6 +56,8 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
     ooT (HpCodeCopy _) f = f
     ocT :: HplOp O C -> StackTopFact -> FactBase StackTopFact
     ocT hplop@(OcOp (_, op) _) f = distributeFact hplop (opT op f)
+    ocT hplop@(HpJump _ _) f = distributeFact hplop f
+    ocT hplop@(HpEnd _) f = distributeFact hplop f
     opT :: Operation -> StackTopFact -> StackTopFact
     opT DUP1 f = f
     opT ISZERO (PElem st) =
@@ -87,6 +89,8 @@ opGUnit co@CoOp {} = gUnitCO $ BlockCO co BNil
 opGUnit oo@OoOp {} = gUnitOO $ BMiddle oo
 opGUnit oo@HpCodeCopy {} = gUnitOO $ BMiddle oo
 opGUnit oc@OcOp {} = gUnitOC $ BlockOC BNil oc
+opGUnit oc@HpJump {} = gUnitOC $ BlockOC BNil oc
+opGUnit oc@HpEnd {} = gUnitOC $ BlockOC BNil oc
 
 cfgAugmentRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackTopFact
 cfgAugmentRewrite = mkFRewrite3 coR ooR ocR
@@ -102,6 +106,8 @@ cfgAugmentRewrite = mkFRewrite3 coR ooR ocR
     ocR :: HplOp O C
         -> StackTopFact
         -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
+    ocR op@HpJump {} _ = return (Just (opGUnit op))
+    ocR op@HpEnd {} _ = return (Just (opGUnit op))
     ocR op@(OcOp (loc, ope) ll) f =
       case ope of
         JUMP -> handleJmp
@@ -127,19 +133,12 @@ cfgAugmentPass =
   }
 
 doCfgAugmentPass :: HplContract -> WordLabelMapM HplContract
-doCfgAugmentPass contract =
-  let entry_ = entryOf $ ctorOf contract
-      body = bodyOf $ ctorOf contract
-  in case entry_ of
-       Nothing -> return contract
-       Just entry -> do
-         newBody <-
-           runWithFuel
-             1000000
-             (fst <$>
-              analyzeAndRewriteFwdBody
-                cfgAugmentPass
-                entry
-                body
-                (mapSingleton entry Top))
-         return contract {ctorOf = HplCode (Just entry) newBody}
+doCfgAugmentPass contract = do
+  let body = bodyOf $ ctorOf contract
+  newBody <- runWithFuel 1000000
+               ((\(a,_,_) -> a) <$>
+                 analyzeAndRewriteFwdOx
+                 cfgAugmentPass
+                 body
+                 Top)
+  return contract {ctorOf = HplCode newBody}

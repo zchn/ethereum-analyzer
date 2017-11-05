@@ -34,10 +34,14 @@ import qualified Data.Text.Lazy as DTL
 import GHC.Show
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
+newtype MyLabel = MyLabel { unMyLabel :: Label } deriving (Eq)
+
 data HplOp e x where
         CoOp :: Label -> HplOp C O
         OoOp :: (Word256, Operation) -> HplOp O O
         OcOp :: (Word256, Operation) -> [Label] -> HplOp O C
+        HpJump :: MyLabel -> Label -> HplOp O C
+        HpEnd :: MyLabel -> HplOp O C
         HpCodeCopy :: Word256 -> HplOp O O
 
 showLoc :: Word256 -> String
@@ -53,6 +57,8 @@ instance Show (HplOp e x) where
   show (CoOp l) = "CO: " <> show l
   show (OoOp op) = "OO: " <> showOp op
   show (OcOp op ll) = "OC: " <> showOp op <> " -> " <> show ll
+  show (HpJump _ l) = "OC: HpJump -> " <> show l
+  show HpEnd {} = "OC: HpEnd"
   show (HpCodeCopy offset) = "HpCodeCopy " <> show offset
 
 instance Show (Block HplOp C C) where
@@ -70,16 +76,24 @@ instance Eq (HplOp O O) where
 
 instance Eq (HplOp O C) where
   (==) (OcOp a _) (OcOp b _) = a == b
+  (==) (HpJump l1 _) (HpJump l2 _) = l1 == l2
+  (==) (HpEnd l1) (HpEnd l2) = l1 == l2
+  (==) _ _ = False
 
 instance NonLocal HplOp where
   entryLabel (CoOp l) = l
   successors (OcOp _ ll) = ll
+  successors (HpJump _ ll) = [ll]
+  successors (HpEnd _) = []
 
-type HplBody = Body HplOp
+type HplBody = Graph HplOp O C
+-- type AHplBody = AGraph HplOp O C
+
+instance Show HplBody where
+  show = const "TODO"
 
 data HplCode = HplCode
-  { entryOf :: Maybe Label
-  , bodyOf :: HplBody
+  { bodyOf :: HplBody
   } deriving (Show)
 
 data HplContract = HplContract
@@ -87,54 +101,58 @@ data HplContract = HplContract
   , dispatcherOf :: HplCode
   } deriving (Show)
 
-emptyCode :: HplCode
-emptyCode = HplCode Nothing emptyBody
+emptyHplBody :: UniqueMonad m => m HplBody
+emptyHplBody = do
+  l <- myFreshLabel
+  return $ mkLast (HpEnd l)
+
+emptyCode :: UniqueMonad m => m HplCode
+emptyCode = HplCode <$> emptyHplBody
 
 evmOps2HplContract :: [(Word256, Operation)] -> WordLabelMapM HplContract
 evmOps2HplContract l = do
   ctorBody <- evmOps2HplCode l
-  return HplContract {ctorOf = ctorBody, dispatcherOf = emptyCode}
+  ec <- emptyCode
+  return HplContract {ctorOf = ctorBody, dispatcherOf = ec}
+
+myFreshLabel :: UniqueMonad m => m MyLabel
+myFreshLabel = freshLabel >>= return . MyLabel
 
 evmOps2HplCode :: [(Word256, Operation)] -> WordLabelMapM HplCode
-evmOps2HplCode [] = return emptyCode
-evmOps2HplCode l@((loc, _):_) = do
-  entry <- labelFor loc
+evmOps2HplCode [] =  emptyCode
+evmOps2HplCode l = do
   body <- _evmOps2HplBody l
-  return HplCode {entryOf = Just entry, bodyOf = body}
+  return HplCode {bodyOf = body}
 
 _evmOps2HplBody :: [(Word256, Operation)] -> WordLabelMapM HplBody
-_evmOps2HplBody [] = return emptyBody
+_evmOps2HplBody [] = emptyHplBody
 _evmOps2HplBody el@((loc, _):_) = do
   l <- labelFor loc
-  doEvmOps2HplBody emptyBody (blockJoinHead (CoOp l) emptyBlock) el
+  jpLabel <- myFreshLabel
+  doEvmOps2HplBody (mkLast $ HpJump jpLabel l) (mkFirst $ CoOp l) el
   where
     doEvmOps2HplBody
       :: HplBody
-      -> Block HplOp C O
+      -> Graph HplOp C O
       -> [(Word256, Operation)]
       -> WordLabelMapM HplBody
     doEvmOps2HplBody body _ [] = return body -- sliently discarding bad hds
     doEvmOps2HplBody body hd [h'] =
       if isTerminator (snd h')
-        then return $ addBlock (blockJoinTail hd (OcOp h' [])) body
-        else return body
+        then return $ body |*><*| hd CH.<*> mkLast (OcOp h' [])
+        else return body -- sliently discarding bad hds
     doEvmOps2HplBody body hd (h':(t'@((loc', op'):_)))
       | isTerminator (snd h') = do
         l' <- labelFor loc'
-        doEvmOps2HplBody
-          (addBlock
-             (blockJoinTail hd (OcOp h' [l' | canPassThrough (snd h')]))
-             body)
-          (blockJoinHead (CoOp l') emptyBlock)
+        doEvmOps2HplBody (body |*><*| hd CH.<*> mkLast (OcOp h' [l' | canPassThrough (snd h')]))
+          (mkFirst $ CoOp l')
           t'
-      | op' /= JUMPDEST = doEvmOps2HplBody body (blockSnoc hd (OoOp h')) t'
+      | op' /= JUMPDEST = doEvmOps2HplBody body (hd CH.<*> mkMiddle (OoOp h')) t'
       | otherwise = do
         l' <- labelFor loc'
         doEvmOps2HplBody
-          (addBlock
-             (blockJoinTail hd (OcOp h' [l' | canPassThrough (snd h')]))
-             body)
-          (blockJoinHead (CoOp l') emptyBlock)
+          (body |*><*| hd CH.<*> mkLast (OcOp h' [l' | canPassThrough (snd h')]))
+          (mkFirst $ CoOp l')
           t'
 
 isTerminator :: Operation -> Bool
@@ -181,6 +199,13 @@ instance CheckpointMonad WordLabelMapM where
           _ <- CH.restart suCheckpoint
           return (m, ())
     in WordLabelMapM mapper
+
+instance UniqueMonad WordLabelMapM where
+  freshUnique = WordLabelMapM f
+    where f m = do
+            u <- freshUnique
+            return (m, u)
+
 
 type WordLabelMapFuelM = CheckingFuelMonad WordLabelMapM
 

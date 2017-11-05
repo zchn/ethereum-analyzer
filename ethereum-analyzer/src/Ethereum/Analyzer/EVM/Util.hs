@@ -56,14 +56,15 @@ toDotText bd =
 toGr :: HplBody -> Gr (Block HplOp C C) ()
 toGr bd =
   let lblToNode l = read (drop 1 $ toS $ show l)
+      blocks = postorder_dfs bd
       (nList, eList) =
-        mapFoldWithKey
-          (\lbl blk (nList', eList') ->
-             let node = lblToNode lbl
+        foldr
+          (\blk (nList', eList') ->
+             let node = lblToNode $ entryLabel blk
                  edgs = map (\l -> (node, lblToNode l, ())) (successors blk)
              in (nList' <> [(node, blk)], eList' <> edgs))
           ([], [])
-          bd
+          blocks
   in mkGraph nList eList
 
 visParams
