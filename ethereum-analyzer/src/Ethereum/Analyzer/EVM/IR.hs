@@ -113,7 +113,7 @@ evmOps2HplContract l = do
 myFreshLabel
   :: UniqueMonad m
   => m MyLabel
-myFreshLabel = freshLabel >>= return . MyLabel
+myFreshLabel = fmap MyLabel freshLabel
 
 evmOps2HplCfg :: [(Word256, Operation)] -> WordLabelMapM HplCfg
 evmOps2HplCfg [] = emptyHplCfg
