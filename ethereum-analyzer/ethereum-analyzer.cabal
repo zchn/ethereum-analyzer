@@ -48,6 +48,7 @@ library
                      , Ethereum.Analyzer.EVM
                      , Ethereum.Analyzer.Debug
                      , Ethereum.Analyzer.Solidity
+                     , Ethereum.Analyzer.Util
   other-modules:       Ethereum.Analyzer.EVM.IR
                      , Ethereum.Analyzer.EVM.CfgAugmentPass
                      , Ethereum.Analyzer.EVM.CfgAugWithTopNPass
