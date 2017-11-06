@@ -282,6 +282,8 @@ opGUnit co@CoOp {} = gUnitCO $ BlockCO co BNil
 opGUnit oo@OoOp {} = gUnitOO $ BMiddle oo
 opGUnit oo@HpCodeCopy {} = gUnitOO $ BMiddle oo
 opGUnit oc@OcOp {} = gUnitOC $ BlockOC BNil oc
+opGUnit oc@HpJump {} = gUnitOC $ BlockOC BNil oc
+opGUnit oc@HpEnd {} = gUnitOC $ BlockOC BNil oc
 
 -- catPElems :: [Pointed e x t] -> [t]
 -- catPElems = mapMaybe maybePElem
@@ -344,11 +346,11 @@ doCfgAugWithTopNPass
 doCfgAugWithTopNPass a = do
   let disasmd = disasm a
   contract <- evmOps2HplContract disasmd
-  let body = bodyOf $ ctorOf contract
+  let body = ctorOf contract
   newBody <-
     runWithFuel
       10000000000
-      ((\(a,b,c) -> a) <$>
+      ((\(h, _, _) -> h) <$>
        analyzeAndRewriteFwdOx
          cfgAugWithTopNPass
          body
@@ -365,21 +367,21 @@ doCfgAugWithTopNPass a = do
                        else l <> [newhs]
                   _ -> l) newBody ([] :: [EvmBytecode])
   case newHexstrings of
-    [] -> return contract {ctorOf = HplCode newBody}
+    [] -> return contract {ctorOf = newBody}
     [newhs] -> do
-      HplCode disBody <- evmOps2HplCode $ disasm newhs
+      disBody <- evmOps2HplCfg $ disasm newhs
       newDisBody <-
         runWithFuel
           10000000000
-          ((\(a,b,c) -> a) <$>
+          ((\(h, _, _) -> h) <$>
            analyzeAndRewriteFwdOx
              cfgAugWithTopNPass
              disBody
              (fact_bot $ fp_lattice cfgAugWithTopNPass))
       return
         HplContract
-        { ctorOf = HplCode newBody
-        , dispatcherOf = HplCode newDisBody
+        { ctorOf = newBody
+        , dispatcherOf = newDisBody
         }
     _ ->
       panic $

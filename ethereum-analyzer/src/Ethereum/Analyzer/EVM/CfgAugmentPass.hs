@@ -134,11 +134,11 @@ cfgAugmentPass =
 
 doCfgAugmentPass :: HplContract -> WordLabelMapM HplContract
 doCfgAugmentPass contract = do
-  let body = bodyOf $ ctorOf contract
+  let body = ctorOf contract
   newBody <- runWithFuel 1000000
                ((\(a,_,_) -> a) <$>
                  analyzeAndRewriteFwdOx
                  cfgAugmentPass
                  body
                  Top)
-  return contract {ctorOf = HplCode newBody}
+  return contract {ctorOf = newBody}

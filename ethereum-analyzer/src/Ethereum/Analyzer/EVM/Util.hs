@@ -31,7 +31,7 @@ disasmToDotText a =
       result =
         unWordLabelMapM $ do
           contract <- evmOps2HplContract disasmd
-          toDotText <$> (bodyOf . ctorOf <$> doCfgAugmentPass contract)
+          toDotText <$> (ctorOf <$> doCfgAugmentPass contract)
   in result
 
 disasmToDotText2
@@ -42,18 +42,18 @@ disasmToDotText2 a =
         unWordLabelMapM $ do
           contract' <- doCfgAugWithTopNPass a
           return
-            ( toDotText $ bodyOf (ctorOf contract')
-            , toDotText $ bodyOf (dispatcherOf contract'))
+            ( toDotText (ctorOf contract')
+            , toDotText (dispatcherOf contract'))
   in result
 
-toDotText :: HplBody -> Text
+toDotText :: HplCfg -> Text
 toDotText bd =
   let bdGr = toGr bd
       dotG = toDotGraph bdGr
       dotCode = toDot dotG
   in DTL.toStrict $ renderDot dotCode
 
-toGr :: HplBody -> Gr (Block HplOp C C) ()
+toGr :: HplCfg -> Gr (Block HplOp C C) ()
 toGr bd =
   let lblToNode l = read (drop 1 $ toS $ show l)
       blocks = postorder_dfs bd

@@ -27,7 +27,7 @@ spec =
           result =
             unWordLabelMapM $ do
               contract <- evmOps2HplContract disasmd
-              toS . show . bodyOf . ctorOf <$> doCfgAugmentPass contract
+              toS . show . ctorOf <$> doCfgAugmentPass contract
       result `shouldBe` expectedHexString2CtorBody
 
 expectedHexString2CtorBody :: Text

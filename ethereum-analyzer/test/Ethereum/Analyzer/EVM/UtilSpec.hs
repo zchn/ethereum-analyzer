@@ -14,17 +14,17 @@ import Test.Hspec
 spec :: Spec
 spec =
   describe "toDotText" $ do
-    it "shows HplBody's dot graph" $ do
+    it "shows HplCfg's dot graph" $ do
       let disasmd = disasm hexstring2
       (unpack . unWordLabelMapM)
-        (toDotText . bodyOf . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
+        (toDotText . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
         toS expectedHexString2RawDot
-    it "shows HplBody after CfgAugmentPass" $ do
+    it "shows HplCfg after CfgAugmentPass" $ do
       let disasmd@((_, _):_) = disasm hexstring2
           result =
             (unpack . unWordLabelMapM) $ do
               contract <- evmOps2HplContract disasmd
-              toDotText . bodyOf . ctorOf <$> doCfgAugmentPass contract
+              toDotText . ctorOf <$> doCfgAugmentPass contract
       result `shouldBe` toS expectedHexString2AugDot
 
 expectedHexString2RawDot :: Text

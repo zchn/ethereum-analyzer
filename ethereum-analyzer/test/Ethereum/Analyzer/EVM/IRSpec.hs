@@ -15,21 +15,21 @@ spec =
   describe "e2h" $ do
     it "works for hexstring1" $ do
       let disasmd = disasm hexstring1
-      unWordLabelMapM (setSize . labelsUsed . bodyOf . ctorOf
+      unWordLabelMapM (setSize . labelsUsed . ctorOf
                        <$> evmOps2HplContract disasmd) `shouldBe`
         327
     it "works for hexstring2" $ do
       let disasmd = disasm hexstring2
-      unWordLabelMapM (setSize . labelsUsed . bodyOf . ctorOf
+      unWordLabelMapM (setSize . labelsUsed . ctorOf
                        <$> evmOps2HplContract disasmd) `shouldBe`
         12
      -- it "shows voteHexstring" $
      --   do let disasmd = disasm voteHexstring
-     --      unWordLabelMapM (show <$> (evmOps2HplBody disasmd)) `shouldBe` ""
-    it "shows HplBody" $ do
+     --      unWordLabelMapM (show <$> (evmOps2HplCfg disasmd)) `shouldBe` ""
+    it "shows HplCfg" $ do
       let disasmd = disasm hexstring2
       unWordLabelMapM
-        ((toS . show . bodyOf . ctorOf <$> evmOps2HplContract disasmd) :: WordLabelMapM Text) `shouldBe`
+        ((toS . show . ctorOf <$> evmOps2HplContract disasmd) :: WordLabelMapM Text) `shouldBe`
         toS expectedHexString2CtorBody
 
 expectedHexString2CtorBody :: Text
