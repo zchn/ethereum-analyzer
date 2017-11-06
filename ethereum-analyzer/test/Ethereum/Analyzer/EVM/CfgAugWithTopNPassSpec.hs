@@ -19,10 +19,10 @@ spec =
     it "works for hexstring1" $ do
       let result =
             unWordLabelMapM $ toS . show <$> doCfgAugWithTopNPass hexstring1
-      DT.length result `shouldBe` 4815
+      DT.length result `shouldBe` 4634
     it "works for hexstring2" $ do
       let result =
             toS $
             unWordLabelMapM
               ((toS . show <$> doCfgAugWithTopNPass hexstring2) :: WordLabelMapM Text)
-      (result :: [Char]) `shouldContain` "OC: 9: JUMPI -> [L2,L4]"
+      (result :: [Char]) `shouldContain` "OC: 9: JUMPI -> [L3,L5]"

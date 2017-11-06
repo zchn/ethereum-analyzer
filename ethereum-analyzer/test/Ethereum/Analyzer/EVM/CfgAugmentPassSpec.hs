@@ -21,7 +21,7 @@ spec =
             unWordLabelMapM $ do
               contract <- evmOps2HplContract disasmd
               (toS . show <$> doCfgAugmentPass contract) :: WordLabelMapM Text
-      Data.Text.length result `shouldBe` 4769
+      Data.Text.length result `shouldBe` 4588
     it "works for hexstring2" $ do
       let disasmd@((_, _):_) = disasm hexstring2
           result =
@@ -32,14 +32,16 @@ spec =
 
 expectedHexString2CtorBody :: Text
 expectedHexString2CtorBody =
-  "LM (UM (fromList [(1,CO: L1\n" <> "OO: 0: PUSH [96]\n" <>
+  "OC: HpJump -> L1\n" <>
+  "CO: L1\n" <>
+  "OO: 0: PUSH [96]\n" <>
   "OO: 2: PUSH [64]\n" <>
   "OO: 4: MSTORE\n" <>
   "OO: 5: CALLDATASIZE\n" <>
   "OO: 6: ISZERO\n" <>
   "OO: 7: PUSH [39]\n" <>
-  "OC: 9: JUMPI -> [L2,L4]\n" <>
-  "),(2,CO: L2\n" <>
+  "OC: 9: JUMPI -> [L3,L5]\n" <>
+  "CO: L3\n" <>
   "OO: 10: PUSH [224]\n" <>
   "OO: 12: PUSH [2]\n" <>
   "OO: 14: EXP\n" <>
@@ -50,14 +52,14 @@ expectedHexString2CtorBody =
   "OO: 24: DUP2\n" <>
   "OO: 25: EQ\n" <>
   "OO: 26: PUSH [110]\n" <>
-  "OC: 28: JUMPI -> [L3,L7]\n" <>
-  "),(3,CO: L3\n" <>
+  "OC: 28: JUMPI -> [L4,L8]\n" <>
+  "CO: L4\n" <>
   "OO: 29: DUP1\n" <>
   "OO: 30: PUSH [229,34,83,129]\n" <>
   "OO: 35: EQ\n" <>
   "OO: 36: PUSH [150]\n" <>
-  "OC: 38: JUMPI -> [L4,L9]\n" <>
-  "),(4,CO: L4\n" <>
+  "OC: 38: JUMPI -> [L5,L10]\n" <>
+  "CO: L5\n" <>
   "OO: 39: JUMPDEST\n" <>
   "OO: 40: PUSH [213]\n" <>
   "OO: 42: PUSH [0]\n" <>
@@ -65,8 +67,8 @@ expectedHexString2CtorBody =
   "OO: 45: GT\n" <>
   "OO: 46: ISZERO\n" <>
   "OO: 47: PUSH [108]\n" <>
-  "OC: 49: JUMPI -> [L5,L6]\n" <>
-  "),(5,CO: L5\n" <>
+  "OC: 49: JUMPI -> [L6,L7]\n" <>
+  "CO: L6\n" <>
   "OO: 50: CALLVALUE\n" <>
   "OO: 51: PUSH [96]\n" <>
   "OO: 53: SWAP1\n" <>
@@ -86,11 +88,11 @@ expectedHexString2CtorBody =
   "OO: 103: SWAP1\n" <>
   "OO: 104: PUSH [32]\n" <>
   "OO: 106: SWAP1\n" <>
-  "OC: 107: LOG3 -> [L6]\n" <>
-  "),(6,CO: L6\n" <>
+  "OC: 107: LOG3 -> [L7]\n" <>
+  "CO: L7\n" <>
   "OO: 108: JUMPDEST\n" <>
   "OC: 109: JUMP -> []\n" <>
-  "),(7,CO: L7\n" <>
+  "CO: L8\n" <>
   "OO: 110: JUMPDEST\n" <>
   "OO: 111: PUSH [213]\n" <>
   "OO: 113: PUSH [0]\n" <>
@@ -111,8 +113,8 @@ expectedHexString2CtorBody =
   "OO: 132: EQ\n" <>
   "OO: 133: ISZERO\n" <>
   "OO: 134: PUSH [108]\n" <>
-  "OC: 136: JUMPI -> [L6,L8]\n" <>
-  "),(8,CO: L8\n" <>
+  "OC: 136: JUMPI -> [L7,L9]\n" <>
+  "CO: L9\n" <>
   "OO: 137: PUSH [0]\n" <>
   "OO: 139: SLOAD\n" <>
   "OO: 140: PUSH [1]\n" <>
@@ -122,7 +124,7 @@ expectedHexString2CtorBody =
   "OO: 147: SUB\n" <>
   "OO: 148: AND\n" <>
   "OC: 149: SUICIDE -> []\n" <>
-  "),(9,CO: L9\n" <>
+  "CO: L10\n" <>
   "OO: 150: JUMPDEST\n" <>
   "OO: 151: PUSH [213]\n" <>
   "OO: 153: PUSH [0]\n" <>
@@ -143,8 +145,8 @@ expectedHexString2CtorBody =
   "OO: 172: EQ\n" <>
   "OO: 173: ISZERO\n" <>
   "OO: 174: PUSH [108]\n" <>
-  "OC: 176: JUMPI -> [L6,L10]\n" <>
-  "),(10,CO: L10\n" <>
+  "OC: 176: JUMPI -> [L7,L11]\n" <>
+  "CO: L11\n" <>
   "OO: 177: PUSH [0]\n" <>
   "OO: 179: DUP1\n" <>
   "OO: 180: SLOAD\n" <>
@@ -169,12 +171,11 @@ expectedHexString2CtorBody =
   "OO: 203: DUP6\n" <>
   "OO: 204: DUP9\n" <>
   "OO: 205: DUP4\n" <>
-  "OC: 206: CALL -> [L11]\n" <>
-  "),(11,CO: L11\n" <>
+  "OC: 206: CALL -> [L12]\n" <>
+  "CO: L12\n" <>
   "OO: 207: POP\n" <>
   "OO: 208: POP\n" <>
   "OO: 209: POP\n" <>
   "OO: 210: POP\n" <>
   "OO: 211: POP\n" <>
-  "OC: 212: JUMP -> []\n" <>
-  ")]))"
+  "OC: 212: JUMP -> []\n"
