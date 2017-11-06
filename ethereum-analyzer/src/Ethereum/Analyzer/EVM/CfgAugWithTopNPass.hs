@@ -355,17 +355,21 @@ doCfgAugWithTopNPass a = do
          cfgAugWithTopNPass
          body
          (fact_bot $ fp_lattice cfgAugWithTopNPass))
-  let newHexstrings = foldGraphNodes (
-        \n l -> case n of
-                  HpCodeCopy offset ->
-                    let newhs =
-                          EvmBytecode $
-                          DB.drop (fromInteger (getBigWordInteger offset)) $
-                          unEvmBytecode (evmBytecodeOf a)
-                    in if DB.null $ unEvmBytecode newhs
-                       then l
-                       else l <> [newhs]
-                  _ -> l) newBody ([] :: [EvmBytecode])
+  let newHexstrings =
+        foldGraphNodes
+          (\n l ->
+             case n of
+               HpCodeCopy offset ->
+                 let newhs =
+                       EvmBytecode $
+                       DB.drop (fromInteger (getBigWordInteger offset)) $
+                       unEvmBytecode (evmBytecodeOf a)
+                 in if DB.null $ unEvmBytecode newhs
+                      then l
+                      else l <> [newhs]
+               _ -> l)
+          newBody
+          ([] :: [EvmBytecode])
   case newHexstrings of
     [] -> return contract {ctorOf = newBody}
     [newhs] -> do
@@ -378,11 +382,7 @@ doCfgAugWithTopNPass a = do
              cfgAugWithTopNPass
              disBody
              (fact_bot $ fp_lattice cfgAugWithTopNPass))
-      return
-        HplContract
-        { ctorOf = newBody
-        , dispatcherOf = newDisBody
-        }
+      return HplContract {ctorOf = newBody, dispatcherOf = newDisBody}
     _ ->
       panic $
       "doCfgAugWithTopNPass: unexpected newHexstrings length: " <>

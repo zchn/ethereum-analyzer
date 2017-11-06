@@ -7,9 +7,9 @@ module Ethereum.Analyzer.EVM.UtilSpec
 import Protolude hiding (show)
 
 import Data.Text
-import Ethereum.Analyzer.Util
 import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
+import Ethereum.Analyzer.Util
 import Test.Hspec
 
 spec :: Spec
@@ -31,9 +31,7 @@ spec =
 -- There are more opcode in the hexstring than printed here.
 expectedHexString2RawDot :: Text
 expectedHexString2RawDot =
-  "digraph {\n" <>
-  "    1 [label=\"CO: L1\\n" <>
-  "OO: 0: PUSH [96]\\n" <>
+  "digraph {\n" <> "    1 [label=\"CO: L1\\n" <> "OO: 0: PUSH [96]\\n" <>
   "OO: 2: PUSH [64]\\n" <>
   "OO: 4: MSTORE\\n" <>
   "OO: 5: CALLDATASIZE\\n" <>
@@ -110,12 +108,9 @@ expectedHexString2RawDot =
   "    6 -> 7;\n" <>
   "}"
 
-
 expectedHexString2AugDot :: Text
 expectedHexString2AugDot =
-  "digraph {\n" <>
-  "    1 [label=\"CO: L1\\n" <>
-  "OO: 0: PUSH [96]\\n" <>
+  "digraph {\n" <> "    1 [label=\"CO: L1\\n" <> "OO: 0: PUSH [96]\\n" <>
   "OO: 2: PUSH [64]\\n" <>
   "OO: 4: MSTORE\\n" <>
   "OO: 5: CALLDATASIZE\\n" <>

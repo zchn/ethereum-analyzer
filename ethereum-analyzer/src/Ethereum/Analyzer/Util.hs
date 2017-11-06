@@ -17,14 +17,18 @@ import qualified Data.Text.Lazy as DTL
 import GHC.Show
 import Text.Read (read)
 
-toDotText :: (NonLocal n, Show (Block n C C)) => CH.Graph n O C -> Text
+toDotText
+  :: (NonLocal n, Show (Block n C C))
+  => CH.Graph n O C -> Text
 toDotText bd =
   let bdGr = toGr bd
       dotG = toDotGraph bdGr
       dotCode = toDot dotG
   in DTL.toStrict $ renderDot dotCode
 
-toGr :: NonLocal n => CH.Graph n O C -> Gr (Block n C C) ()
+toGr
+  :: NonLocal n
+  => CH.Graph n O C -> Gr (Block n C C) ()
 toGr bd =
   let lblToNode l = read (drop 1 $ toS $ show l)
       blocks = postorder_dfs bd
@@ -39,10 +43,13 @@ toGr bd =
   in mkGraph nList eList
 
 visParams
-  :: (Show (Block n C C)) => GraphvizParams p (Block n C C) el () (Block n C C)
+  :: (Show (Block n C C))
+  => GraphvizParams p (Block n C C) el () (Block n C C)
 visParams =
   nonClusteredParams
   {fmtNode = \(_, nl) -> [textLabel (toS $ show nl), shape BoxShape]}
 
-toDotGraph :: (Show (Block n C C)) => Gr (Block n C C) () -> DotGraph Node
+toDotGraph
+  :: (Show (Block n C C))
+  => Gr (Block n C C) () -> DotGraph Node
 toDotGraph = graphToDot visParams

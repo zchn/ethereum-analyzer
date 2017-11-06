@@ -32,9 +32,7 @@ spec =
 
 expectedHexString2CtorBody :: Text
 expectedHexString2CtorBody =
-  "OC: HpJump -> L1\n" <>
-  "CO: L1\n" <>
-  "OO: 0: PUSH [96]\n" <>
+  "OC: HpJump -> L1\n" <> "CO: L1\n" <> "OO: 0: PUSH [96]\n" <>
   "OO: 2: PUSH [64]\n" <>
   "OO: 4: MSTORE\n" <>
   "OO: 5: CALLDATASIZE\n" <>

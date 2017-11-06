@@ -13,8 +13,7 @@ import GHC.Show (Show(..))
 import Test.Hspec
 
 spec :: Spec
-spec =
-  describe "hoopleOf" $ mapM_ hoopleOfWorks testFilepaths
+spec = describe "hoopleOf" $ mapM_ hoopleOfWorks testFilepaths
 
 hoopleOfWorks :: Text -> SpecWith ()
 hoopleOfWorks filepath =

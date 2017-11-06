@@ -9,11 +9,11 @@ module Ethereum.Analyzer.EVM.Util
 
 import Protolude hiding (show)
 
-import Ethereum.Analyzer.Util
 import Ethereum.Analyzer.EVM.CfgAugWithTopNPass
 import Ethereum.Analyzer.EVM.CfgAugmentPass
 import Ethereum.Analyzer.EVM.Disasm
 import Ethereum.Analyzer.EVM.IR
+import Ethereum.Analyzer.Util
 
 disasmToDotText
   :: HasEvmBytecode a
@@ -34,6 +34,5 @@ disasmToDotText2 a =
         unWordLabelMapM $ do
           contract' <- doCfgAugWithTopNPass a
           return
-            ( toDotText (ctorOf contract')
-            , toDotText (dispatcherOf contract'))
+            (toDotText (ctorOf contract'), toDotText (dispatcherOf contract'))
   in result

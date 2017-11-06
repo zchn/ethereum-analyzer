@@ -1,7 +1,5 @@
 {-# LANGUAGE GADTs #-}
 
-
-
 module Ethereum.Analyzer.Solidity.Hoople
   ( hoopleOf
   , HContract(..)

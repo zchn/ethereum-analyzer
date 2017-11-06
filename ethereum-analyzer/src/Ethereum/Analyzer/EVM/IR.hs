@@ -33,7 +33,9 @@ import qualified Data.Text.Lazy as DTL
 import GHC.Show
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
-newtype MyLabel = MyLabel { unMyLabel :: Label } deriving (Eq)
+newtype MyLabel = MyLabel
+  { unMyLabel :: Label
+  } deriving (Eq)
 
 data HplOp e x where
         CoOp :: Label -> HplOp C O
@@ -95,7 +97,9 @@ data HplContract = HplContract
   , dispatcherOf :: HplCfg
   } deriving (Show)
 
-emptyHplCfg :: UniqueMonad m => m HplCfg
+emptyHplCfg
+  :: UniqueMonad m
+  => m HplCfg
 emptyHplCfg = do
   l <- myFreshLabel
   return $ mkLast (HpEnd l)
@@ -106,7 +110,9 @@ evmOps2HplContract l = do
   ec <- emptyHplCfg
   return HplContract {ctorOf = ctorBody, dispatcherOf = ec}
 
-myFreshLabel :: UniqueMonad m => m MyLabel
+myFreshLabel
+  :: UniqueMonad m
+  => m MyLabel
 myFreshLabel = freshLabel >>= return . MyLabel
 
 evmOps2HplCfg :: [(Word256, Operation)] -> WordLabelMapM HplCfg
@@ -116,11 +122,10 @@ evmOps2HplCfg el@((loc, _):_) = do
   jpLabel <- myFreshLabel
   doEvmOps2HplCfg (mkLast $ HpJump jpLabel l) (mkFirst $ CoOp l) el
   where
-    doEvmOps2HplCfg
-      :: HplCfg
-      -> Graph HplOp C O
-      -> [(Word256, Operation)]
-      -> WordLabelMapM HplCfg
+    doEvmOps2HplCfg :: HplCfg
+                    -> Graph HplOp C O
+                    -> [(Word256, Operation)]
+                    -> WordLabelMapM HplCfg
     doEvmOps2HplCfg body _ [] = return body -- sliently discarding bad hds
     doEvmOps2HplCfg body hd [h'] =
       if isTerminator (snd h')
@@ -129,7 +134,8 @@ evmOps2HplCfg el@((loc, _):_) = do
     doEvmOps2HplCfg body hd (h':(t'@((loc', op'):_)))
       | isTerminator (snd h') = do
         l' <- labelFor loc'
-        doEvmOps2HplCfg (body |*><*| hd CH.<*> mkLast (OcOp h' [l' | canPassThrough (snd h')]))
+        doEvmOps2HplCfg
+          (body |*><*| hd CH.<*> mkLast (OcOp h' [l' | canPassThrough (snd h')]))
           (mkFirst $ CoOp l')
           t'
       | op' /= JUMPDEST = doEvmOps2HplCfg body (hd CH.<*> mkMiddle (OoOp h')) t'
@@ -187,10 +193,10 @@ instance CheckpointMonad WordLabelMapM where
 
 instance UniqueMonad WordLabelMapM where
   freshUnique = WordLabelMapM f
-    where f m = do
-            u <- freshUnique
-            return (m, u)
-
+    where
+      f m = do
+        u <- freshUnique
+        return (m, u)
 
 type WordLabelMapFuelM = CheckingFuelMonad WordLabelMapM
 
