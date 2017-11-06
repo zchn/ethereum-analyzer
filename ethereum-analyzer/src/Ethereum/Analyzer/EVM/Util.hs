@@ -10,7 +10,7 @@ module Ethereum.Analyzer.EVM.Util
 
 import Protolude hiding (show)
 
-import Compiler.Hoopl
+import Compiler.Hoopl as CH
 import Data.Graph.Inductive.Graph as DGIG
 import Data.Graph.Inductive.PatriciaTree
 import Data.GraphViz
@@ -46,14 +46,14 @@ disasmToDotText2 a =
             , toDotText (dispatcherOf contract'))
   in result
 
-toDotText :: HplCfg -> Text
+toDotText :: (NonLocal n, Show (Block n C C)) => CH.Graph n O C -> Text
 toDotText bd =
   let bdGr = toGr bd
       dotG = toDotGraph bdGr
       dotCode = toDot dotG
   in DTL.toStrict $ renderDot dotCode
 
-toGr :: HplCfg -> Gr (Block HplOp C C) ()
+toGr :: NonLocal n => CH.Graph n O C -> Gr (Block n C C) ()
 toGr bd =
   let lblToNode l = read (drop 1 $ toS $ show l)
       blocks = postorder_dfs bd
@@ -68,11 +68,10 @@ toGr bd =
   in mkGraph nList eList
 
 visParams
-  :: forall n el.
-     GraphvizParams n (Block HplOp C C) el () (Block HplOp C C)
+  :: (Show (Block n C C)) => GraphvizParams p (Block n C C) el () (Block n C C)
 visParams =
   nonClusteredParams
   {fmtNode = \(_, nl) -> [textLabel (toS $ show nl), shape BoxShape]}
 
-toDotGraph :: Gr (Block HplOp C C) () -> DotGraph Node
+toDotGraph :: (Show (Block n C C)) => Gr (Block n C C) () -> DotGraph Node
 toDotGraph = graphToDot visParams
