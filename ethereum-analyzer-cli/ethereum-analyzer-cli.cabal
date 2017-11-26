@@ -33,6 +33,7 @@ library
                      , ethereum-analyzer
                      , ethereum-analyzer-deps
                      , exceptions
+                     , filepath
                      , hexstring
                      , http-conduit
                      , json-rpc
@@ -42,6 +43,7 @@ library
                      , optparse-text
                      , protolude
                      , text
+                     , time
                      , tostring
                      , unordered-containers
                      , vector
