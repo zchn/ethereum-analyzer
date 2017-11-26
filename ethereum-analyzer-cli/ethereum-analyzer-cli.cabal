@@ -38,13 +38,16 @@ library
                      , json-rpc
                      , monad-logger
                      , mtl
+                     , optparse-applicative
+                     , optparse-text
                      , protolude
                      , text
                      , tostring
                      , unordered-containers
                      , vector
                        
-  exposed-modules:     Ethereum.Executable.BytecodeVisMain
+  exposed-modules:     Ethereum.Executable.Analyze
+                       Ethereum.Executable.BytecodeVisMain
                        Ethereum.Executable.DumpCodeMain
   other-modules:       Ethereum.Jsonrpc.Client                       
   ghc-options:         -Wall
@@ -57,14 +60,8 @@ library
 executable ea-analyze
   main-is:             AnalyzeMain.hs
   build-depends:       base >= 4 && < 5
-                     , ethereum-analyzer
                      , ethereum-analyzer-cli
-                     , ethereum-analyzer-deps
-                     , monad-logger
-                     , optparse-applicative
-                     , optparse-text
                      , protolude
-                     , text
   ghc-options:         -Wall
   hs-source-dirs:      exec_src
   buildable:           True
