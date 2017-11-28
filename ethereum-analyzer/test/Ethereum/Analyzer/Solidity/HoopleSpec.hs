@@ -8,7 +8,6 @@ import Compiler.Hoopl
 
 import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.Asts
-import GHC.Show (Show(..))
 
 import Test.Hspec
 

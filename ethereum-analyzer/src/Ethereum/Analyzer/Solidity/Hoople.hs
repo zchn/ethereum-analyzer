@@ -6,9 +6,10 @@ module Ethereum.Analyzer.Solidity.Hoople
   , HFunDefinition(..)
   ) where
 
-import Protolude hiding ((<*>))
+import Protolude hiding ((<*>), show)
 
 import Compiler.Hoopl
+import GHC.Show (Show(..))
 import Ethereum.Analyzer.Solidity.Simple
 
 data HContract = HContract
@@ -33,6 +34,14 @@ data HStatement e x where
         OoSt :: Statement -> HStatement O O
         OcSt :: Statement -> [Label] -> HStatement O C
         OcJump :: Label -> HStatement O C
+
+instance Show (HStatement e x) where
+  show (CoSt l) = show l
+  show (OoSt st) = show st
+  show (OcSt (StIf lval _ _) ll) = "if " <> show lval <> " -> " <> show ll
+  show (OcSt (StLoop _) ll) = "loop -> " <> show ll
+  show (OcSt st ll) = show st <> " -> " <> show ll
+  show (OcJump l) = "jump -> " <> show l
 
 instance NonLocal HStatement where
   entryLabel (CoSt lbl) = lbl

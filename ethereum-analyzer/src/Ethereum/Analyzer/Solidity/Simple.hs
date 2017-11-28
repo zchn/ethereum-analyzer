@@ -43,7 +43,7 @@ data VarDecl = VarDecl
   } deriving (Eq, Generic, Show, GP.Out)
 
 newtype Idfr =
-  Idfr Text
+  Idfr { unIdfr :: Text }
   deriving (Eq, Generic, Show, GP.Out)
 
 data LValue

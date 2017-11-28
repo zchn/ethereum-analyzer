@@ -35,6 +35,7 @@ library
                      , exceptions
                      , filepath
                      , hexstring
+                     , hoopl
                      , http-conduit
                      , json-rpc
                      , monad-logger

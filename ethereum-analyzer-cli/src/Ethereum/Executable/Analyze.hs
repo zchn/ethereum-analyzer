@@ -2,21 +2,24 @@ module Ethereum.Executable.Analyze
   ( analyzeMain
   ) where
 
-import Protolude
+import Protolude hiding ((<.>))
 
-import qualified Data.Text as T
+import Compiler.Hoopl (runSimpleUniqueMonad)
 
 import Data.Time.Clock
 import Data.Time.Format
 
 import Ethereum.Analyzer.Debug
 import Ethereum.Analyzer.Solidity hiding (value)
+import Ethereum.Analyzer.Util
 
 import Options.Applicative
 import Options.Applicative.Text
 
 import System.Directory
 import System.FilePath
+
+import qualified Data.Text as T
 
 data AnalyzeFlags = AnalyzeFlags
   { astJson :: Text
@@ -63,6 +66,7 @@ analyze flags@AnalyzeFlags { astJson = theAstJson
       savePrettyContracts contracts (toS $
                                      sessionDir </> "contracts.ir")
       when debug $ pprintContracts contracts
+      saveCfgs contracts (toS $ sessionDir </> "cfgs")
       putText "Findings: \n"
       putText ("\n" `T.intercalate` concatMap findingsFor contracts)
     Left err -> putText err
@@ -78,3 +82,17 @@ getTmpDirname = do
 savePrettyContracts :: [Contract] -> Text -> IO ()
 savePrettyContracts cs filepath =
   writeFile (toS filepath) (prettyContracts cs)
+
+saveCfgs :: [Contract] -> Text -> IO ()
+saveCfgs cs dirpath = do
+  createDirectoryIfMissing True (toS dirpath)
+  let hcs = runSimpleUniqueMonad $ mapM hoopleOf cs
+  mapM writeContractCfgs hcs
+  return ()
+  where writeContractCfgs hc = do
+          mapM (writeFunCfgs (toS dirpath </> toS (hcName hc))) (hcFunctions hc)
+          return ()
+        writeFunCfgs contractPrefix hf = do
+          let dot = toDotText (hfCFG hf)
+          writeFile (contractPrefix <.> (toS $ unIdfr $ hfName hf)
+                     <.> "CFG" <.> ".dot") dot

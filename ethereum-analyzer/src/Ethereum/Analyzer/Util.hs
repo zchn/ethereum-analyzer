@@ -14,8 +14,16 @@ import Data.Graph.Inductive.PatriciaTree
 import Data.GraphViz
 import Data.GraphViz.Printing hiding ((<>))
 import qualified Data.Text.Lazy as DTL
+import qualified Data.List as DL
 import GHC.Show
 import Text.Read (read)
+
+instance ( Show (n C O)
+         , Show (n O O)
+         , Show (n O C)) => Show (Block n C C) where
+  show a =
+    let (h, m, t) = blockSplit a
+    in DL.unlines $ [show h] <> map show (blockToList m) <> [show t]
 
 toDotText
   :: (NonLocal n, Show (Block n C C))

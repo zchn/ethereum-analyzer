@@ -62,11 +62,6 @@ instance Show (HplOp e x) where
   show HpEnd {} = "OC: HpEnd"
   show (HpCodeCopy offset) = "HpCodeCopy " <> show offset
 
-instance Show (Block HplOp C C) where
-  show (a :: Block HplOp C C) =
-    let (h, m, t) = blockSplit a
-    in DL.unlines $ [show h] <> DL.map show (blockToList m) <> [show t]
-
 instance Eq (HplOp C O) where
   (==) (CoOp a) (CoOp b) = a == b
 
