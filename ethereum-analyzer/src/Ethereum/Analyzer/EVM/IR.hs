@@ -38,12 +38,12 @@ newtype MyLabel = MyLabel
   } deriving (Eq)
 
 data HplOp e x where
-        CoOp :: Label -> HplOp C O
-        OoOp :: (Word256, Operation) -> HplOp O O
-        OcOp :: (Word256, Operation) -> [Label] -> HplOp O C
-        HpJump :: MyLabel -> Label -> HplOp O C
-        HpEnd :: MyLabel -> HplOp O C
-        HpCodeCopy :: Word256 -> HplOp O O
+  CoOp :: Label -> HplOp C O
+  OoOp :: (Word256, Operation) -> HplOp O O
+  OcOp :: (Word256, Operation) -> [Label] -> HplOp O C
+  HpJump :: MyLabel -> Label -> HplOp O C
+  HpEnd :: MyLabel -> HplOp O C
+  HpCodeCopy :: Word256 -> HplOp O O
 
 showLoc :: Word256 -> String
 showLoc = show . getBigWordInteger
@@ -92,9 +92,7 @@ data HplContract = HplContract
   , dispatcherOf :: HplCfg
   } deriving (Show)
 
-emptyHplCfg
-  :: UniqueMonad m
-  => m HplCfg
+emptyHplCfg :: UniqueMonad m => m HplCfg
 emptyHplCfg = do
   l <- myFreshLabel
   return $ mkLast (HpEnd l)
@@ -105,9 +103,7 @@ evmOps2HplContract l = do
   ec <- emptyHplCfg
   return HplContract {ctorOf = ctorBody, dispatcherOf = ec}
 
-myFreshLabel
-  :: UniqueMonad m
-  => m MyLabel
+myFreshLabel :: UniqueMonad m => m MyLabel
 myFreshLabel = fmap MyLabel freshLabel
 
 evmOps2HplCfg :: [(Word256, Operation)] -> WordLabelMapM HplCfg
@@ -117,10 +113,11 @@ evmOps2HplCfg el@((loc, _):_) = do
   jpLabel <- myFreshLabel
   doEvmOps2HplCfg (mkLast $ HpJump jpLabel l) (mkFirst $ CoOp l) el
   where
-    doEvmOps2HplCfg :: HplCfg
-                    -> Graph HplOp C O
-                    -> [(Word256, Operation)]
-                    -> WordLabelMapM HplCfg
+    doEvmOps2HplCfg ::
+         HplCfg
+      -> Graph HplOp C O
+      -> [(Word256, Operation)]
+      -> WordLabelMapM HplCfg
     doEvmOps2HplCfg body _ [] = return body -- sliently discarding bad hds
     doEvmOps2HplCfg body hd [h'] =
       if isTerminator (snd h')
@@ -172,8 +169,8 @@ newtype WordLabelMapM a =
 instance CheckpointMonad WordLabelMapM where
   type Checkpoint WordLabelMapM = (WordLabelMap, Checkpoint SimpleUniqueMonad)
   checkpoint =
-    let mapper
-          :: WordLabelMap
+    let mapper ::
+             WordLabelMap
           -> SimpleUniqueMonad (WordLabelMap, Checkpoint WordLabelMapM)
         mapper m = do
           suCheckpoint <- CH.checkpoint
@@ -236,8 +233,7 @@ instance UnWordLabelMapM Text where
 instance UnWordLabelMapM DTL.Text where
   unWordLabelMapM = internalUnWordLabelMapM
 
-instance (UnWordLabelMapM a, UnWordLabelMapM b) =>
-         UnWordLabelMapM (a, b) where
+instance (UnWordLabelMapM a, UnWordLabelMapM b) => UnWordLabelMapM (a, b) where
   unWordLabelMapM = internalUnWordLabelMapM
 
 internalUnWordLabelMapM :: WordLabelMapM a -> a

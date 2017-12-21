@@ -39,9 +39,7 @@ data Req
                    Text
   deriving (Show, Eq)
 
-parseJSONElemAtIndex
-  :: FromJSON a
-  => Int -> V.Vector Value -> Parser a
+parseJSONElemAtIndex :: FromJSON a => Int -> V.Vector Value -> Parser a
 parseJSONElemAtIndex idx ary = parseJSON (V.unsafeIndex ary idx)
 
 instance FromRequest Req where
@@ -100,11 +98,11 @@ instance ToJSON Req where
   toJSON (Eth_getCodeReq addr blk) = toJSON (addr, blk)
 
 data Res
-  = Web3_clientVersionRes { clientVersion :: Text}
-  | Eth_blockNumberRes { blockNumber :: Text}
-  | Eth_getBlockByNumberRes { blockInfo :: Object}
-  | Eth_getTransactionReceiptRes { txReceipt :: Object}
-  | Eth_getCodeRes { code :: Text}
+  = Web3_clientVersionRes { clientVersion :: Text }
+  | Eth_blockNumberRes { blockNumber :: Text }
+  | Eth_getBlockByNumberRes { blockInfo :: Object }
+  | Eth_getTransactionReceiptRes { txReceipt :: Object }
+  | Eth_getCodeRes { code :: Text }
   deriving (Show, Eq)
 
 instance FromResponse Res where
@@ -126,9 +124,7 @@ instance ToJSON Res where
   toJSON (Eth_getTransactionReceiptRes result) = toJSON result
   toJSON (Eth_getCodeRes codeRes) = toJSON codeRes
 
-callJsonRpc
-  :: (MonadIO m, MonadCatch m)
-  => String -> Int -> Req -> m Res
+callJsonRpc :: (MonadIO m, MonadCatch m) => String -> Int -> Req -> m Res
 callJsonRpc server port req = do
   initReq <- NHC.parseUrl ("http://" ++ server ++ ":" ++ show port)
   let requ =
@@ -148,30 +144,24 @@ callJsonRpc server port req = do
         Nothing -> error $ "couldn't parse json-rpc response: " ++ show resp
     Nothing -> error $ "couldn't parse json: " ++ show resp
 
-web3ClientVersion
-  :: (MonadIO m, MonadCatch m)
-  => String -> Int -> m Text
+web3ClientVersion :: (MonadIO m, MonadCatch m) => String -> Int -> m Text
 web3ClientVersion server port =
   clientVersion <$> callJsonRpc server port Web3_clientVersionReq
 
-ethBlockNumber
-  :: (MonadIO m, MonadCatch m)
-  => String -> Int -> m Text
+ethBlockNumber :: (MonadIO m, MonadCatch m) => String -> Int -> m Text
 ethBlockNumber server port =
   blockNumber <$> callJsonRpc server port Eth_blockNumberReq
 
-ethGetTransactionsByBlockNumber
-  :: (MonadIO m, MonadCatch m)
-  => String -> Int -> Text -> m [Text]
+ethGetTransactionsByBlockNumber ::
+     (MonadIO m, MonadCatch m) => String -> Int -> Text -> m [Text]
 ethGetTransactionsByBlockNumber server port blk =
   (Prelude.map (\(String s) -> s) . (\(Array a) -> DF.toList a) <$>
    lookupDefault (Array $ V.singleton (String "error")) "transactions") .
   blockInfo <$>
   callJsonRpc server port (Eth_getBlockByNumberReq blk False)
 
-ethGetContractAddrByTxHash
-  :: (MonadIO m, MonadCatch m)
-  => String -> Int -> Text -> m (Maybe Text)
+ethGetContractAddrByTxHash ::
+     (MonadIO m, MonadCatch m) => String -> Int -> Text -> m (Maybe Text)
 ethGetContractAddrByTxHash server port txhash =
   ((\ares ->
       case ares of
@@ -185,15 +175,11 @@ ethGetContractAddrByTxHash server port txhash =
   txReceipt <$>
   callJsonRpc server port (Eth_getTransactionReceiptReq txhash)
 
-ethGetCode
-  :: (MonadIO m, MonadCatch m)
-  => String -> Int -> Text -> m Text
+ethGetCode :: (MonadIO m, MonadCatch m) => String -> Int -> Text -> m Text
 ethGetCode server port address =
   code <$> callJsonRpc server port (Eth_getCodeReq address "latest")
 
-getCode
-  :: (MonadIO m, MonadCatch m)
-  => String -> Int -> Text -> m Code
+getCode :: (MonadIO m, MonadCatch m) => String -> Int -> Text -> m Code
 getCode server port address = do
   textCode <- ethGetCode server port address
   return $

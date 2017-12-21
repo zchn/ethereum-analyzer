@@ -9,8 +9,8 @@ module Ethereum.Analyzer.Solidity.Hoople
 import Protolude hiding ((<*>), show)
 
 import Compiler.Hoopl
-import GHC.Show (Show(..))
 import Ethereum.Analyzer.Solidity.Simple
+import GHC.Show (Show(..))
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
 import qualified Text.PrettyPrint.Leijen.Text as PP
 
@@ -35,25 +35,20 @@ instance Pretty Label where
   pretty = textStrict . toS . show
 
 data HStatement e x where
-        CoSt :: Label -> HStatement C O
-        OoSt :: Statement -> HStatement O O
-        OcSt :: Statement -> [Label] -> HStatement O C
-        OcJump :: Label -> HStatement O C
+  CoSt :: Label -> HStatement C O
+  OoSt :: Statement -> HStatement O O
+  OcSt :: Statement -> [Label] -> HStatement O C
+  OcJump :: Label -> HStatement O C
 
 instance Pretty (HStatement e x) where
   pretty (CoSt l) = pretty l
   pretty (OoSt st) = pretty st
-  pretty (OcSt (StIf lval _ _) ll) = textStrict "OcIf"
-    <+> pretty lval
-    <+> textStrict "->"
-    <+> prettyList ll
-  pretty (OcSt (StLoop _) ll) = textStrict "OcLoop"
-    <+> textStrict "->"
-    <+> prettyList ll
+  pretty (OcSt (StIf lval _ _) ll) =
+    textStrict "OcIf" <+> pretty lval <+> textStrict "->" <+> prettyList ll
+  pretty (OcSt (StLoop _) ll) =
+    textStrict "OcLoop" <+> textStrict "->" <+> prettyList ll
   pretty (OcSt st ll) = pretty st <+> textStrict "->" <+> prettyList ll
-  pretty (OcJump l) = textStrict "jump"
-    <+> textStrict "->"
-    <+> pretty l
+  pretty (OcJump l) = textStrict "jump" <+> textStrict "->" <+> pretty l
 
 instance Show (HStatement e x) where
   show = show . pretty
@@ -67,16 +62,12 @@ instance HooplNode HStatement where
   mkBranchNode = OcJump
   mkLabelNode = CoSt
 
-hoopleOf
-  :: UniqueMonad m
-  => Contract -> m HContract
+hoopleOf :: UniqueMonad m => Contract -> m HContract
 hoopleOf Contract {cName = name, cStateVars = vars, cFunctions = funs} = do
   hFuns <- mapM hfunOf funs
   return $ HContract name vars hFuns
 
-hfunOf
-  :: UniqueMonad m
-  => FunDefinition -> m HFunDefinition
+hfunOf :: UniqueMonad m => FunDefinition -> m HFunDefinition
 hfunOf FunDefinition { fName = name
                      , fParams = params
                      , fReturns = returns
@@ -89,9 +80,7 @@ hfunOf FunDefinition { fName = name
   cfg <- graphOfAGraph acfg
   return $ HFunDefinition name params returns cfg
 
-graphOf
-  :: UniqueMonad m
-  => [Statement] -> Label -> Label -> m ACFG
+graphOf :: UniqueMonad m => [Statement] -> Label -> Label -> m ACFG
 graphOf [] exitL _ = return $ mkBranch exitL
 graphOf (h:t) exitL loopL = do
   postDom <- graphOf t exitL loopL

@@ -36,7 +36,7 @@ analyzeFlags =
   textOption
     (long "workDir" <> value "work" <> metavar "PATH" <>
      help "Path to the work directory (for outputs and intermediate files).") <*>
- switch (long "debug" <> help "Whether to print debug info")
+  switch (long "debug" <> help "Whether to print debug info")
 
 analyzeMain :: IO ()
 analyzeMain = analyze =<< execParser opts
@@ -52,7 +52,8 @@ analyzeMain = analyze =<< execParser opts
 analyze :: AnalyzeFlags -> IO ()
 analyze flags@AnalyzeFlags { astJson = theAstJson
                            , workDir = theWorkDir
-                           , debug = _debug} = do
+                           , debug = _debug
+                           } = do
   tmpDirname <- getTmpDirname
   let sessionDir = toS theWorkDir </> toS tmpDirname
   createDirectoryIfMissing True sessionDir
@@ -63,8 +64,7 @@ analyze flags@AnalyzeFlags { astJson = theAstJson
       else readFile $ toS theAstJson
   case decodeContracts content of
     Right contracts -> do
-      savePrettyContracts contracts (toS $
-                                     sessionDir </> "contracts.ir")
+      savePrettyContracts contracts (toS $ sessionDir </> "contracts.ir")
       when _debug $ pprintContracts contracts
       saveCfgs contracts (toS $ sessionDir </> "cfgs")
       putText "Findings: \n"
@@ -75,13 +75,12 @@ analyze flags@AnalyzeFlags { astJson = theAstJson
 getTmpDirname :: IO Text
 getTmpDirname = do
   t <- getCurrentTime
-  let formated = formatTime defaultTimeLocale (
-        iso8601DateFormat (Just "%H:%M:%S")) t
+  let formated =
+        formatTime defaultTimeLocale (iso8601DateFormat (Just "%H:%M:%S")) t
   return $ toS formated
 
 savePrettyContracts :: [Contract] -> Text -> IO ()
-savePrettyContracts cs filepath =
-  writeFile (toS filepath) (prettyContracts cs)
+savePrettyContracts cs filepath = writeFile (toS filepath) (prettyContracts cs)
 
 saveCfgs :: [Contract] -> Text -> IO ()
 saveCfgs cs dirpath = do
@@ -89,10 +88,13 @@ saveCfgs cs dirpath = do
   let hcs = runSimpleUniqueMonad $ mapM hoopleOf cs
   _ <- mapM writeContractCfgs hcs
   return ()
-  where writeContractCfgs hc = do
-          _ <- mapM (writeFunCfgs (toS dirpath </> toS (hcName hc))) (hcFunctions hc)
-          return ()
-        writeFunCfgs contractPrefix hf = do
-          let dot = toDotText (hfCFG hf)
-          writeFile (contractPrefix <.> (toS $ unIdfr $ hfName hf)
-                     <.> "CFG" <.> ".dot") dot
+  where
+    writeContractCfgs hc = do
+      _ <-
+        mapM (writeFunCfgs (toS dirpath </> toS (hcName hc))) (hcFunctions hc)
+      return ()
+    writeFunCfgs contractPrefix hf = do
+      let dot = toDotText (hfCFG hf)
+      writeFile
+        (contractPrefix <.> (toS $ unIdfr $ hfName hf) <.> "CFG" <.> ".dot")
+        dot

@@ -1,6 +1,6 @@
 module Blockchain.VM.Opcodes where
 
-import Prelude hiding (LT, GT, EQ)
+import Prelude hiding (EQ, GT, LT)
 
 import Data.Binary
 import qualified Data.ByteString as B

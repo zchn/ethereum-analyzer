@@ -23,23 +23,23 @@ module Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
   ) where
 
 import Control.DeepSeq (NFData, rnf)
-import Control.Monad (unless, guard)
+import Control.Monad (guard, unless)
 import Data.Aeson
-       (Value(String), FromJSON, ToJSON, parseJSON, toJSON, withText)
+       (FromJSON, ToJSON, Value(String), parseJSON, toJSON, withText)
 import Data.Binary (Binary, get, put)
 import Data.Binary.Get
-       (getWord64be, getWord32be, getWord8, getByteString, Get)
+       (Get, getByteString, getWord32be, getWord64be, getWord8)
 import Data.Binary.Put
-       (putWord64be, putWord32be, putWord8, putByteString)
+       (putByteString, putWord32be, putWord64be, putWord8)
 
 -- Useful type aliases
 -- Data types
 -- Functions
 import Data.Bits
-       (Bits, (.&.), (.|.), xor, complement, shift, shiftL, shiftR, bit,
-        testBit, bitSize, popCount, isSigned)
+       (Bits, (.&.), (.|.), bit, bitSize, complement, isSigned, popCount,
+        shift, shiftL, shiftR, testBit, xor)
 import qualified Data.ByteString as BS (head, length, reverse)
-import Data.Ratio (numerator, denominator)
+import Data.Ratio (denominator, numerator)
 import qualified Data.Text as T (pack, unpack)
 
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.Curve
@@ -139,8 +139,7 @@ instance BigWordMod ModN where
   rFromInteger i = BigWord $ i `mod` curveN
   rBitSize _ = 256
 
-instance BigWordMod n =>
-         Num (BigWord n) where
+instance BigWordMod n => Num (BigWord n) where
   fromInteger = rFromInteger
   (BigWord i1) + (BigWord i2) = fromInteger $ i1 + i2
   (BigWord i1) * (BigWord i2) = fromInteger $ i1 * i2
@@ -148,8 +147,7 @@ instance BigWordMod n =>
   abs r = r
   signum (BigWord i) = fromInteger $ signum i
 
-instance BigWordMod n =>
-         Bits (BigWord n) where
+instance BigWordMod n => Bits (BigWord n) where
   (BigWord i1) .&. (BigWord i2) = fromInteger $ i1 .&. i2
   (BigWord i1) .|. (BigWord i2) = fromInteger $ i1 .|. i2
   (BigWord i1) `xor` (BigWord i2) = fromInteger $ i1 `xor` i2
@@ -161,17 +159,14 @@ instance BigWordMod n =>
   popCount (BigWord i) = popCount i
   isSigned _ = False
 
-instance BigWordMod n =>
-         Bounded (BigWord n) where
+instance BigWordMod n => Bounded (BigWord n) where
   minBound = 0
   maxBound = fromInteger (-1)
 
-instance BigWordMod n =>
-         Real (BigWord n) where
+instance BigWordMod n => Real (BigWord n) where
   toRational (BigWord i) = toRational i
 
-instance BigWordMod n =>
-         Enum (BigWord n) where
+instance BigWordMod n => Enum (BigWord n) where
   succ r@(BigWord i)
     | r == maxBound = error "BigWord: tried to take succ of maxBound"
     | otherwise = fromInteger $ succ i
@@ -184,18 +179,13 @@ instance BigWordMod n =>
     | otherwise = error "BigWord: toEnum is outside of bounds"
     where
       r = fromInteger $ toEnum i
-      minFrom
-        :: BigWordMod a
-        => BigWord a -> BigWord a
+      minFrom :: BigWordMod a => BigWord a -> BigWord a
       minFrom _ = minBound
-      maxFrom
-        :: BigWordMod a
-        => BigWord a -> BigWord a
+      maxFrom :: BigWordMod a => BigWord a -> BigWord a
       maxFrom _ = maxBound
   fromEnum (BigWord i) = fromEnum i
 
-instance BigWordMod n =>
-         Integral (BigWord n) where
+instance BigWordMod n => Integral (BigWord n) where
   (BigWord i1) `quot` (BigWord i2) = fromInteger $ i1 `quot` i2
   (BigWord i1) `rem` (BigWord i2) = fromInteger $ i1 `rem` i2
   (BigWord i1) `div` (BigWord i2) = fromInteger $ i1 `div` i2

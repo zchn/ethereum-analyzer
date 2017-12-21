@@ -41,9 +41,10 @@ data Contract = Contract
 instance Pretty Contract where
   pretty Contract { cName = _name
                   , cStateVars = _statevars
-                  , cFunctions = _functions } =
-    textStrict _name <+> braces ( vsep $ map pretty _statevars
-                          <> map pretty _functions)
+                  , cFunctions = _functions
+                  } =
+    textStrict _name <+>
+    braces (vsep $ map pretty _statevars <> map pretty _functions)
 
 data VarDecl = VarDecl
   { vName :: Idfr
@@ -51,13 +52,11 @@ data VarDecl = VarDecl
   } deriving (Eq, Generic, Show)
 
 instance Pretty VarDecl where
-  pretty VarDecl { vName = _name
-                 , vType = _type } =
-    pretty _type <+> pretty _name
+  pretty VarDecl {vName = _name, vType = _type} = pretty _type <+> pretty _name
 
-newtype Idfr =
-  Idfr { unIdfr :: Text }
-  deriving (Eq, Generic, Show)
+newtype Idfr = Idfr
+  { unIdfr :: Text
+  } deriving (Eq, Generic, Show)
 
 instance Pretty Idfr where
   pretty = textStrict . unIdfr
@@ -65,9 +64,9 @@ instance Pretty Idfr where
 data LValue
   = JustId Idfr
   | Index { iArray :: LValue
-         ,  iIndex :: LValue}
+          , iIndex :: LValue }
   | Member { mObj :: LValue
-          ,  mField :: Idfr}
+           , mField :: Idfr }
   | Tuple [LValue]
   deriving (Eq, Generic, Show)
 
@@ -106,11 +105,11 @@ instance Pretty FunDefinition where
   pretty FunDefinition { fName = _name
                        , fParams = _params
                        , fReturns = _returns
-                       , fBody = _body } =
-    pretty _name
-    <> tupled (map pretty _params)
-    <+> textStrict "returns" <> tupled (map pretty _returns)
-    <+> semiBraces (map pretty _body)
+                       , fBody = _body
+                       } =
+    pretty _name <> tupled (map pretty _params) <+>
+    textStrict "returns" <> tupled (map pretty _returns) <+>
+    semiBraces (map pretty _body)
 
 data Statement
   = StLocalVarDecl VarDecl
@@ -130,21 +129,17 @@ data Statement
 
 instance Pretty Statement where
   pretty (StLocalVarDecl vd) = pretty vd
-  pretty (StAssign lv exp) = pretty lv
-    <+> textStrict "=" <+> pretty exp
-  pretty (StIf cond thenB elseB) = textStrict "if"
-    <+> parens (pretty cond)
-    <+> semiBraces (map pretty thenB)
-    <+> textStrict "else"
-    <+> semiBraces (map pretty elseB)
-  pretty (StLoop loopB) = textStrict "loop"
-    <+> semiBraces (map pretty loopB)
+  pretty (StAssign lv exp) = pretty lv <+> textStrict "=" <+> pretty exp
+  pretty (StIf cond thenB elseB) =
+    textStrict "if" <+>
+    parens (pretty cond) <+>
+    semiBraces (map pretty thenB) <+>
+    textStrict "else" <+> semiBraces (map pretty elseB)
+  pretty (StLoop loopB) = textStrict "loop" <+> semiBraces (map pretty loopB)
   pretty (StBreak) = textStrict "break"
   pretty (StContinue) = textStrict "continue"
-  pretty (StReturn rvals) = textStrict "return"
-    <+> tupled (map pretty rvals)
-  pretty (StDelete v) = textStrict "delete"
-    <+> pretty v
+  pretty (StReturn rvals) = textStrict "return" <+> tupled (map pretty rvals)
+  pretty (StDelete v) = textStrict "delete" <+> pretty v
   pretty (StTodo t) = textStrict "todo" <+> textStrict t
   pretty (StThrow) = textStrict "throw"
 
@@ -167,9 +162,7 @@ instance Pretty Expression where
   pretty (ExpLval lv) = pretty lv
   pretty (ExpCall f lvals) = pretty f <> tupled (map pretty lvals)
 
-s2sContracts
-  :: UniqueMonad m
-  => SolNode -> m [Contract]
+s2sContracts :: UniqueMonad m => SolNode -> m [Contract]
 s2sContracts SolNode {_AST = Just n} = s2sContracts n
 s2sContracts SolNode {name = Just "SourceUnit", children = Just sChildren} =
   concat <$> mapM s2sContracts sChildren
@@ -180,9 +173,7 @@ s2sContracts SolNode { name = Just "ContractDefinition"
   (vars, funs) <- s2sVarsFuns vChildren
   return [Contract cName vars funs]
   where
-    s2sVarsFuns
-      :: UniqueMonad m
-      => [SolNode] -> m ([VarDecl], [FunDefinition])
+    s2sVarsFuns :: UniqueMonad m => [SolNode] -> m ([VarDecl], [FunDefinition])
     s2sVarsFuns [] = return ([], [])
     s2sVarsFuns (h:t) = do
       (vars', funs') <- s2sVarsFuns t
@@ -196,20 +187,21 @@ s2sVarDecls SolNode { name = Just "VariableDeclaration"
                     , attributes = Just SolNode { name = Just vName
                                                 , _type = Just vType
                                                 }
-                    } = [VarDecl (Idfr vName) (
-                        case vType of
-                          "bool" -> Bool
-                          "address" -> Address
-                          "int256" -> Int256
-                          "uint256" -> Uint256
-                          _ -> Unknown vType)]
+                    } =
+  [ VarDecl
+      (Idfr vName)
+      (case vType of
+         "bool" -> Bool
+         "address" -> Address
+         "int256" -> Int256
+         "uint256" -> Uint256
+         _ -> Unknown vType)
+  ]
 s2sVarDecls SolNode {name = Just "ParameterList", children = Just pChildren} =
   concatMap s2sVarDecls pChildren
 s2sVarDecls _ = []
 
-s2sFuns
-  :: UniqueMonad m
-  => SolNode -> m [FunDefinition]
+s2sFuns :: UniqueMonad m => SolNode -> m [FunDefinition]
 s2sFuns SolNode { name = Just "FunctionDefinition"
                 , children = Just [params, returns, body]
                 , attributes = Just SolNode {name = Just fName}
@@ -224,9 +216,7 @@ s2sFuns SolNode { name = Just "FunctionDefinition"
     ]
 s2sFuns _ = return []
 
-s2sStatements
-  :: UniqueMonad m
-  => SolNode -> m [Statement]
+s2sStatements :: UniqueMonad m => SolNode -> m [Statement]
 s2sStatements SolNode {name = Just "Block", children = Just sChildren} =
   concat <$> mapM s2sStatements sChildren
 s2sStatements SolNode { name = Just "ExpressionStatement"
@@ -270,8 +260,11 @@ s2sStatements e@SolNode { name = Just "UnaryOperation"
   (preOp1, lvalOp1) <- s2sLval op1
   newVar <- uniqueVar
   let newidfr = JustId $ Idfr newVar
-  return $ preOp1 <>
-    [StAssign newidfr $ ExpLiteral "1", StAssign lvalOp1 $ ExpBin "+" lvalOp1 newidfr]
+  return $
+    preOp1 <>
+    [ StAssign newidfr $ ExpLiteral "1"
+    , StAssign lvalOp1 $ ExpBin "+" lvalOp1 newidfr
+    ]
 s2sStatements SolNode { name = Just "UnaryOperation"
                       , children = Just [SolNode { name = Just "Identifier"
                                                  , attributes = Just SolNode {value = Just idName}
@@ -290,8 +283,11 @@ s2sStatements e@SolNode { name = Just "UnaryOperation"
   (preOp1, lvalOp1) <- s2sLval op1
   newVar <- uniqueVar
   let newidfr = JustId $ Idfr newVar
-  return $ preOp1 <>
-    [StAssign newidfr $ ExpLiteral "1", StAssign lvalOp1 $ ExpBin "-" lvalOp1 newidfr]
+  return $
+    preOp1 <>
+    [ StAssign newidfr $ ExpLiteral "1"
+    , StAssign lvalOp1 $ ExpBin "-" lvalOp1 newidfr
+    ]
 s2sStatements SolNode { name = Just "IfStatement"
                       , children = Just [cond, thenBr]
                       } = do
@@ -345,12 +341,11 @@ s2sStatements SolNode {name = Just "VariableDeclarationStatement"}
   -- TODO(zchn): Handle this properly.
  = return []
 s2sStatements SolNode {name = Just "Throw"} = return [StThrow]
-s2sStatements SolNode {name = Just "InlineAssembly"} = return [StTodo "InlineAssembly"]
+s2sStatements SolNode {name = Just "InlineAssembly"} =
+  return [StTodo "InlineAssembly"]
 s2sStatements s = unimplementedPanic s
 
-s2sLval
-  :: UniqueMonad m
-  => SolNode -> m ([Statement], LValue)
+s2sLval :: UniqueMonad m => SolNode -> m ([Statement], LValue)
 s2sLval SolNode { name = Just "Identifier"
                 , attributes = Just SolNode {value = Just idName}
                 } = return ([], JustId (Idfr idName))
@@ -367,9 +362,8 @@ s2sLval n@SolNode {name = Just "IndexAccess", children = Just (c1:ctail)} = do
   (presub, simpleLvalSub) <- handleSubscription simpleLval ctail
   return (presub <> prelval, Index simpleLval simpleLvalSub)
   where
-    handleSubscription
-      :: UniqueMonad m
-      => LValue -> [SolNode] -> m ([Statement], LValue)
+    handleSubscription ::
+         UniqueMonad m => LValue -> [SolNode] -> m ([Statement], LValue)
     handleSubscription lv [] = unexpectedPanic lv
     handleSubscription lv [subNode] = do
       (presub', simpleLvalSub') <- s2sLval subNode
@@ -455,9 +449,7 @@ s2sLval SolNode { name = Just "NewExpression"
   return ([], JustId $ Idfr normalized)
 s2sLval n = unimplementedPanic n {children = Nothing}
 
-uniqueVar
-  :: UniqueMonad m
-  => m Text
+uniqueVar :: UniqueMonad m => m Text
 uniqueVar = ("v" <>) . toS . show <$> freshUnique
 
 -- lastLvalOf :: [Statement] -> LValue

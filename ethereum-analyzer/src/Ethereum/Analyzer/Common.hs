@@ -19,21 +19,16 @@ fromRight :: b -> Either a b -> b
 fromRight _ (Right v) = v
 fromRight v (Left _) = v
 
-s2t4Either
-  :: StringConv s Text
-  => Either s a -> Either Text a
+s2t4Either :: StringConv s Text => Either s a -> Either Text a
 s2t4Either (Left s) = Left $ toS s
 s2t4Either (Right r) = Right r
 
-unexpectedPanic
-  :: Show a
-  => a -> b
+unexpectedPanic :: Show a => a -> b
 unexpectedPanic n = panic . toS $ "unexpected: " <> show n <> show callStack
 
-unimplementedPanic
-  :: Show a
-  => a -> b
-unimplementedPanic n = panic . toS $ "unimplemented: " <> show n <> show callStack
+unimplementedPanic :: Show a => a -> b
+unimplementedPanic n =
+  panic . toS $ "unimplemented: " <> show n <> show callStack
 
 varBytesToWord256 :: [Word8] -> Word256
 varBytesToWord256 w8l =

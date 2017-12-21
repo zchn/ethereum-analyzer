@@ -20,8 +20,8 @@ dbgGetSimpleSol :: Text -> Either Text [Contract]
 dbgGetSimpleSol = decodeContracts
 
 pprintSimpleSol :: Text -> IO ()
-pprintSimpleSol ast = putText $ _mergeEither $
-  (toS . prettyContracts) <$> (decodeContracts ast)
+pprintSimpleSol ast =
+  putText $ _mergeEither $ (toS . prettyContracts) <$> (decodeContracts ast)
 
 pprintContracts :: [Contract] -> IO ()
 pprintContracts = putDoc . pretty

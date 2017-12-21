@@ -21,8 +21,8 @@ import GHC.Show
 
 type StackTopFact = WithTop (Set Word256)
 
-joinJumpTargets
-  :: Label
+joinJumpTargets ::
+     Label
   -> OldFact (Set Word256)
   -> NewFact (Set Word256)
   -> (ChangeFlag, Set Word256)
@@ -31,8 +31,8 @@ joinJumpTargets _ (OldFact oldF) (NewFact newF) =
     then (NoChange, oldF)
     else (SomeChange, oldF `DS.union` newF)
 
-joinStackTopFact
-  :: Label
+joinStackTopFact ::
+     Label
   -> OldFact StackTopFact
   -> NewFact StackTopFact
   -> (ChangeFlag, StackTopFact)
@@ -95,17 +95,20 @@ opGUnit oc@HpEnd {} = gUnitOC $ BlockOC BNil oc
 cfgAugmentRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackTopFact
 cfgAugmentRewrite = mkFRewrite3 coR ooR ocR
   where
-    coR :: HplOp C O
-        -> StackTopFact
-        -> WordLabelMapFuelM (Maybe (Graph HplOp C O))
+    coR ::
+         HplOp C O
+      -> StackTopFact
+      -> WordLabelMapFuelM (Maybe (Graph HplOp C O))
     coR op _ = return $ Just $ opGUnit op
-    ooR :: HplOp O O
-        -> StackTopFact
-        -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
+    ooR ::
+         HplOp O O
+      -> StackTopFact
+      -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
     ooR op _ = return $ Just $ opGUnit op
-    ocR :: HplOp O C
-        -> StackTopFact
-        -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
+    ocR ::
+         HplOp O C
+      -> StackTopFact
+      -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
     ocR op@HpJump {} _ = return (Just (opGUnit op))
     ocR op@HpEnd {} _ = return (Just (opGUnit op))
     ocR op@(OcOp (loc, ope) ll) f =
