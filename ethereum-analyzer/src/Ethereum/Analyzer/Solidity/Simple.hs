@@ -75,7 +75,7 @@ instance Pretty LValue where
   pretty (JustId v) = pretty v
   pretty (Index a i) = pretty a <> brackets (pretty i)
   pretty (Member o f) = pretty o <> textStrict "." <> pretty f
-  pretty (Tuple l) = prettyList l
+  pretty (Tuple l) = tupled (map pretty l)
 
 data VarType
   = Int256
@@ -108,8 +108,8 @@ instance Pretty FunDefinition where
                        , fReturns = _returns
                        , fBody = _body } =
     pretty _name
-    <> prettyList _params
-    <+> textStrict "returns" <> prettyList _returns
+    <> tupled (map pretty _params)
+    <+> textStrict "returns" <> tupled (map pretty _returns)
     <+> semiBraces (map pretty _body)
 
 data Statement
@@ -142,7 +142,7 @@ instance Pretty Statement where
   pretty (StBreak) = textStrict "break"
   pretty (StContinue) = textStrict "continue"
   pretty (StReturn rvals) = textStrict "return"
-    <+> prettyList rvals
+    <+> tupled (map pretty rvals)
   pretty (StDelete v) = textStrict "delete"
     <+> pretty v
   pretty (StTodo t) = textStrict "todo" <+> textStrict t
@@ -199,6 +199,9 @@ s2sVarDecls SolNode { name = Just "VariableDeclaration"
                     } = [VarDecl (Idfr vName) (
                         case vType of
                           "bool" -> Bool
+                          "address" -> Address
+                          "int256" -> Int256
+                          "uint256" -> Uint256
                           _ -> Unknown vType)]
 s2sVarDecls SolNode {name = Just "ParameterList", children = Just pChildren} =
   concatMap s2sVarDecls pChildren
