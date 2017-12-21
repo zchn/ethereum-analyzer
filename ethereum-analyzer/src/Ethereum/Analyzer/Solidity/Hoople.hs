@@ -11,6 +11,8 @@ import Protolude hiding ((<*>), show)
 import Compiler.Hoopl
 import GHC.Show (Show(..))
 import Ethereum.Analyzer.Solidity.Simple
+import Text.PrettyPrint.Leijen.Text hiding ((<$>))
+import qualified Text.PrettyPrint.Leijen.Text as PP
 
 data HContract = HContract
   { hcName :: Text
@@ -29,19 +31,32 @@ data HFunDefinition = HFunDefinition
   , hfCFG :: CFG
   }
 
+instance Pretty Label where
+  pretty = textStrict . toS . show
+
 data HStatement e x where
         CoSt :: Label -> HStatement C O
         OoSt :: Statement -> HStatement O O
         OcSt :: Statement -> [Label] -> HStatement O C
         OcJump :: Label -> HStatement O C
 
+instance Pretty (HStatement e x) where
+  pretty (CoSt l) = pretty l
+  pretty (OoSt st) = pretty st
+  pretty (OcSt (StIf lval _ _) ll) = textStrict "OcIf"
+    <+> pretty lval
+    <+> textStrict "->"
+    <+> prettyList ll
+  pretty (OcSt (StLoop _) ll) = textStrict "OcLoop"
+    <+> textStrict "->"
+    <+> prettyList ll
+  pretty (OcSt st ll) = pretty st <+> textStrict "->" <+> prettyList ll
+  pretty (OcJump l) = textStrict "jump"
+    <+> textStrict "->"
+    <+> pretty l
+
 instance Show (HStatement e x) where
-  show (CoSt l) = show l
-  show (OoSt st) = show st
-  show (OcSt (StIf lval _ _) ll) = "if " <> show lval <> " -> " <> show ll
-  show (OcSt (StLoop _) ll) = "loop -> " <> show ll
-  show (OcSt st ll) = show st <> " -> " <> show ll
-  show (OcJump l) = "jump -> " <> show l
+  show = show . pretty
 
 instance NonLocal HStatement where
   entryLabel (CoSt lbl) = lbl

@@ -55,7 +55,9 @@ visParams
   => GraphvizParams p (Block n C C) el () (Block n C C)
 visParams =
   nonClusteredParams
-  {fmtNode = \(_, nl) -> [textLabel (DTL.replace "\n" "\\l" $ toS $ show nl), shape BoxShape]}
+  {fmtNode = \(_, nl) -> [
+      textLabel (DTL.replace "\n" "\\l" $ toS $ show nl),
+      shape BoxShape]}
 
 toDotGraph
   :: (Show (Block n C C))

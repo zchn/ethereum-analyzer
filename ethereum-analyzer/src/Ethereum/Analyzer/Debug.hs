@@ -5,19 +5,26 @@ module Ethereum.Analyzer.Debug
   , dbgGetSimpleSol
   ) where
 
-import Protolude
+import Protolude hiding (show)
+
+import GHC.Show (Show(..))
 
 import Ethereum.Analyzer.Solidity
-import qualified Text.PrettyPrint.GenericPretty as GP
+import Text.PrettyPrint.Leijen.Text as PP hiding ((<$>))
+
+_mergeEither :: Either t t -> t
+_mergeEither (Right v) = v
+_mergeEither (Left v) = v
 
 dbgGetSimpleSol :: Text -> Either Text [Contract]
 dbgGetSimpleSol = decodeContracts
 
 pprintSimpleSol :: Text -> IO ()
-pprintSimpleSol = GP.pp . dbgGetSimpleSol
+pprintSimpleSol ast = putText $ _mergeEither $
+  (toS . prettyContracts) <$> (decodeContracts ast)
 
 pprintContracts :: [Contract] -> IO ()
-pprintContracts = GP.pp
+pprintContracts = putDoc . pretty
 
 prettyContracts :: [Contract] -> Text
-prettyContracts = toS . GP.pretty
+prettyContracts = toS . show . pretty

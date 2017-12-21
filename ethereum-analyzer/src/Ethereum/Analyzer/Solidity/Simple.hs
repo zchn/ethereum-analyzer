@@ -21,8 +21,8 @@ import Compiler.Hoopl
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity.AstJson
 import GHC.Show (Show(..))
-import qualified Text.PrettyPrint as PP
-import qualified Text.PrettyPrint.GenericPretty as GP
+import Text.PrettyPrint.Leijen.Text hiding ((<$>))
+import qualified Text.PrettyPrint.Leijen.Text as PP
 
 decodeContracts :: Text -> Either Text [Contract]
 decodeContracts astJsonText = do
@@ -35,16 +35,31 @@ data Contract = Contract
   { cName :: Text
   , cStateVars :: [VarDecl]
   , cFunctions :: [FunDefinition]
-  } deriving (Eq, Generic, Show, GP.Out)
+  } deriving (Eq, Generic, Show)
+
+instance Pretty Contract where
+  pretty Contract { cName = _name
+                  , cStateVars = _statevars
+                  , cFunctions = _functions } =
+    textStrict _name <+> braces ( prettyList _statevars
+                          PP.<$> prettyList _functions )
 
 data VarDecl = VarDecl
   { vName :: Idfr
   , vType :: VarType
-  } deriving (Eq, Generic, Show, GP.Out)
+  } deriving (Eq, Generic, Show)
+
+instance Pretty VarDecl where
+  pretty VarDecl { vName = _name
+                 , vType = _type } =
+    pretty _type <+> pretty _name
 
 newtype Idfr =
   Idfr { unIdfr :: Text }
-  deriving (Eq, Generic, Show, GP.Out)
+  deriving (Eq, Generic, Show)
+
+instance Pretty Idfr where
+  pretty = textStrict . unIdfr
 
 data LValue
   = JustId Idfr
@@ -53,23 +68,48 @@ data LValue
   | Member { mObj :: LValue
           ,  mField :: Idfr}
   | Tuple [LValue]
-  deriving (Eq, Generic, Show, GP.Out)
+  deriving (Eq, Generic, Show)
+
+instance Pretty LValue where
+  pretty (JustId v) = pretty v
+  pretty (Index a i) = pretty a <> brackets (pretty i)
+  pretty (Member o f) = pretty o <> textStrict "." <> pretty f
+  pretty (Tuple l) = prettyList l
 
 data VarType
   = Int256
   | Uint256
+  | Bool
   | Address
   | Mapping VarType
             VarType
   | Unknown Text
-  deriving (Eq, Generic, Show, GP.Out)
+  deriving (Eq, Generic, Show)
+
+instance Pretty VarType where
+  pretty Int256 = textStrict "int256"
+  pretty Uint256 = textStrict "uint256"
+  pretty Bool = textStrict "bool"
+  pretty Address = textStrict "address"
+  pretty (Mapping k v) = pretty k <> textStrict "->" <> pretty v
+  pretty (Unknown t) = textStrict ("unknown_" <> t)
 
 data FunDefinition = FunDefinition
   { fName :: Idfr
   , fParams :: [VarDecl]
   , fReturns :: [VarDecl]
   , fBody :: [Statement]
-  } deriving (Eq, Generic, Show, GP.Out)
+  } deriving (Eq, Generic, Show)
+
+instance Pretty FunDefinition where
+  pretty FunDefinition { fName = _name
+                       , fParams = _params
+                       , fReturns = _returns
+                       , fBody = _body } =
+    pretty _name
+    <> prettyList _params
+    <+> textStrict "returns" <> prettyList _returns
+    <+> semiBraces (map pretty _body)
 
 data Statement
   = StLocalVarDecl VarDecl
@@ -85,7 +125,27 @@ data Statement
   | StDelete LValue
   | StTodo Text
   | StThrow
-  deriving (Eq, Generic, Show, GP.Out)
+  deriving (Eq, Generic, Show)
+
+instance Pretty Statement where
+  pretty (StLocalVarDecl vd) = pretty vd
+  pretty (StAssign lv exp) = pretty lv
+    <+> textStrict "=" <+> pretty exp
+  pretty (StIf cond thenB elseB) = textStrict "if"
+    <+> parens (pretty cond)
+    <+> semiBraces (map pretty thenB)
+    <+> textStrict "else"
+    <+> semiBraces (map pretty elseB)
+  pretty (StLoop loopB) = textStrict "loop"
+    <+> semiBraces (map pretty loopB)
+  pretty (StBreak) = textStrict "break"
+  pretty (StContinue) = textStrict "continue"
+  pretty (StReturn rvals) = textStrict "return"
+    <+> prettyList rvals
+  pretty (StDelete v) = textStrict "delete"
+    <+> pretty v
+  pretty (StTodo t) = textStrict "todo" <+> textStrict t
+  pretty (StThrow) = textStrict "throw"
 
 data Expression
   = ExpUnary Text
@@ -97,13 +157,14 @@ data Expression
   | ExpLval LValue
   | ExpCall LValue
             [LValue]
-  deriving (Eq, Generic, Show, GP.Out)
+  deriving (Eq, Generic, Show)
 
-instance GP.Out Text where
-  doc = PP.quotes . PP.text . toS
-  docPrec _ = GP.doc
-
-instance GP.Out SolNode
+instance Pretty Expression where
+  pretty (ExpUnary op v) = textStrict op <> pretty v
+  pretty (ExpBin op v1 v2) = pretty v1 <> textStrict op <> pretty v2
+  pretty (ExpLiteral v) = pretty v
+  pretty (ExpLval lv) = pretty lv
+  pretty (ExpCall f lvals) = pretty f <> prettyList lvals
 
 s2sContracts
   :: UniqueMonad m
@@ -134,7 +195,10 @@ s2sVarDecls SolNode { name = Just "VariableDeclaration"
                     , attributes = Just SolNode { name = Just vName
                                                 , _type = Just vType
                                                 }
-                    } = [VarDecl (Idfr vName) (Unknown vType)]
+                    } = [VarDecl (Idfr vName) (
+                        case vType of
+                          "bool" -> Bool
+                          _ -> Unknown vType)]
 s2sVarDecls SolNode {name = Just "ParameterList", children = Just pChildren} =
   concatMap s2sVarDecls pChildren
 s2sVarDecls _ = []

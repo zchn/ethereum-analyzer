@@ -52,11 +52,11 @@ analyzeMain = analyze =<< execParser opts
 analyze :: AnalyzeFlags -> IO ()
 analyze flags@AnalyzeFlags { astJson = theAstJson
                            , workDir = theWorkDir
-                           , debug = debug} = do
+                           , debug = _debug} = do
   tmpDirname <- getTmpDirname
   let sessionDir = toS theWorkDir </> toS tmpDirname
   createDirectoryIfMissing True sessionDir
-  when debug $ putText $ show flags
+  when _debug $ putText $ show flags
   content <-
     if theAstJson == "" || theAstJson == "-"
       then getContents
@@ -65,7 +65,7 @@ analyze flags@AnalyzeFlags { astJson = theAstJson
     Right contracts -> do
       savePrettyContracts contracts (toS $
                                      sessionDir </> "contracts.ir")
-      when debug $ pprintContracts contracts
+      when _debug $ pprintContracts contracts
       saveCfgs contracts (toS $ sessionDir </> "cfgs")
       putText "Findings: \n"
       putText ("\n" `T.intercalate` concatMap findingsFor contracts)
@@ -87,10 +87,10 @@ saveCfgs :: [Contract] -> Text -> IO ()
 saveCfgs cs dirpath = do
   createDirectoryIfMissing True (toS dirpath)
   let hcs = runSimpleUniqueMonad $ mapM hoopleOf cs
-  mapM writeContractCfgs hcs
+  _ <- mapM writeContractCfgs hcs
   return ()
   where writeContractCfgs hc = do
-          mapM (writeFunCfgs (toS dirpath </> toS (hcName hc))) (hcFunctions hc)
+          _ <- mapM (writeFunCfgs (toS dirpath </> toS (hcName hc))) (hcFunctions hc)
           return ()
         writeFunCfgs contractPrefix hf = do
           let dot = toDotText (hfCFG hf)
