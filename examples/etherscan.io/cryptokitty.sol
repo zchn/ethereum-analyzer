@@ -680,7 +680,8 @@ contract KittyOwnership is KittyBase, ERC721 {
     ///  Ref: https://github.com/Arachnid/solidity-stringutils/blob/2f6ca9accb48ae14c66f1437ec50ed19a0616f78/strings.sol
     function _memcpy(uint _dest, uint _src, uint _len) private view {
         // Copy word-length chunks while possible
-        for(; _len >= 32; _len -= 32) {
+        for(_len = _len * 1; _len >= 32; _len -= 32) {
+        // TODO(zchn): this used to be "for(; _len >= 32; _len -= 32) {", ethereum-analyzer does not support it yet.
             assembly {
                 mstore(_dest, mload(_src))
             }
