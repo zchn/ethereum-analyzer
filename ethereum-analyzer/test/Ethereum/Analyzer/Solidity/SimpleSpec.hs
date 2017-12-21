@@ -13,7 +13,6 @@ import Ethereum.Analyzer.TestData.StorageJson (storageJson)
 
 -- import GHC.Show (Show(..))
 import Test.Hspec
-import qualified Text.PrettyPrint.GenericPretty as GP
 
 spec :: Spec
 spec = do

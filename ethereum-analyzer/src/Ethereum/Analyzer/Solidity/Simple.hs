@@ -42,8 +42,8 @@ instance Pretty Contract where
   pretty Contract { cName = _name
                   , cStateVars = _statevars
                   , cFunctions = _functions } =
-    textStrict _name <+> braces ( prettyList _statevars
-                          PP.<$> prettyList _functions )
+    textStrict _name <+> braces ( vsep $ map pretty _statevars
+                          <> map pretty _functions)
 
 data VarDecl = VarDecl
   { vName :: Idfr
@@ -165,7 +165,7 @@ instance Pretty Expression where
   pretty (ExpBin op v1 v2) = pretty v1 <> textStrict op <> pretty v2
   pretty (ExpLiteral v) = pretty v
   pretty (ExpLval lv) = pretty lv
-  pretty (ExpCall f lvals) = pretty f <> prettyList lvals
+  pretty (ExpCall f lvals) = pretty f <> tupled (map pretty lvals)
 
 s2sContracts
   :: UniqueMonad m
