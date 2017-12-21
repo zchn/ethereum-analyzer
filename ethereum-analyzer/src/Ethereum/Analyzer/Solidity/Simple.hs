@@ -18,6 +18,7 @@ module Ethereum.Analyzer.Solidity.Simple
 import Protolude hiding (show)
 
 import Compiler.Hoopl
+import Data.Text (replace)
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity.AstJson
 import GHC.Show (Show(..))
@@ -341,6 +342,7 @@ s2sStatements SolNode {name = Just "VariableDeclarationStatement"}
   -- TODO(zchn): Handle this properly.
  = return []
 s2sStatements SolNode {name = Just "Throw"} = return [StThrow]
+s2sStatements SolNode {name = Just "InlineAssembly"} = return [StTodo "InlineAssembly"]
 s2sStatements s = unimplementedPanic s
 
 s2sLval
@@ -443,6 +445,11 @@ s2sLval SolNode { name = Just "TupleExpression"
   let preArgs = concatMap fst preAndlvals -- TODO(zchn): reverse?
   let lvalArgs = map snd preAndlvals
   return (preArgs, Tuple lvalArgs)
+s2sLval SolNode { name = Just "NewExpression"
+                , attributes = Just SolNode {_type = Just t}
+                } = do
+  let normalized = "_ea_new_" <> replace t " " "_"
+  return ([], JustId $ Idfr normalized)
 s2sLval n = unimplementedPanic n {children = Nothing}
 
 uniqueVar

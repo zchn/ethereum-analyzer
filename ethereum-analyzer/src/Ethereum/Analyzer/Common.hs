@@ -28,12 +28,12 @@ s2t4Either (Right r) = Right r
 unexpectedPanic
   :: Show a
   => a -> b
-unexpectedPanic n = panic . toS $ "unexpected: " ++ show n
+unexpectedPanic n = panic . toS $ "unexpected: " <> show n <> show callStack
 
 unimplementedPanic
   :: Show a
   => a -> b
-unimplementedPanic n = panic . toS $ "unimplemented: " ++ show n
+unimplementedPanic n = panic . toS $ "unimplemented: " <> show n <> show callStack
 
 varBytesToWord256 :: [Word8] -> Word256
 varBytesToWord256 w8l =
