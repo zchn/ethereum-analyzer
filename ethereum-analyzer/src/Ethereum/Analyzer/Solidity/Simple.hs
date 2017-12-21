@@ -259,6 +259,15 @@ s2sStatements e@SolNode { name = Just "UnaryOperation"
   let newidfr = JustId $ Idfr newVar
   return
     [StAssign newidfr $ ExpLiteral "1", StAssign idfr $ ExpBin "+" idfr newidfr]
+s2sStatements e@SolNode { name = Just "UnaryOperation"
+                        , children = Just [op1]
+                        , attributes = Just SolNode {operator = Just "++"}
+                        } = do
+  (preOp1, lvalOp1) <- s2sLval op1
+  newVar <- uniqueVar
+  let newidfr = JustId $ Idfr newVar
+  return $ preOp1 <>
+    [StAssign newidfr $ ExpLiteral "1", StAssign lvalOp1 $ ExpBin "+" lvalOp1 newidfr]
 s2sStatements SolNode { name = Just "UnaryOperation"
                       , children = Just [SolNode { name = Just "Identifier"
                                                  , attributes = Just SolNode {value = Just idName}
@@ -270,6 +279,15 @@ s2sStatements SolNode { name = Just "UnaryOperation"
   let newidfr = JustId $ Idfr newVar
   return
     [StAssign newidfr $ ExpLiteral "1", StAssign idfr $ ExpBin "-" idfr newidfr]
+s2sStatements e@SolNode { name = Just "UnaryOperation"
+                        , children = Just [op1]
+                        , attributes = Just SolNode {operator = Just "--"}
+                        } = do
+  (preOp1, lvalOp1) <- s2sLval op1
+  newVar <- uniqueVar
+  let newidfr = JustId $ Idfr newVar
+  return $ preOp1 <>
+    [StAssign newidfr $ ExpLiteral "1", StAssign lvalOp1 $ ExpBin "-" lvalOp1 newidfr]
 s2sStatements SolNode { name = Just "IfStatement"
                       , children = Just [cond, thenBr]
                       } = do
@@ -323,7 +341,7 @@ s2sStatements SolNode {name = Just "VariableDeclarationStatement"}
   -- TODO(zchn): Handle this properly.
  = return []
 s2sStatements SolNode {name = Just "Throw"} = return [StThrow]
-s2sStatements s = unimplementedPanic s {children = Nothing}
+s2sStatements s = unimplementedPanic s
 
 s2sLval
   :: UniqueMonad m
