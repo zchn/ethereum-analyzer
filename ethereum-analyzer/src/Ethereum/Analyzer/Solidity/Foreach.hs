@@ -39,5 +39,5 @@ _eOf StBreak = []
 _eOf StContinue = []
 _eOf (StReturn _) = []
 _eOf (StDelete _) = []
-_eOf st@(StTodo _) = unimplementedPanic st
+_eOf (StTodo _) = []
 _eOf StThrow = []

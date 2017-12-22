@@ -13,7 +13,6 @@ import Ethereum.Analyzer.TestData.StorageJson (storageJson)
 
 -- import GHC.Show (Show(..))
 import Test.Hspec
-import qualified Text.PrettyPrint.GenericPretty as GP
 
 spec :: Spec
 spec = do
@@ -30,25 +29,27 @@ spec = do
           [ Contract
             { cName = "SimpleStorage"
             , cStateVars =
-                [VarDecl {vName = Idfr "storedData", vType = Unknown "uint256"}]
+                [ VarDecl
+                  {vName = Idfr {unIdfr = "storedData"}, vType = Uint256}
+                ]
             , cFunctions =
                 [ FunDefinition
-                  { fName = Idfr "set"
+                  { fName = Idfr {unIdfr = "set"}
                   , fParams =
-                      [VarDecl {vName = Idfr "x", vType = Unknown "uint256"}]
+                      [VarDecl {vName = Idfr {unIdfr = "x"}, vType = Uint256}]
                   , fReturns = []
                   , fBody =
                       [ StAssign
-                          (JustId (Idfr "storedData"))
-                          (ExpLval (JustId (Idfr "x")))
+                          (JustId (Idfr {unIdfr = "storedData"}))
+                          (ExpLval (JustId (Idfr {unIdfr = "x"})))
                       ]
                   }
                 , FunDefinition
-                  { fName = Idfr "get"
+                  { fName = Idfr {unIdfr = "get"}
                   , fParams = []
                   , fReturns =
-                      [VarDecl {vName = Idfr "", vType = Unknown "uint256"}]
-                  , fBody = [StReturn [JustId (Idfr "storedData")]]
+                      [VarDecl {vName = Idfr {unIdfr = ""}, vType = Uint256}]
+                  , fBody = [StReturn [JustId (Idfr {unIdfr = "storedData"})]]
                   }
                 ]
             }

@@ -55,8 +55,8 @@ requestDuration =
         "The HTTP request latencies in microseconds."
 
 -- | Instrument a WAI app with the default WAI metrics.
-instrumentApp
-  :: RequestDuration -- ^ The metric to instrument
+instrumentApp ::
+     RequestDuration -- ^ The metric to instrument
   -> Text -- ^ The label used to identify this app
   -> Wai.Application -- ^ The app to instrument
   -> Wai.Application -- ^ The instrumented app
@@ -79,8 +79,8 @@ instrumentApp metric handler app req respond = do
 
 -- | Instrument an app with Prometheus and export metrics from the configured
 -- handler.
-prometheus
-  :: PrometheusSettings -- ^ How we're going to use Prometheus
+prometheus ::
+     PrometheusSettings -- ^ How we're going to use Prometheus
   -> RequestDuration -- ^ A metric to instrument with request information
   -> Text -- ^ The label used to identify the app
   -> Wai.Middleware
@@ -98,8 +98,8 @@ prometheus PrometheusSettings {..} duration appName app req respond =
 metrics :: Wai.Application
 metrics = const respondWithMetrics
 
-respondWithMetrics :: (Wai.Response -> IO Wai.ResponseReceived)
-                   -> IO Wai.ResponseReceived
+respondWithMetrics ::
+     (Wai.Response -> IO Wai.ResponseReceived) -> IO Wai.ResponseReceived
 respondWithMetrics respond = do
   content <- Prom.exportMetricsAsText
   respond $ Wai.responseBuilder HTTP.status200 headers $ byteString content

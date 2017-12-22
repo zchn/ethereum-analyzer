@@ -7,7 +7,7 @@ module Ethereum.Analyzer.Solidity.AstJson
   , defSolNode
   ) where
 
-import Protolude hiding (show, (<>))
+import Protolude hiding ((<>), show)
 
 import Data.Aeson
 import Data.Aeson.Types

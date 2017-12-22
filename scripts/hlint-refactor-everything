@@ -2,7 +2,7 @@
 
 set -e
 
-HLINT=hlint-2.0.5
+HLINT=hlint-ethereum-analyzer
 GIT=git
 
 function hlint_file {
@@ -27,4 +27,3 @@ function lint_everything {
 }
 
 lint_everything
-

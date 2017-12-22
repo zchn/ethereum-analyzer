@@ -28,9 +28,9 @@ import Control.Monad (guard)
 
 import Numeric (readHex)
 
-import Data.Binary (Binary, encode, decode, decodeOrFail)
+import Data.Binary (Binary, decode, decodeOrFail, encode)
 import Data.Binary.Get
-       (Get, runGetOrFail, getByteString, ByteOffset, runGet)
+       (ByteOffset, Get, getByteString, runGet, runGetOrFail)
 import Data.Binary.Put (Put, runPut)
 import Data.Bits ((.|.), shiftL, shiftR)
 import Data.List (unfoldr)
@@ -95,21 +95,15 @@ hexToBS xs = BS.pack <$> mapM hexWord (chunksOf 2 xs)
 
 -- Data.Binary helpers
 -- | Strict version of @Data.Binary.encode@
-encode'
-  :: Binary a
-  => a -> BS.ByteString
+encode' :: Binary a => a -> BS.ByteString
 encode' = toStrictBS . encode
 
 -- | Strict version of @Data.Binary.decode@
-decode'
-  :: Binary a
-  => BS.ByteString -> a
+decode' :: Binary a => BS.ByteString -> a
 decode' = decode . toLazyBS
 
 -- | Strict version of @Data.Binary.runGet@
-runGet'
-  :: Binary a
-  => Get a -> BS.ByteString -> a
+runGet' :: Binary a => Get a -> BS.ByteString -> a
 runGet' m = runGet m . toLazyBS
 
 -- | Strict version of @Data.Binary.runPut@
@@ -117,8 +111,8 @@ runPut' :: Put -> BS.ByteString
 runPut' = toStrictBS . runPut
 
 -- | Strict version of @Data.Binary.decodeOrFail@
-decodeOrFail'
-  :: Binary a
+decodeOrFail' ::
+     Binary a
   => BS.ByteString
   -> Either (BS.ByteString, ByteOffset, String) (BS.ByteString, ByteOffset, a)
 decodeOrFail' bs =
@@ -127,8 +121,8 @@ decodeOrFail' bs =
     Right (lbs, o, res) -> Right (toStrictBS lbs, o, res)
 
 -- | Strict version of @Data.Binary.runGetOrFail@
-runGetOrFail'
-  :: Binary a
+runGetOrFail' ::
+     Binary a
   => Get a
   -> BS.ByteString
   -> Either (BS.ByteString, ByteOffset, String) (BS.ByteString, ByteOffset, a)
@@ -139,8 +133,8 @@ runGetOrFail' m bs =
 
 -- | Try to decode a Data.Binary value. If decoding succeeds, apply the function
 -- to the result. Otherwise, return the default value.
-fromDecode
-  :: Binary a
+fromDecode ::
+     Binary a
   => BS.ByteString -- ^ The bytestring to decode
   -> b -- ^ Default value to return when decoding fails
   -> (a -> b) -- ^ Function to apply when decoding succeeds
@@ -151,8 +145,8 @@ fromDecode bs def f = either (const def) (f . lst) $ decodeOrFail' bs
 
 -- | Try to run a Data.Binary.Get monad. If decoding succeeds, apply a function
 -- to the result. Otherwise, return the default value.
-fromRunGet
-  :: Binary a
+fromRunGet ::
+     Binary a
   => Get a -- ^ The Get monad to run
   -> BS.ByteString -- ^ The bytestring to decode
   -> b -- ^ Default value to return when decoding fails
@@ -165,9 +159,7 @@ fromRunGet m bs def f = either (const def) (f . lst) $ runGetOrFail' m bs
 -- | Decode a Data.Binary value into the Either monad. A Right value is returned
 -- with the result upon success. Otherwise a Left value with the error message
 -- is returned.
-decodeToEither
-  :: Binary a
-  => BS.ByteString -> Either String a
+decodeToEither :: Binary a => BS.ByteString -> Either String a
 decodeToEither bs =
   case decodeOrFail' bs of
     Left (_, _, err) -> Left err
@@ -175,18 +167,14 @@ decodeToEither bs =
 
 -- | Decode a Data.Binary value into the Maybe monad. A Just value is returned
 -- with the result upon success. Otherwise, Nothing is returned.
-decodeToMaybe
-  :: Binary a
-  => BS.ByteString -> Maybe a
+decodeToMaybe :: Binary a => BS.ByteString -> Maybe a
 decodeToMaybe bs = fromDecode bs Nothing Just
 
 -- | Isolate a Data.Binary.Get monad for the next @Int@ bytes. Only the next
 -- @Int@ bytes of the input bytestring will be available for the Get monad to
 -- consume. This function will fail if the Get monad fails or some of the input
 -- is not consumed.
-isolate
-  :: Binary a
-  => Int -> Get a -> Get a
+isolate :: Binary a => Int -> Get a -> Get a
 isolate i g = do
   bs <- getByteString i
   case runGetOrFail' g bs of

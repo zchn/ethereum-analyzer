@@ -17,16 +17,17 @@ module Ethereum.Analyzer.Web.API
 import Protolude
 
 import Data.Aeson
-       (FromJSON(..), ToJSON(..), Value(..), object, (.=), (.:))
+       (FromJSON(..), ToJSON(..), Value(..), (.:), (.=), object)
 import Data.Aeson.Types (typeMismatch)
 import qualified NeatInterpolation as NI
 import Servant.API
-       ((:>), (:<|>)(..), Get, JSON, MimeRender(..), QueryParam, Raw)
+       ((:<|>)(..), (:>), Get, JSON, MimeRender(..), QueryParam, Raw)
 
 import Ethereum.Analyzer.Web.API.Internal (HTML)
 
 -- | ethereum-analyzer API definition.
-type API = Get '[ HTML] RootPage :<|> "users" :> Get '[ JSON] Users :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[ JSON] DotCfgResp :<|> "ea" :> "dotcfg2" :> QueryParam "code" Text :> Get '[ JSON] DotCfgResp
+type API
+   = Get '[ HTML] RootPage :<|> "users" :> Get '[ JSON] Users :<|> "ea" :> "dotcfg" :> QueryParam "code" Text :> Get '[ JSON] DotCfgResp :<|> "ea" :> "dotcfg2" :> QueryParam "code" Text :> Get '[ JSON] DotCfgResp
 
 -- | Value-level representation of API.
 apiraw :: Proxy (API :<|> "web" :> Raw)

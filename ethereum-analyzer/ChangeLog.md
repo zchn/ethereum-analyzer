@@ -1,5 +1,23 @@
-# Revision history for ethereum-analyzer
+TODOs
+==================
+  * Support struct type.
+  * Support contract type.
+  * Support special for loops in CryptoKitties.
+  * Support EVM opcode from ea-analyzer.
+  * Support InlineAssembly.
+  * Fix the bug in handling 'IndexAccess'.
+  * Fix the bug in handling 'new'.
+  * Fix the bug in handling 'delete'.
+  * Show all contracts and functions in a single dot file.
 
-## 0.1.0.0  -- YYYY-mm-dd
 
-* First version. Released on an unsuspecting world.
+3.3.0 / 2017-12-21
+==================
+
+ * Pretty print Simple opcode.
+ * Support NewExpression. Add InlineAssembly as a StTodo.
+ * Support generalized ++ and --
+ * Add all CryptoKitties contracts.
+ * Add example for EVM CFG.
+ * Add REVERT per EIP 140.
+ * bugfix: Add StContinue to loops when needed.
