@@ -112,6 +112,7 @@ data Operation
   | CALLCODE
   | RETURN
   | DELEGATECALL
+  | REVERT
   | INVALID
   | SUICIDE
     --Pseudo Opcodes
@@ -274,6 +275,7 @@ opDatas =
       7
       1
       "Message-call into this account with an alternative account’s code, but persisting the current values for sender and value."
+  , OPData 0xfd REVERT 0 0 "Stop execution and revert state changes (EIP140)."
   , OPData 0xfe INVALID 0 0 "Designated invalid instruction."
   , OPData
       0xff
