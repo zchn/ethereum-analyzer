@@ -44,5 +44,7 @@ function tokensOfOwner(address _owner) external view returns(uint256[] ownerToke
 
 ``` shell
 stack build
-solc --combined-json ast examples/analysis-benchmark/selfdestruct-over-suicide.sol | stack exec ea-analyze
+solc --combined-json ast\
+  examples/analysis-benchmark/selfdestruct-over-suicide.sol |\
+  stack exec ea-analyze
 ```
