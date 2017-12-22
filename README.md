@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/zchn/ethereum-analyzer.svg?branch=master)](https://travis-ci.org/zchn/ethereum-analyzer)
 
+- [Usage](#usage)
+  - [Solidity Control Flow Graph (CFG) Generation](#solidity-control-flow-graph-cfg-generation)
+  - [Solidity Linter (WIP)](#solidity-linter-wip)
+  - [EVM CFG Generation](#evm-cfg-generation)
 
 ## Usage
 
