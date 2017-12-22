@@ -306,7 +306,7 @@ s2sStatements SolNode { name = Just "WhileStatement"
                       } = do
   (precond, lvalcond) <- s2sLval cond
   bodySts <- s2sStatements body
-  return [StLoop (precond <> [StIf lvalcond bodySts [StBreak]])]
+  return [StLoop (precond <> [StIf lvalcond (bodySts <> [StContinue]) [StBreak]])]
 s2sStatements SolNode { name = Just "DoWhileStatement"
                       , children = Just [cond, body]
                       } = do
@@ -322,7 +322,7 @@ s2sStatements SolNode { name = Just "ForStatement"
   bodySts <- s2sStatements body
   return $
     initSts <>
-    [StLoop (precond <> [StIf lvalcond (bodySts <> iterSts) [StBreak]])]
+    [StLoop (precond <> [StIf lvalcond (bodySts <> iterSts <> [StContinue]) [StBreak]])]
 s2sStatements SolNode {name = Just "Break"} = return [StBreak]
 s2sStatements SolNode {name = Just "Continue"} = return [StContinue]
 s2sStatements SolNode { name = Just "VariableDeclarationStatement"
