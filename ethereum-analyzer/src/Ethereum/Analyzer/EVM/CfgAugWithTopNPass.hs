@@ -367,6 +367,8 @@ doCfgAugWithTopNPass a = do
   case newHexstrings of
     [] -> return contract {ctorOf = newBody}
     newhs : _ -> do
+      -- TODO(zchn): fix the handling of CryptoKittiesSalesAuction.evm so that
+      --  the above match can be changed to "[newhs] -> do".
       disBody <- evmOps2HplCfg $ disasm newhs
       newDisBody <-
         runWithFuel
