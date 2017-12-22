@@ -18,3 +18,6 @@ TODOs
  * Support NewExpression. Add InlineAssembly as a StTodo.
  * Support generalized ++ and --
  * Add all CryptoKitties contracts.
+ * Add example for EVM CFG.
+ * Add REVERT per EIP 140.
+ * bugfix: Add StContinue to loops when needed.
