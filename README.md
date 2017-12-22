@@ -3,11 +3,7 @@
 
 ## Usage
 
-### EVM Control Flow Graph (CFG) Generation
-
-TODO(zchn): Add documentation.
-
-### Solidity CFG Generation
+### Solidity Control Flow Graph (CFG) Generation
 
 ```shell
 stack build --profile &&\
@@ -15,8 +11,11 @@ stack build --profile &&\
   stack exec -- ea-analyze &&\
   find work/ -name "*.dot" -exec dot -Tpng -O \{\} \;
 ```
+
 generates CFGs like
-![Solidity](./doc/img/KittyOwnership.tokensOfOwner.CFG.dot.png)
+
+![Solidity CFG](./doc/img/KittyOwnership.tokensOfOwner.CFG.dot.png)
+
 whose original code looks like
 
 ```javascript
@@ -48,3 +47,16 @@ solc --combined-json ast\
   examples/analysis-benchmark/selfdestruct-over-suicide.sol |\
   stack exec ea-analyze
 ```
+
+### EVM CFG Generation
+
+``` shell
+stack build
+cat examples/etherscan.io/CryptoKittiesSalesAuction.evm | stack exec -- ea-bytecode-vis --outDot=work/tmp.dot &&\
+  dot -Tpng work/tmp.dot -O
+```
+
+generates a pretty large CFG for the whole EVM bytecode sequence, part of which
+looks like
+
+![EVM CFG](./doc/img/CryptoKittiesSalesAuction.evm.part.dot.png)

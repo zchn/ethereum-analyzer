@@ -366,7 +366,7 @@ doCfgAugWithTopNPass a = do
           ([] :: [EvmBytecode])
   case newHexstrings of
     [] -> return contract {ctorOf = newBody}
-    [newhs] -> do
+    newhs : _ -> do
       disBody <- evmOps2HplCfg $ disasm newhs
       newDisBody <-
         runWithFuel
