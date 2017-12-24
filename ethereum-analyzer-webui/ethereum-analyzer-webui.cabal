@@ -1,5 +1,5 @@
 name:                ethereum-analyzer-webui
-version:             3.2.0
+version:             3.3.3
 synopsis:            A web frontend for ethereum-analyzer
 homepage:            https://github.com/zchn/ethereum-analyzer
 license:             Apache-2.0
@@ -21,7 +21,7 @@ source-repository head
 source-repository this
   type:     git
   location: https://github.com/zchn/ethereum-analyzer
-  tag:      v3.2.0
+  tag:      v3.3.3
   subdir:   ethereum-analyzer-webui
 
 library
