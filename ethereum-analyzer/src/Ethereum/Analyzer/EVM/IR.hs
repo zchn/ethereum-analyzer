@@ -23,19 +23,14 @@ import Blockchain.ExtWord as BE
 import Blockchain.VM.Opcodes as BVO
 import Compiler.Hoopl as CH
 
--- import Control.Monad as CM
 import Data.Bimap as DB
-import Data.List as DL
-import Data.String (String)
-
--- import Data.Graph.Inductive.Graph as DGIG
 import qualified Data.Text.Lazy as DTL
-import GHC.Show
+import Ckev.In.Text
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 newtype MyLabel = MyLabel
   { unMyLabel :: Label
-  } deriving (Eq)
+  } deriving (Eq, Show)
 
 data HplOp e x where
   CoOp :: Label -> HplOp C O
@@ -45,22 +40,22 @@ data HplOp e x where
   HpEnd :: MyLabel -> HplOp O C
   HpCodeCopy :: Word256 -> HplOp O O
 
-showLoc :: Word256 -> String
-showLoc = show . getBigWordInteger
+showLoc :: Word256 -> Text
+showLoc = showT . getBigWordInteger
 
-showOp :: (Word256, Operation) -> String
-showOp (lineNo, op) = showLoc lineNo <> ": " <> show op
+showOp :: (Word256, Operation) -> Text
+showOp (lineNo, op) = showLoc lineNo <> ": " <> showT op
 
-showOps :: [(Word256, Operation)] -> [String]
+showOps :: [(Word256, Operation)] -> [Text]
 showOps = fmap showOp
 
-instance Show (HplOp e x) where
-  show (CoOp l) = "CO: " <> show l
-  show (OoOp op) = "OO: " <> showOp op
-  show (OcOp op ll) = "OC: " <> showOp op <> " -> " <> show ll
-  show (HpJump _ l) = "OC: HpJump -> " <> show l
-  show HpEnd {} = "OC: HpEnd"
-  show (HpCodeCopy offset) = "HpCodeCopy " <> show offset
+instance ShowText (HplOp e x) where
+  showText (CoOp l) = "CO: " <> showT l
+  showText (OoOp op) = "OO: " <> showOp op
+  showText (OcOp op ll) = "OC: " <> showOp op <> " -> " <> showT ll
+  showText (HpJump _ l) = "OC: HpJump -> " <> showT l
+  showText HpEnd {} = "OC: HpEnd"
+  showText (HpCodeCopy offset) = "HpCodeCopy " <> showT offset
 
 instance Eq (HplOp C O) where
   (==) (CoOp a) (CoOp b) = a == b
@@ -84,13 +79,16 @@ instance NonLocal HplOp where
 
 type HplCfg = Graph HplOp O C
 
-instance Show HplCfg where
-  show = showGraph show
+instance ShowText HplCfg where
+  showText = showGraphT showText
 
 data HplContract = HplContract
   { ctorOf :: HplCfg
   , dispatcherOf :: HplCfg
-  } deriving (Show)
+  }
+
+instance ShowText HplContract where
+  showText c = showT [showText $ ctorOf c, showText $ dispatcherOf c]
 
 emptyHplCfg :: UniqueMonad m => m HplCfg
 emptyHplCfg = do

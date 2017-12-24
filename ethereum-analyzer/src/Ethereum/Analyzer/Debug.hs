@@ -7,7 +7,7 @@ module Ethereum.Analyzer.Debug
 
 import Protolude hiding (show)
 
-import GHC.Show (Show(..))
+import Ckev.In.Text
 
 import Ethereum.Analyzer.Solidity
 import Text.PrettyPrint.Leijen.Text as PP hiding ((<$>))
@@ -27,4 +27,4 @@ pprintContracts :: [Contract] -> IO ()
 pprintContracts = putDoc . pretty
 
 prettyContracts :: [Contract] -> Text
-prettyContracts = toS . show . pretty
+prettyContracts = showT . pretty

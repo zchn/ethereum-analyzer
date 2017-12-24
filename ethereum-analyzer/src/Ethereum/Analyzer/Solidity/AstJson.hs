@@ -13,7 +13,7 @@ import Data.Aeson
 import Data.Aeson.Types
 import Data.HashMap.Lazy hiding (map)
 import Ethereum.Analyzer.Common
-import GHC.Show (Show(..))
+import Ckev.In.Text
 import Text.PrettyPrint.Leijen.Text as PP
 
 decodeSoleNodes :: LByteString -> Either Text [SolNode]
@@ -57,6 +57,9 @@ data SolNode = SolNode
   , visibility :: Maybe Text
   , children :: Maybe [SolNode]
   } deriving (Eq, Generic, Show)
+
+instance ShowText SolNode where
+  showText = showT
 
 instance ToJSON SolNode where
   toJSON =

@@ -11,7 +11,7 @@ import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.Asts
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
 
--- import GHC.Show (Show(..))
+-- import Ckev.In.Text
 import Test.Hspec
 
 spec :: Spec

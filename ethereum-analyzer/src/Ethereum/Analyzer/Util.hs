@@ -9,21 +9,21 @@ module Ethereum.Analyzer.Util
 import Protolude hiding (show)
 
 import Compiler.Hoopl as CH
+import Ckev.In.Text
 import Data.Graph.Inductive.Graph as DGIG
 import Data.Graph.Inductive.PatriciaTree
 import Data.GraphViz
 import Data.GraphViz.Printing hiding ((<>))
-import qualified Data.List as DL
+import qualified Data.Text as DT
 import qualified Data.Text.Lazy as DTL
-import GHC.Show
 import Text.Read (read)
 
-instance (Show (n C O), Show (n O O), Show (n O C)) => Show (Block n C C) where
-  show a =
+instance (ShowText (n C O), ShowText (n O O), ShowText (n O C)) => ShowText (Block n C C) where
+  showText a =
     let (h, m, t) = blockSplit a
-    in DL.unlines $ [show h] <> map show (blockToList m) <> [show t]
+    in DT.unlines $ [showText h] <> map showText (blockToList m) <> [showText t]
 
-toDotText :: (NonLocal n, Show (Block n C C)) => CH.Graph n O C -> Text
+toDotText :: (NonLocal n, ShowText (Block n C C)) => CH.Graph n O C -> Text
 toDotText bd =
   let bdGr = toGr bd
       dotG = toDotGraph bdGr
@@ -32,7 +32,7 @@ toDotText bd =
 
 toGr :: NonLocal n => CH.Graph n O C -> Gr (Block n C C) ()
 toGr bd =
-  let lblToNode l = read (drop 1 $ toS $ show l)
+  let lblToNode l = read (drop 1 $ toS $ showT l)
       blocks = postorder_dfs bd
       (nList, eList) =
         foldr
@@ -45,13 +45,13 @@ toGr bd =
   in mkGraph nList eList
 
 visParams ::
-     (Show (Block n C C)) => GraphvizParams p (Block n C C) el () (Block n C C)
+     (ShowText (Block n C C)) => GraphvizParams p (Block n C C) el () (Block n C C)
 visParams =
   nonClusteredParams
   { fmtNode =
       \(_, nl) ->
-        [textLabel (DTL.replace "\n" "\\l" $ toS $ show nl), shape BoxShape]
+        [textLabel (DTL.replace "\n" "\\l" $ toS $ showText nl), shape BoxShape]
   }
 
-toDotGraph :: (Show (Block n C C)) => Gr (Block n C C) () -> DotGraph Node
+toDotGraph :: (ShowText (Block n C C)) => Gr (Block n C C) () -> DotGraph Node
 toDotGraph = graphToDot visParams

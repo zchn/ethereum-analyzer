@@ -13,7 +13,7 @@ import Protolude hiding (show)
 import Blockchain.ExtWord
 import Data.ByteString as DB
 import Data.Either (Either(..))
-import GHC.Show (Show(..))
+import Ckev.In.Text
 
 fromRight :: b -> Either a b -> b
 fromRight _ (Right v) = v
@@ -23,12 +23,12 @@ s2t4Either :: StringConv s Text => Either s a -> Either Text a
 s2t4Either (Left s) = Left $ toS s
 s2t4Either (Right r) = Right r
 
-unexpectedPanic :: Show a => a -> b
-unexpectedPanic n = panic . toS $ "unexpected: " <> show n <> show callStack
+unexpectedPanic :: ShowText a => a -> b
+unexpectedPanic n = panic $ "unexpected: " <> showText n
 
-unimplementedPanic :: Show a => a -> b
+unimplementedPanic :: ShowText a => a -> b
 unimplementedPanic n =
-  panic . toS $ "unimplemented: " <> show n <> show callStack
+  panic $ "unimplemented: " <> showText n
 
 varBytesToWord256 :: [Word8] -> Word256
 varBytesToWord256 w8l =

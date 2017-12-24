@@ -5,9 +5,9 @@ module Ethereum.Analyzer.EVM.IRSpec
 import Protolude hiding (show)
 
 import Compiler.Hoopl
+import Ckev.In.Text
 import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
-import GHC.Show
 import Test.Hspec
 
 spec :: Spec
@@ -29,7 +29,7 @@ spec =
     it "shows HplCfg" $ do
       let disasmd = disasm hexstring2
       unWordLabelMapM
-        ((toS . show . ctorOf <$> evmOps2HplContract disasmd) :: WordLabelMapM Text) `shouldBe`
+        ((showText . ctorOf <$> evmOps2HplContract disasmd) :: WordLabelMapM Text) `shouldBe`
         toS expectedHexString2CtorBody
 
 expectedHexString2CtorBody :: Text

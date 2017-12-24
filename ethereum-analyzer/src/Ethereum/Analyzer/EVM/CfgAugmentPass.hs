@@ -17,7 +17,7 @@ import Data.List as DL
 import Data.Set as DS hiding (toList)
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.EVM.IR
-import GHC.Show
+import Ckev.In.Text
 
 type StackTopFact = WithTop (Set Word256)
 
@@ -74,14 +74,14 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
       PElem $ DS.map (bytesToWord256 . DL.map complement . word256ToBytes) st
     opT (PUSH w8l) _ = PElem $ DS.singleton $ varBytesToWord256 w8l
     opT op@LABEL {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@PUSHLABEL {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@PUSHDIFF {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
-    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
+    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@MalformedOpcode {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT _ _ = Top
 
 opGUnit :: HplOp e x -> Graph HplOp e x

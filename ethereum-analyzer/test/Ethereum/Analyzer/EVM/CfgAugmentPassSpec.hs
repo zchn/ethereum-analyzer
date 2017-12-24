@@ -9,7 +9,7 @@ import Protolude hiding (show)
 import Data.Text (length)
 import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
-import GHC.Show
+import Ckev.In.Text
 import Test.Hspec
 
 spec :: Spec
@@ -20,14 +20,14 @@ spec =
           result =
             unWordLabelMapM $ do
               contract <- evmOps2HplContract disasmd
-              (toS . show <$> doCfgAugmentPass contract) :: WordLabelMapM Text
+              (showText <$> doCfgAugmentPass contract) :: WordLabelMapM Text
       Data.Text.length result `shouldBe` 4588
     it "works for hexstring2" $ do
       let disasmd@((_, _):_) = disasm hexstring2
           result =
             unWordLabelMapM $ do
               contract <- evmOps2HplContract disasmd
-              toS . show . ctorOf <$> doCfgAugmentPass contract
+              showText . ctorOf <$> doCfgAugmentPass contract
       result `shouldBe` expectedHexString2CtorBody
 
 expectedHexString2CtorBody :: Text

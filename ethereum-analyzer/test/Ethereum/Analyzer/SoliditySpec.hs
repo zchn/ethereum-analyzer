@@ -4,9 +4,9 @@ module Ethereum.Analyzer.SoliditySpec
 
 import Protolude hiding (show)
 
+import Ckev.In.Text
 import Ethereum.Analyzer.Solidity
 import Ethereum.Analyzer.TestData.StorageJson (storageJson)
-import GHC.Show (Show(..))
 import Test.Hspec
 import Text.PrettyPrint.Leijen.Text (Doc, pretty, renderPretty)
 
@@ -15,7 +15,7 @@ spec =
   describe "e2h" $ do
     it "pretty-prints storageJson" $ do
       let prettySol =
-            (show <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
+            (showT <$> renderPretty 1.0 80) . (pretty :: [SolNode] -> Doc) <$>
             decodeSoleNodes (toS storageJson)
       -- putStrLn $ fromRight "" prettySol
       prettySol `shouldBe`

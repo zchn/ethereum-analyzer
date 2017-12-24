@@ -10,9 +10,9 @@ import Protolude hiding ((<*>), show)
 
 import Compiler.Hoopl
 import Ethereum.Analyzer.Solidity.Simple
-import GHC.Show (Show(..))
+import Ckev.In.Text
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
-import qualified Text.PrettyPrint.Leijen.Text as PP
+-- import qualified Text.PrettyPrint.Leijen.Text as PP
 
 data HContract = HContract
   { hcName :: Text
@@ -32,7 +32,7 @@ data HFunDefinition = HFunDefinition
   }
 
 instance Pretty Label where
-  pretty = textStrict . toS . show
+  pretty = textStrict . toS . showT
 
 data HStatement e x where
   CoSt :: Label -> HStatement C O
@@ -50,8 +50,8 @@ instance Pretty (HStatement e x) where
   pretty (OcSt st ll) = pretty st <+> textStrict "->" <+> prettyList ll
   pretty (OcJump l) = textStrict "jump" <+> textStrict "->" <+> pretty l
 
-instance Show (HStatement e x) where
-  show = show . pretty
+instance ShowText (HStatement e x) where
+  showText = showT . pretty
 
 instance NonLocal HStatement where
   entryLabel (CoSt lbl) = lbl

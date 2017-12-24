@@ -19,7 +19,7 @@ import Data.Set as DS hiding (toList)
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.EVM.Disasm
 import Ethereum.Analyzer.EVM.IR
-import GHC.Show
+import Ckev.In.Text
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 type StackElemFact = WithTop (Set Word256)
@@ -265,14 +265,14 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
     -- opT DATA ByteString flist = flist
     -- opT MalformedOpcode Word8 flist = flist
     opT op@LABEL {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@PUSHLABEL {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@PUSHDIFF {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
-    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
+    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@MalformedOpcode {} _ =
-      panic $ "Unexpected(stackTopTransfer): " <> toS (show op)
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     -- TODO(zchn): Implement interp
     opT _ flist = DL.map (const Top) flist
 
@@ -382,4 +382,4 @@ doCfgAugWithTopNPass a = do
     _ ->
       panic $
       "doCfgAugWithTopNPass: unexpected newHexstrings length: " <>
-      toS (show (DL.length newHexstrings))
+      toS (showT (DL.length newHexstrings))
