@@ -1,3 +1,9 @@
+3.3.1 / 2017-12-24
+==================
+
+ * Replace usage of String with Text.
+ * Fix the name collision bug that causes a Hackage build failure.
+
 TODOs
 ==================
   * Support struct type.
