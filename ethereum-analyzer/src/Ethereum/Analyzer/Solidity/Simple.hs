@@ -18,11 +18,11 @@ module Ethereum.Analyzer.Solidity.Simple
 import Protolude hiding ((<>), show)
 
 import Compiler.Hoopl
-import Data.Text (replace)
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity.AstJson
 import Ckev.In.Text
 import Text.PrettyPrint.Leijen.Text hiding ((<$>))
+import qualified Data.Text as DT
 -- import qualified Text.PrettyPrint.Leijen.Text as PP
 
 decodeContracts :: Text -> Either Text [Contract]
@@ -447,7 +447,7 @@ s2sLval SolNode { name = Just "TupleExpression"
 s2sLval SolNode { name = Just "NewExpression"
                 , attributes = Just SolNode {_type = Just t}
                 } = do
-  let normalized = "_ea_new_" <> replace t " " "_"
+  let normalized = "_ea_new_" <> DT.replace t " " "_"
   return ([], JustId $ Idfr normalized)
 s2sLval n = unimplementedPanic n {children = Nothing}
 
