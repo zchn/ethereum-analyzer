@@ -36,8 +36,6 @@ library
                      , filepath
                      , hexstring
                      , hoopl
-                     , http-conduit
-                     , json-rpc
                      , monad-logger
                      , mtl
                      , optparse-applicative
