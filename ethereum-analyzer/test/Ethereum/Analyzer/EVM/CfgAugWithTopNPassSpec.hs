@@ -19,7 +19,7 @@ spec =
     it "works for hexstring1" $ do
       let result =
             unWordLabelMapM $ showText <$> doCfgAugWithTopNPass hexstring1
-      DT.length result `shouldBe` 4634
+      DT.length result `shouldBe` 4876
     it "works for hexstring2" $ do
       let result =
             toS $

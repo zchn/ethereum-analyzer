@@ -21,7 +21,7 @@ spec =
             unWordLabelMapM $ do
               contract <- evmOps2HplContract disasmd
               (showText <$> doCfgAugmentPass contract) :: WordLabelMapM Text
-      Data.Text.length result `shouldBe` 4588
+      Data.Text.length result `shouldBe` 4829
     it "works for hexstring2" $ do
       let disasmd@((_, _):_) = disasm hexstring2
           result =
