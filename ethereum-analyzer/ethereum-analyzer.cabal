@@ -26,7 +26,6 @@ source-repository this
 
 library
   build-depends:       base >= 4 && < 5
-                     , GenericPretty
                      , aeson
                      , bimap
                      , bytestring
@@ -86,7 +85,6 @@ test-suite spec
                      , Ethereum.Analyzer.TestData.StorageJson
                      , Ethereum.AnalyzerSpec
   build-depends:       base >= 4 && < 5
-                     , GenericPretty
                      , bytestring
                      , ethereum-analyzer
                      , ethereum-analyzer-deps
