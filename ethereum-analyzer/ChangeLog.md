@@ -1,9 +1,3 @@
-3.3.1 / 2017-12-24
-==================
-
- * Replace usage of String with Text.
- * Fix the name collision bug that causes a Hackage build failure.
-
 TODOs
 ==================
   * Support struct type.
@@ -16,6 +10,19 @@ TODOs
   * Fix the bug in handling 'delete'.
   * Show all contracts and functions in a single dot file.
 
+3.3.4 / 2017-12-25
+==================
+ * Fix newly failed test cases due to the String->Text cleanup.
+
+3.3.3 / 2017-12-24
+==================
+ * Fix a collision with Protolude.replace
+
+3.3.1 / 2017-12-24
+==================
+
+ * Replace usage of String with Text.
+ * Fix the name collision bug that causes a Hackage build failure.
 
 3.3.0 / 2017-12-21
 ==================
