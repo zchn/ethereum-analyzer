@@ -1,4 +1,4 @@
-`ethereum-analyzer` [![Hackage](https://img.shields.io/hackage/v/ethereum-analyzer.svg)](https://hackage.haskell.org/package/ethereum-analyzer) [![Build Status](https://travis-ci.org/zchn/ethereum-analyzer.svg?branch=master)](https://travis-ci.org/zchn/ethereum-analyzer)
+# ethereum-analyzer [![Hackage](https://img.shields.io/hackage/v/ethereum-analyzer.svg)](https://hackage.haskell.org/package/ethereum-analyzer) [![Build Status](https://travis-ci.org/zchn/ethereum-analyzer.svg?branch=master)](https://travis-ci.org/zchn/ethereum-analyzer)
 
 - [Usage](#usage)
   - [Solidity Control Flow Graph (CFG) Generation](#solidity-control-flow-graph-cfg-generation)
