@@ -36,8 +36,6 @@ library
                      , filepath
                      , hexstring
                      , hoopl
-                     , http-conduit
-                     , json-rpc
                      , monad-logger
                      , mtl
                      , optparse-applicative
@@ -51,8 +49,6 @@ library
                        
   exposed-modules:     Ethereum.Executable.Analyze
                        Ethereum.Executable.BytecodeVisMain
-                       Ethereum.Executable.DumpCodeMain
-  other-modules:       Ethereum.Jsonrpc.Client                       
   ghc-options:         -Wall
   hs-source-dirs:      src
   buildable:           True
@@ -77,19 +73,6 @@ executable ea-bytecode-vis
   main-is:             BytecodeVisMain.hs
   build-depends:       base >= 4 && < 5
                      , ethereum-analyzer-cli
-                     , hflags
-                     , monad-logger
-                     , protolude
-  ghc-options:         -Wall
-  hs-source-dirs:      exec_src
-  buildable:           True
-  default-language:    Haskell98
-
-executable ea-dump-contract
-  main-is:             DumpCodeMain.hs
-  build-depends:       base >= 4 && < 5
-                     , ethereum-analyzer-cli
-                     , ethereum-analyzer-deps
                      , hflags
                      , monad-logger
                      , protolude
