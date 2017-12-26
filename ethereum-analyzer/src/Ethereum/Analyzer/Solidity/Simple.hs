@@ -361,8 +361,8 @@ s2sLval SolNode { name = Just "MemberAccess"
   return (prelval, Member simpleLval (Idfr mName))
 s2sLval SolNode {name = Just "IndexAccess", children = Just (c1:ctail)} = do
   (prelval, simpleLval) <- s2sLval c1
-  (presub, simpleLvalSub) <- handleSubscription simpleLval ctail
-  return (presub <> prelval, Index simpleLval simpleLvalSub)
+  (presub, simpleLvalWithSub) <- handleSubscription simpleLval ctail
+  return (presub <> prelval, simpleLvalWithSub)
   where
     handleSubscription ::
          UniqueMonad m => LValue -> [SolNode] -> m ([Statement], LValue)

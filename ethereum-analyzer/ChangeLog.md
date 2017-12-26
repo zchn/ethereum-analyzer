@@ -1,18 +1,21 @@
 TODOs
 ==================
-  * Support struct type.
-  * Support contract type.
-  * Support special for loops in CryptoKitties.
-  * Support EVM opcode from ea-analyzer.
-  * Support InlineAssembly.
-  * Fix the bug in handling 'IndexAccess'.
-  * Fix the bug in handling 'new'.
-  * Fix the bug in handling 'delete'.
-  * Show all contracts and functions in a single dot file.
+ * Support struct type.
+ * Support contract type.
+ * Support special for loops in CryptoKitties.
+ * Support EVM opcode from ea-analyzer.
+ * Support InlineAssembly.
+ * Fix the bug in handling 'new'.
+ * Show all contracts and functions in a single dot file.
+
+3.3.5 / 2017-12-25
+==================
+ * Fix the bug in handling 'IndexAccess'.
 
 3.3.4 / 2017-12-25
 ==================
  * Fix newly failed test cases due to the String->Text cleanup.
+ * Fix the bug in handling 'delete'.
 
 3.3.3 / 2017-12-24
 ==================
