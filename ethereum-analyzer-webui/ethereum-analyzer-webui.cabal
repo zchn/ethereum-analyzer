@@ -56,11 +56,7 @@ library
                      , Ethereum.Analyzer.Web.Server.Instrument
                      , Ethereum.Analyzer.Web.Server.Logging
                                   
-  ghc-options:         -Wall
-                     , -Wcompat
-                     , -Wincomplete-record-updates
-                     , -Wincomplete-uni-patterns
-                     , -Wredundant-constraints
+  ghc-options:         -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
   hs-source-dirs:      src
   buildable:           True
   default-language:    Haskell98
@@ -75,11 +71,7 @@ executable ethereum-analyzer-webui
                        hflags,
                        monad-logger
                        
-  ghc-options:         -Wall
-                     , -Wcompat
-                     , -Wincomplete-record-updates
-                     , -Wincomplete-uni-patterns
-                     , -Wredundant-constraints
+  ghc-options:         -Wall -Wcompat -Wincomplete-record-updates -Wincomplete-uni-patterns -Wredundant-constraints
   hs-source-dirs:      exec_src
   buildable:           True
   default-language:    Haskell98
