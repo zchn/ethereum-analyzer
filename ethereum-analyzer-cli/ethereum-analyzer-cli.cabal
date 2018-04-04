@@ -50,6 +50,10 @@ library
   exposed-modules:     Ethereum.Executable.Analyze
                        Ethereum.Executable.BytecodeVisMain
   ghc-options:         -Wall
+                     , -Wcompat
+                     , -Wincomplete-record-updates
+                     , -Wincomplete-uni-patterns
+                     , -Wredundant-constraints
   hs-source-dirs:      src
   buildable:           True
   default-language:    Haskell98

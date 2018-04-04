@@ -1,0 +1,1 @@
+stack haddock --open hoopl
