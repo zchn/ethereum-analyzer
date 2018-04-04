@@ -47,7 +47,6 @@ library
                    , Legacy.Haskoin.V0102.Network.Haskoin.Crypto.Curve
                    , Legacy.Haskoin.V0102.Network.Haskoin.Crypto.NumberTheory
                    , Legacy.Haskoin.V0102.Network.Haskoin.Util
-    ghc-options: -Wall
     buildable: True
     hs-source-dirs: src
 
