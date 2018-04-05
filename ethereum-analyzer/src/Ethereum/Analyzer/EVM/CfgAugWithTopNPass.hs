@@ -131,8 +131,10 @@ swapStack :: Int -> StackNFact -> StackNFact
 swapStack n stk =
   if n + 1 > DL.length stk
     then pushTop $ popStack 1 stk
-    else let (h1:t1, h2:t2) = DL.splitAt n stk
-         in (h2 : t1) <> (h1 : t2)
+    else case DL.splitAt n stk of
+           ([], _) -> panic "Unexpected"
+           (_, []) -> panic "Unexpected"
+           (h1:t1, h2:t2) -> (h2 : t1) <> (h1 : t2)
 
 stackNTransfer :: FwdTransfer HplOp StackNFact
 stackNTransfer = mkFTransfer3 coT ooT ocT
@@ -379,7 +381,7 @@ doCfgAugWithTopNPass a = do
              disBody
              (fact_bot $ fp_lattice cfgAugWithTopNPass))
       return HplContract {ctorOf = newBody, dispatcherOf = newDisBody}
-    _ ->
-      panic $
-      "doCfgAugWithTopNPass: unexpected newHexstrings length: " <>
-      toS (showT (DL.length newHexstrings))
+    -- _ ->
+    --   panic $
+    --   "doCfgAugWithTopNPass: unexpected newHexstrings length: " <>
+    --   toS (showT (DL.length newHexstrings))

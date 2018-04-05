@@ -20,7 +20,7 @@ source-repository this
 library
     default-language: Haskell98
     build-depends: 
-                   base >= 4 && < 5
+                   base >= 4.9 && < 5
                  , aeson
                  , ansi-wl-pprint
                  , base16-bytestring

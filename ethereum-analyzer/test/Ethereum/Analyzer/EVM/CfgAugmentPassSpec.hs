@@ -23,7 +23,9 @@ spec =
               (showText <$> doCfgAugmentPass contract) :: WordLabelMapM Text
       Data.Text.length result `shouldBe` 4829
     it "works for hexstring2" $ do
-      let disasmd@((_, _):_) = disasm hexstring2
+      let disasmd = case disasm hexstring2 of
+            n@((_, _):_) -> n
+            _ -> panic "Unexpected"
           result =
             unWordLabelMapM $ do
               contract <- evmOps2HplContract disasmd

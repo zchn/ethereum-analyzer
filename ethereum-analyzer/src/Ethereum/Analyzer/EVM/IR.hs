@@ -28,9 +28,7 @@ import qualified Data.Text.Lazy as DTL
 import Ckev.In.Text
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
-newtype MyLabel = MyLabel
-  { unMyLabel :: Label
-  } deriving (Eq, Show)
+newtype MyLabel = MyLabel Label deriving (Eq, Show)
 
 data HplOp e x where
   CoOp :: Label -> HplOp C O
@@ -231,7 +229,7 @@ instance UnWordLabelMapM Text where
 instance UnWordLabelMapM DTL.Text where
   unWordLabelMapM = internalUnWordLabelMapM
 
-instance (UnWordLabelMapM a, UnWordLabelMapM b) => UnWordLabelMapM (a, b) where
+instance UnWordLabelMapM (a, b) where
   unWordLabelMapM = internalUnWordLabelMapM
 
 internalUnWordLabelMapM :: WordLabelMapM a -> a

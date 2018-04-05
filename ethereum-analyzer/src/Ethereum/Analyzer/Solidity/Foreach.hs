@@ -6,7 +6,6 @@ module Ethereum.Analyzer.Solidity.Foreach
 import Protolude
 
 import Data.List (concatMap)
-import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.Solidity.Simple
 
 statementsOf :: Contract -> [Statement]

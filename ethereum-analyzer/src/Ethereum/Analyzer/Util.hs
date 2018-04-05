@@ -18,12 +18,14 @@ import qualified Data.Text as DT
 import qualified Data.Text.Lazy as DTL
 import Text.Read (read)
 
-instance (ShowText (n C O), ShowText (n O O), ShowText (n O C)) => ShowText (Block n C C) where
-  showText a =
+newtype PBlock n = PBlock (Block n C C)
+
+instance (ShowText (n C O), ShowText (n O O), ShowText (n O C)) => ShowText (PBlock n) where
+  showText (PBlock a) =
     let (h, m, t) = blockSplit a
     in DT.unlines $ [showText h] <> map showText (blockToList m) <> [showText t]
 
-toDotText :: (NonLocal n, ShowText (Block n C C)) => CH.Graph n O C -> Text
+toDotText :: (NonLocal n, ShowText (PBlock n)) => CH.Graph n O C -> Text
 toDotText bd =
   let bdGr = toGr bd
       dotG = toDotGraph bdGr
@@ -45,13 +47,13 @@ toGr bd =
   in mkGraph nList eList
 
 visParams ::
-     (ShowText (Block n C C)) => GraphvizParams p (Block n C C) el () (Block n C C)
+     (ShowText (PBlock n)) => GraphvizParams p (Block n C C) el () (Block n C C)
 visParams =
   nonClusteredParams
   { fmtNode =
       \(_, nl) ->
-        [textLabel (DTL.replace "\n" "\\l" $ toS $ showText nl), shape BoxShape]
+        [textLabel (DTL.replace "\n" "\\l" $ toS $ showText $ PBlock nl), shape BoxShape]
   }
 
-toDotGraph :: (ShowText (Block n C C)) => Gr (Block n C C) () -> DotGraph Node
+toDotGraph :: (ShowText (PBlock n)) => Gr (Block n C C) () -> DotGraph Node
 toDotGraph = graphToDot visParams

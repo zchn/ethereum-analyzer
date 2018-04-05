@@ -27,5 +27,5 @@ hoopleOfWorks filepath =
              contracts <- concat <$> mapM s2sContracts solNodes
              hContracts <- mapM hoopleOf contracts
              return $ map hfCFG $ concatMap hcFunctions hContracts
-    sum (map (\g -> foldGraphNodes (const (1 +)) g 0) cfgs) `shouldSatisfy`
-      (> 0)
+    (sum (map (\g -> foldGraphNodes (const (1 +)) g 0) cfgs) :: Int)
+      `shouldSatisfy` (> 0)

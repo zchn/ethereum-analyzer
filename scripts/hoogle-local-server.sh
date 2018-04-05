@@ -1,1 +1,1 @@
-stack hoogle -- server --local --port=8080
+stack hoogle -- server --port=8080

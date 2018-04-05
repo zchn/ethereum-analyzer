@@ -330,8 +330,9 @@ s2sStatements SolNode {name = Just "Continue"} = return [StContinue]
 s2sStatements SolNode { name = Just "VariableDeclarationStatement"
                       , children = Just [vdec@SolNode {name = Just "VariableDeclaration"}, vinit]
                       } = do
-  let varDecl@(VarDecl vId _):_ =
-        s2sVarDecls vdec -- because VariableDeclaration only emits one decl
+  let (varDecl, vId) = case s2sVarDecls vdec of -- because VariableDeclaration only emits one decl
+                       varDecl@(VarDecl vId _):_ -> (varDecl, vId)
+                       _ -> panic "Unexpected"
   (preDef, lvalDef) <- s2sLval vinit
   return $
     preDef <> [StLocalVarDecl varDecl] <>

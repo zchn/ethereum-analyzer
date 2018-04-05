@@ -36,8 +36,8 @@ import Data.Binary.Put
 -- Data types
 -- Functions
 import Data.Bits
-       (Bits, (.&.), (.|.), bit, bitSize, complement, isSigned, popCount,
-        shift, shiftL, shiftR, testBit, xor)
+       (Bits, (.&.), (.|.), bit, bitSize, bitSizeMaybe, complement, isSigned,
+        popCount, rotate, shift, shiftL, shiftR, testBit, xor)
 import qualified Data.ByteString as BS (head, length, reverse)
 import Data.Ratio (denominator, numerator)
 import qualified Data.Text as T (pack, unpack)
@@ -154,10 +154,12 @@ instance BigWordMod n => Bits (BigWord n) where
   complement (BigWord i) = fromInteger $ complement i
   shift (BigWord i) j = fromInteger $ shift i j
   bitSize = rBitSize
+  bitSizeMaybe = Just . rBitSize
   testBit (BigWord i) = testBit i
   bit n = fromInteger $ bit n
   popCount (BigWord i) = popCount i
   isSigned _ = False
+  rotate _ = error "Unimplemented"
 
 instance BigWordMod n => Bounded (BigWord n) where
   minBound = 0

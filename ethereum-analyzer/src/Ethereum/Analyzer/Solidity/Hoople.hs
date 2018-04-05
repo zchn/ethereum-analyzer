@@ -31,7 +31,9 @@ data HFunDefinition = HFunDefinition
   , hfCFG :: CFG
   }
 
-instance Pretty Label where
+newtype PLabel = PLabel Label deriving (Eq, Show)
+
+instance Pretty PLabel where
   pretty = textStrict . toS . showT
 
 data HStatement e x where
@@ -41,14 +43,14 @@ data HStatement e x where
   OcJump :: Label -> HStatement O C
 
 instance Pretty (HStatement e x) where
-  pretty (CoSt l) = pretty l
+  pretty (CoSt l) = pretty $ PLabel l
   pretty (OoSt st) = pretty st
   pretty (OcSt (StIf lval _ _) ll) =
-    textStrict "OcIf" <+> pretty lval <+> textStrict "->" <+> prettyList ll
+    textStrict "OcIf" <+> pretty lval <+> textStrict "->" <+> prettyList (map PLabel ll)
   pretty (OcSt (StLoop _) ll) =
-    textStrict "OcLoop" <+> textStrict "->" <+> prettyList ll
-  pretty (OcSt st ll) = pretty st <+> textStrict "->" <+> prettyList ll
-  pretty (OcJump l) = textStrict "jump" <+> textStrict "->" <+> pretty l
+    textStrict "OcLoop" <+> textStrict "->" <+> prettyList (map PLabel ll)
+  pretty (OcSt st ll) = pretty st <+> textStrict "->" <+> prettyList (map PLabel ll)
+  pretty (OcJump l) = textStrict "jump" <+> textStrict "->" <+> pretty (PLabel l)
 
 instance ShowText (HStatement e x) where
   showText = showT . pretty
