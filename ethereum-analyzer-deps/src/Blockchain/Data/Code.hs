@@ -8,7 +8,7 @@ import GHC.Generics
 import Blockchain.Data.RLP
 
 data Code
-  = Code { codeBytes :: B.ByteString }
+  = Code { codeBytes :: B.ByteString}
   | PrecompiledCode Int
   deriving (Show, Eq, Read, Ord, Generic)
 

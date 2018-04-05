@@ -22,25 +22,28 @@ import Data.Time.Format
        (defaultTimeLocale, formatTime, iso8601DateFormat)
 import Text.PrettyPrint.Leijen.Text (Doc, Pretty(..))
 
-type LogM msg m
-   = LoggingT (WithSeverity msg) (LoggingT (WithTimestamp (WithSeverity msg)) m)
+type LogM msg m = LoggingT (WithSeverity msg) (LoggingT (WithTimestamp (WithSeverity msg)) m)
 
 -- | Take a bunch of logs with severity and print them to stdout with timestamps.
-withLogging ::
-     (MonadMask m, MonadIO m, Pretty msg) => Severity -> LogM msg m a -> m a
+withLogging
+  :: (MonadMask m, MonadIO m, Pretty msg)
+  => Severity -> LogM msg m a -> m a
 withLogging severityThreshold body =
   withFDHandler defaultBatchingOptions stdout 0.4 80 $ \stdoutHandler ->
     runLoggingT
       (withTimestamps body)
       (printLogs severityThreshold stdoutHandler)
 
-withTimestamps ::
-     (MonadIO m, MonadLog (WithTimestamp msg) m) => LoggingT msg m a -> m a
+withTimestamps
+  :: (MonadIO m, MonadLog (WithTimestamp msg) m)
+  => LoggingT msg m a -> m a
 withTimestamps = mapLogMessageM timestamp
 
 type Keyword = Text
 
-fromKeyword :: Alternative m => Keyword -> m Severity
+fromKeyword
+  :: Alternative m
+  => Keyword -> m Severity
 fromKeyword "emerg" = pure Emergency
 fromKeyword "alert" = pure Alert
 fromKeyword "crit" = pure Critical
@@ -63,12 +66,9 @@ toKeyword Notice = "notice"
 toKeyword Informational = "info"
 toKeyword Debug = "debug"
 
-printLogs ::
-     (Pretty a, MonadIO m)
-  => Severity
-  -> Handler m Doc
-  -> WithTimestamp (WithSeverity a)
-  -> m ()
+printLogs
+  :: (Pretty a, MonadIO m)
+  => Severity -> Handler m Doc -> WithTimestamp (WithSeverity a) -> m ()
 printLogs severityThreshold handler message =
   when (severityThreshold >= msgSeverity (discardTimestamp message)) $
   handler . renderWithTimestamp timeFormatter (renderWithSeverity pretty) $
@@ -78,5 +78,7 @@ printLogs severityThreshold handler message =
     timeFormat = iso8601DateFormat (Just "%H:%M:%S.%q")
 
 -- | Convenience method to log with severity.
-log :: MonadLog (WithSeverity a) m => Severity -> a -> m ()
+log
+  :: MonadLog (WithSeverity a) m
+  => Severity -> a -> m ()
 log severity msg' = logMessage (WithSeverity severity msg')

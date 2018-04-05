@@ -10,6 +10,7 @@ import Protolude hiding (show)
 
 import Blockchain.ExtWord
 import Blockchain.VM.Opcodes as BVO
+import Ckev.In.Text
 import Compiler.Hoopl
 import Data.Bits as Db
 import Data.ByteString as DB
@@ -19,13 +20,12 @@ import Data.Set as DS hiding (toList)
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.EVM.Disasm
 import Ethereum.Analyzer.EVM.IR
-import Ckev.In.Text
 import Legacy.Haskoin.V0102.Network.Haskoin.Crypto.BigWord
 
 type StackElemFact = WithTop (Set Word256)
 
-joinStackElemBase ::
-     Label
+joinStackElemBase
+  :: Label
   -> OldFact (Set Word256)
   -> NewFact (Set Word256)
   -> (ChangeFlag, Set Word256)
@@ -34,8 +34,8 @@ joinStackElemBase _ (OldFact oldF) (NewFact newF) =
     then (NoChange, oldF)
     else (SomeChange, oldF `DS.union` newF)
 
-joinStackElemFact ::
-     Label
+joinStackElemFact
+  :: Label
   -> OldFact StackElemFact
   -> NewFact StackElemFact
   -> (ChangeFlag, StackElemFact)
@@ -43,11 +43,10 @@ joinStackElemFact = liftJoinTop joinStackElemBase
 
 type StackNFact = [StackElemFact]
 
-joinStackNFact ::
-     Label
-  -> OldFact StackNFact
-  -> NewFact StackNFact
-  -> (ChangeFlag, StackNFact)
+joinStackNFact :: Label
+               -> OldFact StackNFact
+               -> NewFact StackNFact
+               -> (ChangeFlag, StackNFact)
 joinStackNFact l (OldFact oldF) (NewFact newF) =
   let zipped =
         DL.zipWith
@@ -75,7 +74,9 @@ stackNLattice depth =
 _sizeBound :: Int
 _sizeBound = 10
 
-mkTopList :: forall b b1 a. [b] -> [Pointed C b1 a]
+mkTopList
+  :: forall b b1 a.
+     [b] -> [Pointed C b1 a]
 mkTopList = DL.map (const Top)
 
 pairCompute :: (Word256 -> Word256 -> Word256) -> StackNFact -> StackNFact
@@ -272,7 +273,8 @@ stackNTransfer = mkFTransfer3 coT ooT ocT
       panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@PUSHDIFF {} _ =
       panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
-    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
+    opT op@DATA {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@MalformedOpcode {} _ =
       panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     -- TODO(zchn): Implement interp
@@ -294,11 +296,13 @@ opGUnit oc@HpEnd {} = gUnitOC $ BlockOC BNil oc
 cfgAugWithTopNRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackNFact
 cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
   where
-    coR ::
-         HplOp C O -> StackNFact -> WordLabelMapFuelM (Maybe (Graph HplOp C O))
+    coR :: HplOp C O
+        -> StackNFact
+        -> WordLabelMapFuelM (Maybe (Graph HplOp C O))
     coR op _ = return $ Just $ opGUnit op
-    ooR ::
-         HplOp O O -> StackNFact -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
+    ooR :: HplOp O O
+        -> StackNFact
+        -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
     ooR op@(OoOp (_, CODECOPY)) f =
       case peekStack 2 f of
         Top -> return $ Just $ opGUnit op
@@ -307,8 +311,9 @@ cfgAugWithTopNRewrite = mkFRewrite3 coR ooR ocR
           Just $
           DS.foldl (\a b -> catGraphNodeOO a $ HpCodeCopy b) (opGUnit op) vals
     ooR op _ = return $ Just $ opGUnit op
-    ocR ::
-         HplOp O C -> StackNFact -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
+    ocR :: HplOp O C
+        -> StackNFact
+        -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
     ocR op@HpJump {} _ = return (Just (opGUnit op))
     ocR op@HpEnd {} _ = return (Just (opGUnit op))
     ocR op@(OcOp (loc, ope) ll) f =
@@ -338,7 +343,9 @@ cfgAugWithTopNPass =
   , fp_rewrite = cfgAugWithTopNRewrite
   }
 
-doCfgAugWithTopNPass :: HasEvmBytecode a => a -> WordLabelMapM HplContract
+doCfgAugWithTopNPass
+  :: HasEvmBytecode a
+  => a -> WordLabelMapM HplContract
 doCfgAugWithTopNPass a = do
   let disasmd = disasm a
   contract <- evmOps2HplContract disasmd
@@ -368,9 +375,10 @@ doCfgAugWithTopNPass a = do
           ([] :: [EvmBytecode])
   case newHexstrings of
     [] -> return contract {ctorOf = newBody}
-    newhs : _ -> do
+    newhs:_
       -- TODO(zchn): fix the handling of CryptoKittiesSalesAuction.evm so that
       --  the above match can be changed to "[newhs] -> do".
+     -> do
       disBody <- evmOps2HplCfg $ disasm newhs
       newDisBody <-
         runWithFuel

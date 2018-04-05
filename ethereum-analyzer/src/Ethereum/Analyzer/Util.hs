@@ -8,8 +8,8 @@ module Ethereum.Analyzer.Util
 
 import Protolude hiding (show)
 
-import Compiler.Hoopl as CH
 import Ckev.In.Text
+import Compiler.Hoopl as CH
 import Data.Graph.Inductive.Graph as DGIG
 import Data.Graph.Inductive.PatriciaTree
 import Data.GraphViz
@@ -18,21 +18,27 @@ import qualified Data.Text as DT
 import qualified Data.Text.Lazy as DTL
 import Text.Read (read)
 
-newtype PBlock n = PBlock (Block n C C)
+newtype PBlock n =
+  PBlock (Block n C C)
 
-instance (ShowText (n C O), ShowText (n O O), ShowText (n O C)) => ShowText (PBlock n) where
+instance (ShowText (n C O), ShowText (n O O), ShowText (n O C)) =>
+         ShowText (PBlock n) where
   showText (PBlock a) =
     let (h, m, t) = blockSplit a
     in DT.unlines $ [showText h] <> map showText (blockToList m) <> [showText t]
 
-toDotText :: (NonLocal n, ShowText (PBlock n)) => CH.Graph n O C -> Text
+toDotText
+  :: (NonLocal n, ShowText (PBlock n))
+  => CH.Graph n O C -> Text
 toDotText bd =
   let bdGr = toGr bd
       dotG = toDotGraph bdGr
       dotCode = toDot dotG
   in DTL.toStrict $ renderDot dotCode
 
-toGr :: NonLocal n => CH.Graph n O C -> Gr (Block n C C) ()
+toGr
+  :: NonLocal n
+  => CH.Graph n O C -> Gr (Block n C C) ()
 toGr bd =
   let lblToNode l = read (drop 1 $ toS $ showT l)
       blocks = postorder_dfs bd
@@ -46,14 +52,19 @@ toGr bd =
           blocks
   in mkGraph nList eList
 
-visParams ::
-     (ShowText (PBlock n)) => GraphvizParams p (Block n C C) el () (Block n C C)
+visParams
+  :: (ShowText (PBlock n))
+  => GraphvizParams p (Block n C C) el () (Block n C C)
 visParams =
   nonClusteredParams
   { fmtNode =
       \(_, nl) ->
-        [textLabel (DTL.replace "\n" "\\l" $ toS $ showText $ PBlock nl), shape BoxShape]
+        [ textLabel (DTL.replace "\n" "\\l" $ toS $ showText $ PBlock nl)
+        , shape BoxShape
+        ]
   }
 
-toDotGraph :: (ShowText (PBlock n)) => Gr (Block n C C) () -> DotGraph Node
+toDotGraph
+  :: (ShowText (PBlock n))
+  => Gr (Block n C C) () -> DotGraph Node
 toDotGraph = graphToDot visParams

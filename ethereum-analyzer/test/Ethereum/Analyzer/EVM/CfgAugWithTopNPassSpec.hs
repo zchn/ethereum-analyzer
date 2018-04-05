@@ -7,10 +7,10 @@ module Ethereum.Analyzer.EVM.CfgAugWithTopNPassSpec
 
 import Protolude hiding (show)
 
+import Ckev.In.Text
 import Data.Text as DT
 import Ethereum.Analyzer.EVM
 import Ethereum.Analyzer.TestData.Basic
-import Ckev.In.Text
 import Test.Hspec
 
 spec :: Spec

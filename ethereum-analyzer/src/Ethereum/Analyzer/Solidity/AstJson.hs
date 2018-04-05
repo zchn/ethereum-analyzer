@@ -9,11 +9,11 @@ module Ethereum.Analyzer.Solidity.AstJson
 
 import Protolude hiding ((<>), show)
 
+import Ckev.In.Text
 import Data.Aeson
 import Data.Aeson.Types
 import Data.HashMap.Lazy hiding (map)
 import Ethereum.Analyzer.Common
-import Ckev.In.Text
 import Text.PrettyPrint.Leijen.Text as PP
 
 decodeSoleNodes :: LByteString -> Either Text [SolNode]

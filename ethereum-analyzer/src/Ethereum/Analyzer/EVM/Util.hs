@@ -15,7 +15,9 @@ import Ethereum.Analyzer.EVM.Disasm
 import Ethereum.Analyzer.EVM.IR
 import Ethereum.Analyzer.Util
 
-disasmToDotText :: HasEvmBytecode a => a -> Text
+disasmToDotText
+  :: HasEvmBytecode a
+  => a -> Text
 disasmToDotText a =
   let disasmd = disasm a
       result =
@@ -24,7 +26,9 @@ disasmToDotText a =
           toDotText <$> (ctorOf <$> doCfgAugmentPass contract)
   in result
 
-disasmToDotText2 :: HasEvmBytecode a => a -> (Text, Text)
+disasmToDotText2
+  :: HasEvmBytecode a
+  => a -> (Text, Text)
 disasmToDotText2 a =
   let result =
         unWordLabelMapM $ do

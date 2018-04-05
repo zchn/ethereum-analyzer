@@ -12,17 +12,17 @@ import Blockchain.ExtWord
 import Blockchain.VM.Opcodes
 import Compiler.Hoopl
 
+import Ckev.In.Text
 -- import Data.Bits
 import Data.List as DL
 import Data.Set as DS hiding (toList)
 import Ethereum.Analyzer.Common
 import Ethereum.Analyzer.EVM.IR
-import Ckev.In.Text
 
 type StackTopFact = WithTop (Set Word256)
 
-joinJumpTargets ::
-     Label
+joinJumpTargets
+  :: Label
   -> OldFact (Set Word256)
   -> NewFact (Set Word256)
   -> (ChangeFlag, Set Word256)
@@ -31,8 +31,8 @@ joinJumpTargets _ (OldFact oldF) (NewFact newF) =
     then (NoChange, oldF)
     else (SomeChange, oldF `DS.union` newF)
 
-joinStackTopFact ::
-     Label
+joinStackTopFact
+  :: Label
   -> OldFact StackTopFact
   -> NewFact StackTopFact
   -> (ChangeFlag, StackTopFact)
@@ -79,7 +79,8 @@ stackTopTransfer = mkFTransfer3 coT ooT ocT
       panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@PUSHDIFF {} _ =
       panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
-    opT op@DATA {} _ = panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
+    opT op@DATA {} _ =
+      panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT op@MalformedOpcode {} _ =
       panic $ "Unexpected(stackTopTransfer): " <> toS (showT op)
     opT _ _ = Top
@@ -95,20 +96,17 @@ opGUnit oc@HpEnd {} = gUnitOC $ BlockOC BNil oc
 cfgAugmentRewrite :: FwdRewrite WordLabelMapFuelM HplOp StackTopFact
 cfgAugmentRewrite = mkFRewrite3 coR ooR ocR
   where
-    coR ::
-         HplOp C O
-      -> StackTopFact
-      -> WordLabelMapFuelM (Maybe (Graph HplOp C O))
+    coR :: HplOp C O
+        -> StackTopFact
+        -> WordLabelMapFuelM (Maybe (Graph HplOp C O))
     coR op _ = return $ Just $ opGUnit op
-    ooR ::
-         HplOp O O
-      -> StackTopFact
-      -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
+    ooR :: HplOp O O
+        -> StackTopFact
+        -> WordLabelMapFuelM (Maybe (Graph HplOp O O))
     ooR op _ = return $ Just $ opGUnit op
-    ocR ::
-         HplOp O C
-      -> StackTopFact
-      -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
+    ocR :: HplOp O C
+        -> StackTopFact
+        -> WordLabelMapFuelM (Maybe (Graph HplOp O C))
     ocR op@HpJump {} _ = return (Just (opGUnit op))
     ocR op@HpEnd {} _ = return (Just (opGUnit op))
     ocR op@(OcOp (loc, ope) ll) f =

@@ -36,7 +36,9 @@ instance HasEvmBytecode Code where
   evmBytecodeOf (Code bs) = EvmBytecode bs
   evmBytecodeOf _ = EvmBytecode ""
 
-disasm :: HasEvmBytecode a => a -> [(Word256, Operation)]
+disasm
+  :: HasEvmBytecode a
+  => a -> [(Word256, Operation)]
 disasm a =
   let bs = (unEvmBytecode . evmBytecodeOf) a
       hardlimit = 10000

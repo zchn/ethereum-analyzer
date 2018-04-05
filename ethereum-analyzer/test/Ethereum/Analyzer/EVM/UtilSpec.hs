@@ -21,9 +21,10 @@ spec =
         (toDotText . ctorOf <$> evmOps2HplContract disasmd) `shouldBe`
         toS expectedHexString2RawDot
     it "shows HplCfg after CfgAugmentPass" $ do
-      let disasmd = case disasm hexstring2 of
-            nonempty@((_, _):_) -> nonempty
-            _ -> panic "Unexpected"
+      let disasmd =
+            case disasm hexstring2 of
+              nonempty@((_, _):_) -> nonempty
+              _ -> panic "Unexpected"
           result =
             (unpack . unWordLabelMapM) $ do
               contract <- evmOps2HplContract disasmd

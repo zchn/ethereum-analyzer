@@ -36,8 +36,8 @@ import Data.Binary.Put
 -- Data types
 -- Functions
 import Data.Bits
-       (Bits, (.&.), (.|.), bit, bitSize, bitSizeMaybe, complement, isSigned,
-        popCount, rotate, shift, shiftL, shiftR, testBit, xor)
+       (Bits, (.&.), (.|.), bit, bitSize, bitSizeMaybe, complement,
+        isSigned, popCount, rotate, shift, shiftL, shiftR, testBit, xor)
 import qualified Data.ByteString as BS (head, length, reverse)
 import Data.Ratio (denominator, numerator)
 import qualified Data.Text as T (pack, unpack)
@@ -139,7 +139,8 @@ instance BigWordMod ModN where
   rFromInteger i = BigWord $ i `mod` curveN
   rBitSize _ = 256
 
-instance BigWordMod n => Num (BigWord n) where
+instance BigWordMod n =>
+         Num (BigWord n) where
   fromInteger = rFromInteger
   (BigWord i1) + (BigWord i2) = fromInteger $ i1 + i2
   (BigWord i1) * (BigWord i2) = fromInteger $ i1 * i2
@@ -147,7 +148,8 @@ instance BigWordMod n => Num (BigWord n) where
   abs r = r
   signum (BigWord i) = fromInteger $ signum i
 
-instance BigWordMod n => Bits (BigWord n) where
+instance BigWordMod n =>
+         Bits (BigWord n) where
   (BigWord i1) .&. (BigWord i2) = fromInteger $ i1 .&. i2
   (BigWord i1) .|. (BigWord i2) = fromInteger $ i1 .|. i2
   (BigWord i1) `xor` (BigWord i2) = fromInteger $ i1 `xor` i2
@@ -161,14 +163,17 @@ instance BigWordMod n => Bits (BigWord n) where
   isSigned _ = False
   rotate _ = error "Unimplemented"
 
-instance BigWordMod n => Bounded (BigWord n) where
+instance BigWordMod n =>
+         Bounded (BigWord n) where
   minBound = 0
   maxBound = fromInteger (-1)
 
-instance BigWordMod n => Real (BigWord n) where
+instance BigWordMod n =>
+         Real (BigWord n) where
   toRational (BigWord i) = toRational i
 
-instance BigWordMod n => Enum (BigWord n) where
+instance BigWordMod n =>
+         Enum (BigWord n) where
   succ r@(BigWord i)
     | r == maxBound = error "BigWord: tried to take succ of maxBound"
     | otherwise = fromInteger $ succ i
@@ -181,13 +186,18 @@ instance BigWordMod n => Enum (BigWord n) where
     | otherwise = error "BigWord: toEnum is outside of bounds"
     where
       r = fromInteger $ toEnum i
-      minFrom :: BigWordMod a => BigWord a -> BigWord a
+      minFrom
+        :: BigWordMod a
+        => BigWord a -> BigWord a
       minFrom _ = minBound
-      maxFrom :: BigWordMod a => BigWord a -> BigWord a
+      maxFrom
+        :: BigWordMod a
+        => BigWord a -> BigWord a
       maxFrom _ = maxBound
   fromEnum (BigWord i) = fromEnum i
 
-instance BigWordMod n => Integral (BigWord n) where
+instance BigWordMod n =>
+         Integral (BigWord n) where
   (BigWord i1) `quot` (BigWord i2) = fromInteger $ i1 `quot` i2
   (BigWord i1) `rem` (BigWord i2) = fromInteger $ i1 `rem` i2
   (BigWord i1) `div` (BigWord i2) = fromInteger $ i1 `div` i2

@@ -11,24 +11,29 @@ module Ethereum.Analyzer.Common
 import Protolude hiding (show)
 
 import Blockchain.ExtWord
+import Ckev.In.Text
 import Data.ByteString as DB
 import Data.Either (Either(..))
-import Ckev.In.Text
 
 fromRight :: b -> Either a b -> b
 fromRight _ (Right v) = v
 fromRight v (Left _) = v
 
-s2t4Either :: StringConv s Text => Either s a -> Either Text a
+s2t4Either
+  :: StringConv s Text
+  => Either s a -> Either Text a
 s2t4Either (Left s) = Left $ toS s
 s2t4Either (Right r) = Right r
 
-unexpectedPanic :: ShowText a => a -> b
+unexpectedPanic
+  :: ShowText a
+  => a -> b
 unexpectedPanic n = panic $ "unexpected: " <> showText n
 
-unimplementedPanic :: ShowText a => a -> b
-unimplementedPanic n =
-  panic $ "unimplemented: " <> showText n
+unimplementedPanic
+  :: ShowText a
+  => a -> b
+unimplementedPanic n = panic $ "unimplemented: " <> showText n
 
 varBytesToWord256 :: [Word8] -> Word256
 varBytesToWord256 w8l =

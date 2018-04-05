@@ -33,10 +33,14 @@ type Handler msg = ExceptT ServantErr (Log.LogM msg IO)
 --
 -- See http://haskell-servant.readthedocs.io/en/stable/tutorial/Server.html#using-another-monad-for-your-handlers
 -- for the details.
-toHandler :: Pretty msg => Severity -> (Handler msg :~> ExceptT ServantErr IO)
+toHandler
+  :: Pretty msg
+  => Severity -> (Handler msg :~> ExceptT ServantErr IO)
 toHandler logLevel = Nat toHandler'
   where
-    toHandler' :: Pretty msg => Handler msg a -> ExceptT ServantErr IO a
+    toHandler'
+      :: Pretty msg
+      => Handler msg a -> ExceptT ServantErr IO a
     toHandler' = ExceptT . Log.withLogging logLevel . runExceptT
 
 -- | Example endpoint.
