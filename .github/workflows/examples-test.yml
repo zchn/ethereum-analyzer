@@ -48,6 +48,12 @@ jobs:
             fi
           done
 
+      - name: Upload dot files
+        uses: actions/upload-artifact@v3
+        with:
+          name: solidity-cfg-dot-files
+          path: work/*.dot
+
   solidity-linter:
     name: Solidity Linter
     runs-on: ubuntu-latest
@@ -68,13 +74,19 @@ jobs:
 
       - name: Run Solidity Linter and Verify Output
         run: |
-          stack build
-          output=$(solc --combined-json ast examples/analysis-benchmark/selfdestruct-over-suicide.sol | stack exec ea-analyze 2>&1)
+          stack build --profile
+          output=$(solc --combined-json ast examples/analysis-benchmark/selfdestruct-over-suicide.sol | stack exec -- ea-analyze 2>&1)
           echo "$output"
           if ! echo "$output" | grep -q "Prefer 'selfdestruct' over 'suicide'"; then
             echo "Expected error message not found in output"
             exit 1
           fi
+
+      - name: Upload dot files
+        uses: actions/upload-artifact@v3
+        with:
+          name: solidity-linter-dot-files
+          path: work/*.dot
 
   evm-cfg:
     name: EVM CFG Generation
@@ -111,3 +123,9 @@ jobs:
             echo "Generated EVM CFG dot file does not match expected output"
             exit 1
           fi
+
+      - name: Upload dot files
+        uses: actions/upload-artifact@v3
+        with:
+          name: evm-cfg-dot-files
+          path: work/*.dot
