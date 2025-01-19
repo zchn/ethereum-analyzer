@@ -49,6 +49,5 @@ jobs:
           # Compare generated dot file with expected one
           if ! diff -u work/tmp.dot test/expected/evm_cfg.dot; then
             echo "Generated EVM CFG dot file does not match expected output"
-            # TODO(zchn): uncomment this once the expected files are fixed.
-            # exit 1
+            exit 1
           fi
