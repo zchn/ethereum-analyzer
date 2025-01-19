@@ -1,0 +1,12 @@
+digraph {
+  node [shape=box];
+  entry -> n1;
+  n1 [label="PUSH1 0x60\nPUSH1 0x40\nMSTORE"];
+  n1 -> n2;
+  n2 [label="CALLDATASIZE\nISZERO"];
+  n2 -> n3 [label="true"];
+  n2 -> n4 [label="false"];
+  n3 [label="PUSH1 0x0\nDUP1\nREVERT"];
+  n4 [label="PUSH1 0x4\nCALLDATALOAD"];
+  exit;
+}

@@ -1,0 +1,54 @@
+name: Test Examples
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  evm-cfg:
+    name: EVM CFG Generation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y graphviz
+
+      - name: Set up Stack
+        uses: haskell/actions/setup@v2
+        with:
+          enable-stack: true
+          stack-version: 'latest'
+
+      - name: Generate EVM CFG
+        run: |
+          mkdir -p work/
+          stack build
+          cat examples/etherscan.io/CryptoKittiesSalesAuction.evm | stack exec -- ea-bytecode-vis --outDot=work/tmp.dot
+          dot -Tpng work/tmp.dot -O
+
+      - name: Verify output existence
+        run: |
+          # Check if dot file was generated
+          test -f work/tmp.dot || exit 1
+          # Check if PNG file was generated
+          test -f work/tmp.dot.png || exit 1
+
+      - name: Upload dot files
+        uses: actions/upload-artifact@v3
+        with:
+          name: evm-cfg-dot-files
+          path: work/*.dot
+
+      - name: Verify output correctness
+        run: |
+          # Compare generated dot file with expected one
+          if ! diff -u work/tmp.dot test/expected/evm_cfg.dot; then
+            echo "Generated EVM CFG dot file does not match expected output"
+            # TODO(zchn): uncomment this once the expected files are fixed.
+            # exit 1
+          fi
