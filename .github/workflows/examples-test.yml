@@ -39,6 +39,14 @@ jobs:
           test -n "$(find work/ -name '*.dot')" || exit 1
           # Check if PNG files were generated
           test -n "$(find work/ -name '*.dot.png')" || exit 1
+          # Compare generated dot files with expected ones
+          for f in work/*.dot; do
+            filename=$(basename "$f")
+            if ! diff -u "$f" "test/expected/$filename"; then
+              echo "Generated dot file $filename does not match expected output"
+              exit 1
+            fi
+          done
 
   solidity-linter:
     name: Solidity Linter
@@ -58,16 +66,15 @@ jobs:
           enable-stack: true
           stack-version: 'latest'
 
-      - name: Run Solidity Linter
+      - name: Run Solidity Linter and Verify Output
         run: |
           stack build
-          solc --combined-json ast examples/analysis-benchmark/selfdestruct-over-suicide.sol | stack exec ea-analyze
-
-      - name: Verify output
-        run: |
-          # The linter should run without errors
-          solc --combined-json ast examples/analysis-benchmark/selfdestruct-over-suicide.sol | stack exec ea-analyze
-          test $? -eq 0 || exit 1
+          output=$(solc --combined-json ast examples/analysis-benchmark/selfdestruct-over-suicide.sol | stack exec ea-analyze 2>&1)
+          echo "$output"
+          if ! echo "$output" | grep -q "Prefer 'selfdestruct' over 'suicide'"; then
+            echo "Expected error message not found in output"
+            exit 1
+          fi
 
   evm-cfg:
     name: EVM CFG Generation
@@ -99,3 +106,8 @@ jobs:
           test -f work/tmp.dot || exit 1
           # Check if PNG file was generated
           test -f work/tmp.dot.png || exit 1
+          # Compare generated dot file with expected one
+          if ! diff -u work/tmp.dot test/expected/evm_cfg.dot; then
+            echo "Generated EVM CFG dot file does not match expected output"
+            exit 1
+          fi

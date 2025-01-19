@@ -1,0 +1,30 @@
+digraph {
+  node [shape=box];
+  entry -> n1;
+  n1 [label="tokenCount = balanceOf(_owner)"];
+  n1 -> n2;
+  n2 [label="tokenCount == 0"];
+  n2 -> n3 [label="true"];
+  n2 -> n4 [label="false"];
+  n3 [label="return new uint256[](0)"];
+  n4 [label="result = new uint256[](tokenCount)"];
+  n4 -> n5;
+  n5 [label="totalCats = totalSupply()"];
+  n5 -> n6;
+  n6 [label="resultIndex = 0"];
+  n6 -> n7;
+  n7 [label="catId = 1"];
+  n7 -> n8;
+  n8 [label="catId <= totalCats"];
+  n8 -> n9 [label="true"];
+  n8 -> n12 [label="false"];
+  n9 [label="kittyIndexToOwner[catId] == _owner"];
+  n9 -> n10 [label="true"];
+  n9 -> n11 [label="false"];
+  n10 [label="result[resultIndex] = catId\nresultIndex++"];
+  n10 -> n11;
+  n11 [label="catId++"];
+  n11 -> n8;
+  n12 [label="return result"];
+  exit;
+}
