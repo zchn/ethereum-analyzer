@@ -19,4 +19,4 @@ jobs:
           stack-version: 'latest'
 
       - name: Build
-        run: stack build
+        run: stack build && cat examples/etherscan.io/CryptoKittiesSalesAuction.evm | stack exec -- ea-bytecode-vis --outDot=work/tmp.dot && dot -Tpng work/tmp.dot -O
