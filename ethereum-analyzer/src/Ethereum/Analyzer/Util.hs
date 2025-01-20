@@ -34,7 +34,7 @@ toDotText bd =
   let bdGr = toGr bd
       dotG = toDotGraph bdGr
       dotCode = toDot dotG
-  in DTL.toStrict $ renderDot dotCode
+  in DTL.toStrict $ renderDot dotCode <> "\n"
 
 toGr
   :: NonLocal n
