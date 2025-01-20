@@ -14,7 +14,8 @@ import Data.Aeson
 import Data.Aeson.Types
 import Data.HashMap.Lazy hiding (map)
 import Ethereum.Analyzer.Common
-import Text.PrettyPrint.Leijen.Text as PP
+import Text.PrettyPrint.Leijen.Text as PP hiding ((<>))
+import Text.PrettyPrint.Leijen.Text ((<>))
 
 decodeSoleNodes :: LByteString -> Either Text [SolNode]
 decodeSoleNodes combined_ast = do

@@ -8,7 +8,7 @@ module Ethereum.Analyzer.Common
   , varBytesToWord256
   ) where
 
-import Protolude hiding (show)
+import Protolude hiding (show, fromRight)
 
 import Blockchain.ExtWord
 import Ckev.In.Text
