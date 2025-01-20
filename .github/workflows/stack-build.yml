@@ -19,4 +19,7 @@ jobs:
           stack-version: 'latest'
 
       - name: Build
-        run: stack build
+        run: stack build --fast
+        
+      - name: test
+        run: stack test --fast --haddock-deps 
