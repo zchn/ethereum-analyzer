@@ -109,7 +109,7 @@ expectedHexString2RawDot =
   "    4 -> 5;\n" <>
   "    5 -> 6;\n" <>
   "    6 -> 7;\n" <>
-  "}"
+  "}\n"
 
 expectedHexString2AugDot :: Text
 expectedHexString2AugDot =
@@ -294,4 +294,4 @@ expectedHexString2AugDot =
   "    10 -> 7;\n" <>
   "    10 -> 11;\n" <>
   "    11 -> 12;\n" <>
-  "}"
+  "}\n"
