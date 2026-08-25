@@ -44,7 +44,7 @@ jobs:
           test -f work/tmp.dot.png || exit 1
 
       - name: Upload dot files
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: evm-cfg-dot-files
           path: work/*.dot
