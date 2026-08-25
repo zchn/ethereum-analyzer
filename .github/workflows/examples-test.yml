@@ -10,19 +10,24 @@ jobs:
   evm-cfg:
     name: EVM CFG Generation
     runs-on: ubuntu-latest
+    env:
+      LANG: C.UTF-8
     steps:
       - uses: actions/checkout@v3
 
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y graphviz
+          sudo apt-get install -y graphviz libgmp-dev
 
+      # Pinned: this project's resolver (lts-8.24) uses GHC 8.0.2 / Cabal
+      # 1.24, and Stack 3.x dropped support for Cabal versions below 2.2.
+      # 2.15.5 is the newest release that can still build it.
       - name: Set up Stack
         uses: haskell/actions/setup@v2
         with:
           enable-stack: true
-          stack-version: 'latest'
+          stack-version: '2.15.5'
 
       - name: Generate EVM CFG
         run: |
