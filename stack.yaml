@@ -10,5 +10,11 @@ packages:
 - ethereum-analyzer-webui/
 extra-deps:
 - global-lock-0.1
-- logging-effect-1.1.1
-resolver: lts-8.24
+- logging-effect-1.3.12
+- hexstring-0.11.1
+- hflags-0.4.3
+- hoopl-3.10.2.2
+- prometheus-metrics-ghc-0.3.0
+resolver: lts-12.26
+allow-newer: true
+system-ghc: true

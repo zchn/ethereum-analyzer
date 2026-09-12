@@ -27,7 +27,7 @@ jobs:
       # 1.24, and Stack 3.x dropped support for Cabal versions below 2.2.
       # 2.15.5 is the newest release that can still build it.
       - name: Set up Haskell Stack
-        uses: haskell/actions/setup@v2
+        uses: haskell-actions/setup@v2
         with:
           enable-stack: true
           stack-version: '2.15.5'
